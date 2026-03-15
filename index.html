@@ -19,7 +19,7 @@
         <ul class="nav-links">
           <li><a href="#features">Features</a></li>
           <li><a href="#platform">Platform</a></li>
-          <li><a href="#market">Marketplace</a></li>
+          <li><a href="#market">Store</a></li>
           <li><a href="#sdk">SDK</a></li>
           <li><a href="#contact" class="btn-nav">Early Access</a></li>
         </ul>
@@ -32,9 +32,7 @@
         <p class="hero-tag">✦ Embedded Linux · Community Edition — Raspberry Pi</p>
         <h1>The missing platform<br/>for <span class="highlight">Embedded Linux</span></h1>
         <p class="hero-subtitle">
-          OrbitOS turns embedded Linux devices into a programmable ecosystem. 
-          Control hardware, networking, and system services from your apps or remotely, 
-          with built-in security and real-time access.
+          OrbitOS transforms embedded Linux devices into a programmable ecosystem. Access hardware, networking, and system services locally or remotely, with built-in security and real-time control.
         </p>
         <div class="under-construction">
           🚧 Full website under construction · Community Edition launching soon
@@ -50,7 +48,7 @@
         <div class="orbit-ring ring-3"></div>
         <div class="orbit-core">⬡</div>
         <span class="orbit-label label-top">OTA</span>
-        <span class="orbit-label label-right">APPs</span>
+        <span class="orbit-label label-right">Apps</span>
         <span class="orbit-label label-bottom">SDK</span>
         <span class="orbit-label label-left">Edge</span>
       </div>
@@ -85,9 +83,8 @@
             <h3>One API for All Hardware</h3>
             <p>
               OrbitOS exposes device capabilities as APIs you can call from apps or tools —
-              locally or remotely, with security built in.
-              GPIO, PWM, I²C, SPI, UART, WiFi, Ethernet, Bluetooth and network controls
-              all work the same way across every OrbitOS device.
+              locally via UDS or remotely via mTLS. GPIO, PWM, I²C, SPI, UART, WiFi, Ethernet, Bluetooth and network controls
+              all work consistently across every OrbitOS device.
             </p>
           </div>
 
@@ -95,19 +92,17 @@
             <div class="card-icon">🔐</div>
             <h3>Security by Default</h3>
             <p>
-              Every connection to the device is encrypted and authenticated.
-              OrbitOS verifies the identity of every caller before granting access —
-              no open ports, no implicit trust. Safe for field and industrial deployments out of the box.
+              Every connection is encrypted and authenticated. OrbitOS verifies every caller before granting access —
+              no open ports, no implicit trust. Safe for field and industrial deployments.
             </p>
           </div>
 
           <div class="card">
             <div class="card-icon">📦</div>
-            <h3>Apps That Don't Break Each Other</h3>
+            <h3>Isolated Apps</h3>
             <p>
-              Applications run in isolation and communicate through well-defined interfaces.
-              If your app fails, the runtime quickly restarts it —
-              giving you a reliable, maintainable foundation for any project.
+              Applications run in isolation and communicate through defined interfaces.
+              If an app fails, the runtime restarts it automatically — giving you reliability and maintainability.
             </p>
           </div>
 
@@ -115,10 +110,8 @@
             <div class="card-icon">🔄</div>
             <h3>Atomic OS Updates</h3>
             <p>
-              OSTree-backed updates with delta downloads,
-              instant rollback and zero-downtime upgrades.
-              Devices can safely update in the field
-              without the risk of bricking.
+              OSTree-backed updates with delta downloads, instant rollback and zero-downtime upgrades.
+              Devices can safely update in the field without risk of bricking.
             </p>
           </div>
 
@@ -126,11 +119,8 @@
             <div class="card-icon">🌍</div>
             <h3>Multi-Language SDK</h3>
             <p>
-              Develop applications in
-              <strong>Go</strong>, <strong>Python</strong>, <strong>Java</strong> or
-              <strong>C++</strong>. Applications are packaged into a unified
-              <code>.orb</code> format ensuring consistent deployment across
-              any OrbitOS device.
+              Develop applications in <strong>Go</strong>, <strong>Python</strong>, <strong>Java</strong> or <strong>C++</strong>.
+              Apps are packaged into a unified <code>.orb</code> format ensuring consistent deployment across any OrbitOS device.
             </p>
           </div>
 
@@ -138,9 +128,7 @@
             <div class="card-icon">💻</div>
             <h3>Real-Time Remote Development</h3>
             <p>
-              Develop against real hardware without deploying first.
-              Run your application directly from your laptop while interacting
-              with device peripherals in real time using the same SDK and APIs.
+              Develop against real hardware without deploying first. Run your application directly from your laptop while interacting with device peripherals in real time using the same SDK and APIs.
               <strong>Develop locally. Test on real hardware. Deploy when ready.</strong>
             </p>
           </div>
@@ -149,10 +137,7 @@
             <div class="card-icon">⚡</div>
             <h3>Edge-Ready Runtime</h3>
             <p>
-              OrbitOS is designed for embedded and edge systems.
-              Efficient runtime services allow applications to run
-              on resource-constrained devices while maintaining
-              modern development capabilities.
+              OrbitOS is designed for embedded and edge systems. Efficient runtime services allow apps to run on resource-constrained devices while maintaining modern development capabilities.
             </p>
           </div>
 
@@ -172,9 +157,7 @@
           </p>
           <p>
             OrbitOS exposes device capabilities as APIs you can call from apps or tools —
-            locally or remotely, with security built in.
-            Whether you're building an app that runs on the device or a tool that connects from your laptop,
-            the same API works in both cases. Every request is verified before access is granted.
+            locally via UDS or remotely via mTLS. Every request is verified before access is granted.
           </p>
           <p class="chips-label">Devices</p>
           <div class="platform-chips">
@@ -197,7 +180,7 @@
         <div class="about-stats">
           <div class="stat">
             <span class="stat-number">Unified</span>
-            <span class="stat-label">API and Application Packages</span>
+            <span class="stat-label">API & Packages</span>
           </div>
           <div class="stat">
             <span class="stat-number">Secure</span>
@@ -205,7 +188,7 @@
           </div>
           <div class="stat">
             <span class="stat-number">App Store</span>
-            <span class="stat-label">Remote Installation</span>
+            <span class="stat-label">Install & Update Apps</span>
           </div>
           <div class="stat">
             <span class="stat-number">Safe</span>
@@ -215,47 +198,35 @@
       </div>
     </section>
 
-    <!-- Marketplace / App Store -->
+    <!-- Store -->
     <section class="market" id="market">
       <div class="section-container">
         <p class="section-label">App Distribution</p>
         <h2 class="section-title">Application Store</h2>
         <p class="section-subtitle">
-          Install, update, and remove applications securely. OrbitOS supports a package store
-          where every app is signed and verified, ensuring trusted deployment on your devices.
+          Browse, install, and manage applications from a central store. Each app is verified and encrypted, ensuring trusted deployment on your devices.
         </p>
 
         <div class="cards">
           <div class="card">
             <div class="card-icon">🛒</div>
             <h3>Secure App Store</h3>
-            <p>
-              Users can browse and install applications from a centralized store. Every app is verified for safety and authenticity, so you can install and run software with confidence.
-            </p>
+            <p>Users can browse and install apps safely from a centralized store.</p>
           </div>
           <div class="card">
             <div class="card-icon">🔏</div>
-            <h3>Signed Packages</h3>
-            <p>
-              All applications are packaged in the <code>.orb</code> format and signed.
-              OrbitOS verifies signatures before installation to prevent unauthorized or malicious software.
-            </p>
+            <h3>Verified Packages</h3>
+            <p>Apps are packaged in <code>.orb</code> format and cryptographically verified before installation.</p>
           </div>
           <div class="card">
             <div class="card-icon">⚙️</div>
             <h3>Atomic Install & Updates</h3>
-            <p>
-              Installations and updates are transactional — they either complete fully or rollback automatically,
-              keeping devices in a safe state at all times.
-            </p>
+            <p>Installations and updates are transactional — complete fully or rollback automatically.</p>
           </div>
           <div class="card">
             <div class="card-icon">🔄</div>
             <h3>Managed Lifecycle</h3>
-            <p>
-              The runtime manages app lifecycle: start, stop, and supervise apps automatically.
-              Permissions and hardware access are controlled per app, just like Android.
-            </p>
+            <p>The runtime manages app lifecycle: start, stop, supervise apps automatically, with granular permissions.</p>
           </div>
         </div>
       </div>
@@ -274,20 +245,20 @@
             <span class="code-file">GPIO · PWM · UART · I²C</span>
           </div>
           <pre class="code-body">       
-// Connect to the device — same API whether running on-device or from a remote machine
+// Connect to the device — same API whether running on-device or remotely
 device, _ := sdk.NewClientAuto(tcpAddress, tcpPort, udsSocketPath)
 
 // GPIO — set direction and drive a pin high
 device.GpioManager.SetDirection("GPIO18", 0)
 device.GpioManager.SetLevel("GPIO18", 1)
 
-// PWM — 1 kHz signal at 50% duty cycle on GPIO18
+// PWM — 1 kHz signal at 50% duty cycle
 pwmPins, _ := device.GpioManager.ListPwmPins()
 device.GpioManager.SetPwm(pwmPins[0], 0.5, 1000.0)
 
 // UART — open ttyAMA0 at 115200 baud and send a command
-device.UartManager.Open("/dev/ttyAMA0", 115200})
-device.UartManager.Write("/dev/ttyAMA0", "AT\r\n"))
+device.UartManager.Open("/dev/ttyAMA0", 115200)
+device.UartManager.Write("/dev/ttyAMA0", "AT\r\n")
 
 // I²C — scan bus and read a sensor register
 addrs, _ := device.I2CManager.ScanBus(1)
