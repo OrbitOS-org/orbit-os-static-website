@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OrbitOS — Embedded Linux Platform</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="logo">
+          <span class="logo-icon">⬡</span>
+          <span class="logo-text">Orbit<strong>OS</strong></span>
+        </div>
+        <ul class="nav-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#platform">Platform</a></li>
+          <li><a href="#market">Marketplace</a></li>
+          <li><a href="#sdk">SDK</a></li>
+          <li><a href="#contact" class="btn-nav">Early Access</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <p class="hero-tag">✦ Embedded Linux · Community Edition — Raspberry Pi</p>
+        <h1>The missing platform<br/>for <span class="highlight">Embedded Linux</span></h1>
+        <p class="hero-subtitle">
+          OrbitOS turns embedded Linux devices into a programmable ecosystem. 
+          Control hardware, networking, and system services from your apps or remotely, 
+          with built-in security and real-time access.
+        </p>
+        <div class="under-construction">
+          🚧 Full website under construction · Community Edition launching soon
+        </div>
+        <div class="hero-buttons">
+          <a href="#features" class="btn-primary">Explore Features</a>
+          <a href="#sdk" class="btn-secondary">View SDK</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="orbit-ring ring-1"></div>
+        <div class="orbit-ring ring-2"></div>
+        <div class="orbit-ring ring-3"></div>
+        <div class="orbit-core">⬡</div>
+        <span class="orbit-label label-top">gRPC</span>
+        <span class="orbit-label label-right">GPIO</span>
+        <span class="orbit-label label-bottom">mTLS</span>
+        <span class="orbit-label label-left">Edge</span>
+      </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="what" id="what">
+      <div class="section-container">
+        <p class="section-label">The Problem</p>
+        <h2 class="section-title-left">
+          Every embedded project<br/>reinvents the same infrastructure.
+        </h2>
+        <p class="section-desc">
+          Reading GPIO, configuring networking, securing remote access,
+          handling OTA updates and building APIs — every team ends up writing
+          the same platform code again and again.
+          <strong>OrbitOS provides that platform.</strong>
+        </p>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+      <div class="section-container">
+        <p class="section-label">What it does</p>
+        <h2 class="section-title">One runtime. All hardware.</h2>
+        <p class="section-subtitle">Access and control your device from any language, locally or remotely.</p>
+        <div class="cards">
+
+          <div class="card">
+            <div class="card-icon">🔌</div>
+            <h3>Unified Hardware API</h3>
+            <p>
+              Access hardware and system interfaces through a single,
+              <strong>strongly-typed API</strong>.
+              GPIO, PWM, I²C, SPI, UART, WiFi, Ethernet, Bluetooth
+              and firewall controls are exposed consistently across all OrbitOS devices.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-icon">🔐</div>
+            <h3>Secure Device Communication</h3>
+            <p>
+              All communication is secured using
+              <strong>gRPC over TLS with mutual authentication</strong>.
+              OrbitOS enforces identity-based access control for every request,
+              making it suitable for secure edge and industrial deployments.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-icon">📦</div>
+            <h3>Service-Oriented Architecture</h3>
+            <p>
+              Applications run as isolated services that communicate through
+              well-defined APIs. This modular architecture improves reliability,
+              scalability and maintainability.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-icon">🔄</div>
+            <h3>Atomic OS Updates</h3>
+            <p>
+              OSTree-backed updates with delta downloads,
+              instant rollback and zero-downtime upgrades.
+              Devices can safely update in the field
+              without the risk of bricking.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-icon">🌍</div>
+            <h3>Multi-Language SDK</h3>
+            <p>
+              Develop applications in
+              <strong>Go</strong>, <strong>Python</strong>, <strong>Java</strong> or
+              <strong>C++</strong>. Applications are packaged into a unified
+              <code>.opk</code> format ensuring consistent deployment across
+              any OrbitOS device.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-icon">💻</div>
+            <h3>Real-Time Remote Development</h3>
+            <p>
+              Develop against real hardware without deploying first.
+              Run your application directly from your laptop while interacting
+              with device peripherals in real time using the same SDK and APIs.
+              <strong>Develop locally. Test on real hardware. Deploy when ready.</strong>
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-icon">⚡</div>
+            <h3>Edge-Ready Runtime</h3>
+            <p>
+              OrbitOS is designed for embedded and edge systems.
+              Efficient runtime services allow applications to run
+              on resource-constrained devices while maintaining
+              modern development capabilities.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Platform -->
+    <section class="platform" id="platform">
+      <div class="section-container about-grid">
+        <div class="about-text">
+          <p class="section-label">Architecture</p>
+          <h2>Built like <span class="highlight">Android</span>.<br/>For the edge.</h2>
+          <p>
+            Gravity — the core of OrbitOS — runs applications, controls hardware,
+            and enforces security in a single unified runtime.
+          </p>
+          <p>
+            The OrbitOS API is accessible in two ways: internally, via a <strong>UDS</strong> for installed apps,
+            and externally, via <strong>TCP mTLS</strong> for SDKs, configuration tools, and real-time remote development.
+            Every request passes through the Permission Manager to ensure secure and consistent access.
+          </p>
+          <p class="chips-label">Devices</p>
+          <div class="platform-chips">
+            <span class="chip">Raspberry Pi 2 / 3 / 4 / 5</span>
+            <span class="chip">Arduino UNO R4</span>
+            <span class="chip">BeagleBone Black / AI</span>
+            <span class="chip">NVIDIA Jetson Nano / Xavier</span>
+            <span class="chip">Rock Pi 4 / 5</span>
+            <span class="chip">Odroid N2+</span>
+            <span class="chip">x86_64 SBCs & NUCs</span>
+          </div>
+          <p class="chips-label">Architectures</p>
+          <div class="platform-chips">
+            <span class="chip">ARM64 (aarch64)</span>
+            <span class="chip">ARM32 (ARMv7)</span>
+            <span class="chip">x86_64</span>
+            <span class="chip">RISC-V 64-bit (planned)</span>
+          </div>
+        </div>
+        <div class="about-stats">
+          <div class="stat">
+            <span class="stat-number">API</span>
+            <span class="stat-label">gRPC</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">Security</span>
+            <span class="stat-label">UDS + mTLS</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">Store</span>
+            <span class="stat-label">Application Store</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">Updates</span>
+            <span class="stat-label">Atomic</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Marketplace / App Store -->
+    <section class="market" id="market">
+      <div class="section-container">
+        <p class="section-label">App Distribution</p>
+        <h2 class="section-title">Application Store</h2>
+        <p class="section-subtitle">
+          Install, update, and remove applications securely. OrbitOS supports a package store
+          where every app is signed and verified, ensuring trusted deployment on your devices.
+        </p>
+
+        <div class="cards">
+          <div class="card">
+            <div class="card-icon">🛒</div>
+            <h3>Secure App Store</h3>
+            <p>
+              Users can browse and install applications from a centralized store. Every app is verified for safety and authenticity, so you can install and run software with confidence.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🔏</div>
+            <h3>Signed Packages</h3>
+            <p>
+              All applications are packaged in the <code>.opk</code> format and signed.
+              OrbitOS verifies signatures before installation to prevent unauthorized or malicious software.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-icon">⚙️</div>
+            <h3>Atomic Install & Updates</h3>
+            <p>
+              Installations and updates are transactional — they either complete fully or rollback automatically,
+              keeping devices in a safe state at all times.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🔄</div>
+            <h3>Managed Lifecycle</h3>
+            <p>
+              The runtime manages app lifecycle: start, stop, and supervise apps automatically.
+              Permissions and hardware access are controlled per app, just like Android.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SDK -->
+    <section class="sdk-section" id="sdk">
+      <div class="section-container">
+        <p class="section-label">Developer Experience</p>
+        <h2 class="section-title">Talk to your device like an API</h2>
+        <p class="section-subtitle">Connect from any machine. Control hardware. In any language.</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">Go SDK</span>
+            <span class="code-file">GPIO · PWM · UART · I²C</span>
+          </div>
+          <pre class="code-body">       
+// Connect to device by UDS (app installed on-device) or over TCP/mTLS (remote development / tools)
+device, _ := sdk.NewClientAuto(tcpAddress, tcpPort, udsSocketPath)
+
+// GPIO — set direction and drive a pin high
+device.GpioManager.SetDirection("GPIO18", 0)
+device.GpioManager.SetLevel("GPIO18", 1)
+
+// PWM — 1 kHz signal at 50% duty cycle on GPIO18
+pwmPins, _ := device.GpioManager.ListPwmPins()
+device.GpioManager.SetPwm(pwmPins[0], 0.5, 1000.0)
+
+// UART — open ttyAMA0 at 115200 baud and send a command
+device.UartManager.Open("/dev/ttyAMA0", 115200})
+device.UartManager.Write("/dev/ttyAMA0", "AT\r\n"))
+
+// I²C — scan bus and read a sensor register
+addrs, _ := device.I2CManager.ScanBus(1)
+data, _  := device.I2CManager.WriteRead(1, 0x48, []byte{0x00}, 2)</pre>
+        </div>
+
+        <div class="sdk-langs">
+          <div class="sdk-pill"><span>Go</span><span class="sdk-status wip">In Progress</span></div>
+          <div class="sdk-pill"><span>Python</span><span class="sdk-status wip">In Progress</span></div>
+          <div class="sdk-pill"><span>Java</span><span class="sdk-status wip">In Progress</span></div>
+          <div class="sdk-pill"><span>C++</span><span class="sdk-status wip">In Progress</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact" id="contact">
+      <div class="section-container">
+        <h2 class="section-title">Get Early Access</h2>
+        <p class="section-subtitle">
+          Be the first to know when the Community Edition launches for Raspberry Pi.
+        </p>
+        <form class="contact-form">
+          <div class="form-row">
+            <input type="text" placeholder="Your name" required />
+            <input type="email" placeholder="Your email" required />
+          </div>
+          <textarea placeholder="Tell us about your project or use case..." rows="4"></textarea>
+          <button type="submit" class="btn-primary">Request Early Access</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="logo">
+          <span class="logo-icon">⬡</span>
+          <span class="logo-text">Orbit<strong>OS</strong></span>
+        </div>
+        <p class="footer-copy">© 2026 OrbitOS · Open Source · Built for the edge</p>
+      </div>
+    </footer>
+
+  </body>
+</html>
