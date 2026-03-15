@@ -82,33 +82,32 @@
 
           <div class="card">
             <div class="card-icon">🔌</div>
-            <h3>Unified Hardware API</h3>
+            <h3>One API for All Hardware</h3>
             <p>
-              Access hardware and system interfaces through a single,
-              <strong>strongly-typed API</strong>.
-              GPIO, PWM, I²C, SPI, UART, WiFi, Ethernet, Bluetooth
-              and firewall controls are exposed consistently across all OrbitOS devices.
+              OrbitOS exposes device capabilities as APIs you can call from apps or tools —
+              locally or remotely, with security built in.
+              GPIO, PWM, I²C, SPI, UART, WiFi, Ethernet, Bluetooth and network controls
+              all work the same way across every OrbitOS device.
             </p>
           </div>
 
           <div class="card">
             <div class="card-icon">🔐</div>
-            <h3>Secure Device Communication</h3>
+            <h3>Security by Default</h3>
             <p>
-              All communication is secured using
-              <strong>gRPC over TLS with mutual authentication</strong>.
-              OrbitOS enforces identity-based access control for every request,
-              making it suitable for secure edge and industrial deployments.
+              Every connection to the device is encrypted and authenticated.
+              OrbitOS verifies the identity of every caller before granting access —
+              no open ports, no implicit trust. Safe for field and industrial deployments out of the box.
             </p>
           </div>
 
           <div class="card">
             <div class="card-icon">📦</div>
-            <h3>Service-Oriented Architecture</h3>
+            <h3>Apps That Don't Break Each Other</h3>
             <p>
-              Applications run as isolated services that communicate through
-              well-defined APIs. This modular architecture improves reliability,
-              scalability and maintainability.
+              Applications run in isolation and communicate through well-defined interfaces.
+              If your app fails, the runtime quickly restarts it —
+              giving you a reliable, maintainable foundation for any project.
             </p>
           </div>
 
@@ -168,13 +167,14 @@
           <p class="section-label">Architecture</p>
           <h2>Built like <span class="highlight">Android</span>.<br/>For the edge.</h2>
           <p>
-            Gravity — the core of OrbitOS — runs applications, controls hardware,
+            Gravity — the core of OrbitOS — runs your applications, controls hardware,
             and enforces security in a single unified runtime.
           </p>
           <p>
-            The OrbitOS API is accessible in two ways: internally, via a <strong>UDS</strong> for installed apps,
-            and externally, via <strong>TCP mTLS</strong> for SDKs, configuration tools, and real-time remote development.
-            Every request passes through the Permission Manager to ensure secure and consistent access.
+            OrbitOS exposes device capabilities as APIs you can call from apps or tools —
+            locally or remotely, with security built in.
+            Whether you're building an app that runs on the device or a tool that connects from your laptop,
+            the same API works in both cases. Every request is verified before access is granted.
           </p>
           <p class="chips-label">Devices</p>
           <div class="platform-chips">
@@ -196,20 +196,20 @@
         </div>
         <div class="about-stats">
           <div class="stat">
-            <span class="stat-number">API</span>
-            <span class="stat-label">gRPC</span>
+            <span class="stat-number">Unified</span>
+            <span class="stat-label">API and Application Packages</span>
           </div>
           <div class="stat">
-            <span class="stat-number">Security</span>
-            <span class="stat-label">UDS + mTLS</span>
+            <span class="stat-number">Secure</span>
+            <span class="stat-label">Local & Remote Access</span>
           </div>
           <div class="stat">
-            <span class="stat-number">Store</span>
-            <span class="stat-label">Application Store</span>
+            <span class="stat-number">App Store</span>
+            <span class="stat-label">Remote Installation</span>
           </div>
           <div class="stat">
-            <span class="stat-number">Updates</span>
-            <span class="stat-label">Atomic</span>
+            <span class="stat-number">Safe</span>
+            <span class="stat-label">System Updates</span>
           </div>
         </div>
       </div>
@@ -274,7 +274,7 @@
             <span class="code-file">GPIO · PWM · UART · I²C</span>
           </div>
           <pre class="code-body">       
-// Connect to device by UDS (app installed on-device) or over TCP/mTLS (remote development / tools)
+// Connect to the device — same API whether running on-device or from a remote machine
 device, _ := sdk.NewClientAuto(tcpAddress, tcpPort, udsSocketPath)
 
 // GPIO — set direction and drive a pin high
@@ -295,10 +295,10 @@ data, _  := device.I2CManager.WriteRead(1, 0x48, []byte{0x00}, 2)</pre>
         </div>
 
         <div class="sdk-langs">
-          <div class="sdk-pill"><span>Go</span><span class="sdk-status wip">In Progress</span></div>
-          <div class="sdk-pill"><span>Python</span><span class="sdk-status wip">In Progress</span></div>
-          <div class="sdk-pill"><span>Java</span><span class="sdk-status wip">In Progress</span></div>
-          <div class="sdk-pill"><span>C++</span><span class="sdk-status wip">In Progress</span></div>
+          <div class="sdk-pill"><span>Go</span><span class="sdk-status ready">Available</span></div>
+          <div class="sdk-pill"><span>Python</span><span class="sdk-status wip">Beta soon</span></div>
+          <div class="sdk-pill"><span>Java</span><span class="sdk-status planned">Planned Q3</span></div>
+          <div class="sdk-pill"><span>C++</span><span class="sdk-status planned">Planned Q4</span></div>
         </div>
       </div>
     </section>
