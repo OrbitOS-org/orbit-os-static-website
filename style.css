@@ -358,6 +358,50 @@ code {
   padding: 6rem 0;
 }
 
+/* Platform header (full-width text above diagram) */
+.platform-header {
+  max-width: 720px;
+  margin-bottom: 3rem;
+}
+
+.platform-header h2 {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.platform-intro {
+  color: var(--muted);
+  font-size: 0.97rem;
+  line-height: 1.75;
+}
+
+/* Architecture diagram */
+.diagram-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3.5rem;
+}
+
+.diagram-img {
+  max-width: 680px;
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 0 48px rgba(108, 99, 255, 0.1);
+}
+
+/* Bottom row: chips on left, stats on right */
+.platform-bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
 .about-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -645,6 +689,7 @@ code {
   .label-right, .label-left { display: none; }
 
   .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .platform-bottom { grid-template-columns: 1fr; gap: 2.5rem; }
 
   .form-row { grid-template-columns: 1fr; }
 

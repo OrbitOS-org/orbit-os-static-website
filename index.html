@@ -147,54 +147,66 @@
 
     <!-- Platform -->
     <section class="platform" id="platform">
-      <div class="section-container about-grid">
-        <div class="about-text">
+      <div class="section-container">
+
+        <!-- Header -->
+        <div class="platform-header">
           <p class="section-label">Architecture</p>
           <h2>Built like <span class="highlight">Android</span>.<br/>For the edge.</h2>
-          <p>
+          <p class="platform-intro">
             Gravity RT — the core of OrbitOS — runs your applications, controls hardware,
             and enforces security in a single unified runtime.
-          </p>
-          <p>
             OrbitOS exposes device capabilities as APIs you can call from apps or tools —
-            locally via UDS or remotely via mTLS. Every request is verified before access is granted.
+            locally or remotely, with security built in. Every request is verified before access is granted.
           </p>
-          <p class="chips-label">Devices</p>
-          <div class="platform-chips">
-            <span class="chip">Raspberry Pi 2 / 3 / 4 / 5</span>
-            <span class="chip">Arduino UNO R4</span>
-            <span class="chip">BeagleBone Black / AI</span>
-            <span class="chip">NVIDIA Jetson Nano / Xavier</span>
-            <span class="chip">Rock Pi 4 / 5</span>
-            <span class="chip">Odroid N2+</span>
-            <span class="chip">x86_64 SBCs & NUCs</span>
+        </div>
+
+        <!-- Architecture diagram -->
+        <div class="diagram-wrapper">
+          <img src="diagram.jpeg" alt="OrbitOS architecture diagram — Hardware, Linux, Gravity RT, OrbitOS runtime, .orb apps, Cloud Store, Remote Management and Remote Development" class="diagram-img" />
+        </div>
+
+        <!-- Chips + Stats row -->
+        <div class="platform-bottom">
+          <div class="platform-meta">
+            <p class="chips-label">Supported Devices</p>
+            <div class="platform-chips">
+              <span class="chip">Raspberry Pi 2 / 3 / 4 / 5</span>
+              <span class="chip">Arduino UNO R4</span>
+              <span class="chip">BeagleBone Black / AI</span>
+              <span class="chip">NVIDIA Jetson Nano / Xavier</span>
+              <span class="chip">Rock Pi 4 / 5</span>
+              <span class="chip">Odroid N2+</span>
+              <span class="chip">x86_64 SBCs & NUCs</span>
+            </div>
+            <p class="chips-label">Architectures</p>
+            <div class="platform-chips">
+              <span class="chip">ARM64 (aarch64)</span>
+              <span class="chip">ARM32 (ARMv7)</span>
+              <span class="chip">x86_64</span>
+              <span class="chip">RISC-V 64-bit (planned)</span>
+            </div>
           </div>
-          <p class="chips-label">Architectures</p>
-          <div class="platform-chips">
-            <span class="chip">ARM64 (aarch64)</span>
-            <span class="chip">ARM32 (ARMv7)</span>
-            <span class="chip">x86_64</span>
-            <span class="chip">RISC-V 64-bit (planned)</span>
+          <div class="about-stats">
+            <div class="stat">
+              <span class="stat-number">Unified</span>
+              <span class="stat-label">API & Packages</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number">Secure</span>
+              <span class="stat-label">Local & Remote Access</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number">App Store</span>
+              <span class="stat-label">Install & Update Apps</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number">Safe</span>
+              <span class="stat-label">System Updates</span>
+            </div>
           </div>
         </div>
-        <div class="about-stats">
-          <div class="stat">
-            <span class="stat-number">Unified</span>
-            <span class="stat-label">API & Packages</span>
-          </div>
-          <div class="stat">
-            <span class="stat-number">Secure</span>
-            <span class="stat-label">Local & Remote Access</span>
-          </div>
-          <div class="stat">
-            <span class="stat-number">App Store</span>
-            <span class="stat-label">Install & Update Apps</span>
-          </div>
-          <div class="stat">
-            <span class="stat-number">Safe</span>
-            <span class="stat-label">System Updates</span>
-          </div>
-        </div>
+
       </div>
     </section>
 
