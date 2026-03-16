@@ -540,6 +540,16 @@ code {
   margin-top: 2rem;
 }
 
+.sdk-lang-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.sdk-lang-link:hover {
+  color: var(--accent-2);
+}
+
 .sdk-pill {
   display: flex;
   align-items: center;

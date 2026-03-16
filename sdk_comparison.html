@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OrbitOS SDK — Go vs Java Method Reference</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --accent-go: #00add8;
+      --accent-java: #f89820;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --warn-bg: #3d2b00;
+      --warn-border: #f89820;
+      --ok-bg: #0d2318;
+      --ok-border: #3fb950;
+      --tag-go: rgba(0,173,216,.15);
+      --tag-java: rgba(248,152,32,.15);
+      --row-hover: rgba(255,255,255,.03);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ── Layout ─────────────────────────────────────────────── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 40px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    header h1 { font-size: 20px; font-weight: 600; }
+    header p { color: var(--muted); font-size: 13px; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    }
+    .badge-go   { background: var(--tag-go);   color: var(--accent-go);   border: 1px solid var(--accent-go); }
+    .badge-java { background: var(--tag-java); color: var(--accent-java); border: 1px solid var(--accent-java); }
+
+    nav {
+      position: sticky;
+      top: 73px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      z-index: 99;
+    }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      padding: 10px 12px;
+      font-size: 13px;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: color .15s, border-color .15s;
+    }
+    nav a:hover { color: var(--text); border-color: var(--border); }
+
+    main { max-width: 1400px; margin: 0 auto; padding: 40px 40px 80px; }
+
+    /* ── Section ────────────────────────────────────────────── */
+    .section { margin-bottom: 56px; }
+    .section-title {
+      font-size: 18px; font-weight: 600;
+      margin-bottom: 4px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-subtitle { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
+
+    /* ── Conventions box ────────────────────────────────────── */
+    .conventions {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+    .conv-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .conv-card h4 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 8px; }
+    .conv-row { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .conv-row:last-child { border-bottom: none; }
+    .conv-go   { color: var(--accent-go); }
+    .conv-java { color: var(--accent-java); }
+
+    /* ── Table ──────────────────────────────────────────────── */
+    .table-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      padding: 10px 16px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--muted);
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,.02);
+    }
+    thead th:first-child { width: 16%; }
+    thead th:nth-child(2), thead th:nth-child(3) { width: 42%; }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--row-hover); }
+    td { padding: 10px 16px; vertical-align: top; }
+    td:first-child { color: var(--muted); font-size: 13px; }
+    code {
+      font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+      font-size: 12.5px;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .go-sig   { color: #79c0ff; }
+    .java-sig { color: #ffa657; }
+    .na       { color: #484f58; font-style: italic; font-size: 12px; }
+
+    /* ── Divergence banner ──────────────────────────────────── */
+    .divergence {
+      margin-top: 10px;
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #e3b341;
+    }
+    .divergence strong { display: block; margin-bottom: 4px; }
+    .divergence ul { padding-left: 16px; }
+    .divergence li { margin-bottom: 4px; }
+
+    /* ── Summary divergence table ───────────────────────────── */
+    .summary-table-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--warn-border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .summary-table-wrapper thead th { background: rgba(248,152,32,.08); color: var(--warn-border); }
+    .summary-table-wrapper td:nth-child(3) { color: #e3b341; }
+    .summary-table-wrapper td:nth-child(4) { color: #3fb950; font-size: 12px; }
+
+    /* ── Scrollbar ──────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>OrbitOS SDK — Method Reference</h1>
+    <p>Side-by-side comparison of Go &amp; Java public API signatures</p>
+  </div>
+  <span class="badge badge-go">Go</span>
+  <span class="badge badge-java">Java</span>
+</header>
+
+<nav>
+  <a href="#conventions">Conventions</a>
+  <a href="#account">Account</a>
+  <a href="#power">Power</a>
+  <a href="#wifi">WiFi</a>
+  <a href="#ethernet">Ethernet</a>
+  <a href="#firewall">Firewall</a>
+  <a href="#gpio">GPIO</a>
+  <a href="#uart">UART</a>
+  <a href="#i2c">I²C</a>
+  <a href="#spi">SPI</a>
+  <a href="#bluetooth">Bluetooth</a>
+  <a href="#system">System</a>
+  <a href="#packages">Packages</a>
+  <a href="#development">Development</a>
+  <a href="#divergences">⚠ Divergências</a>
+</nav>
+
+<main>
+
+<!-- ═══════════════════════════════════════════════════════════ CONVENTIONS -->
+<div class="section" id="conventions">
+  <div class="section-title">Global Conventions</div>
+  <div class="section-subtitle">Mapping of cross-language patterns</div>
+  <div class="conventions">
+    <div class="conv-card">
+      <h4>Error Handling</h4>
+      <div class="conv-row"><span class="conv-go">error (return)</span><span class="conv-java">throws XxxException</span></div>
+      <div class="conv-row"><span class="conv-go">(T, error)</span><span class="conv-java">T throws XxxException</span></div>
+      <div class="conv-row"><span class="conv-go">error (no return)</span><span class="conv-java">void throws XxxException</span></div>
+    </div>
+    <div class="conv-card">
+      <h4>Streaming / Callbacks</h4>
+      <div class="conv-row"><span class="conv-go">func(T) callback</span><span class="conv-java">Consumer&lt;T&gt;</span></div>
+      <div class="conv-row"><span class="conv-go">&lt;-chan T</span><span class="conv-java">StreamHandle</span></div>
+      <div class="conv-row"><span class="conv-go">context.Context param</span><span class="conv-java">StreamHandle.cancel()</span></div>
+    </div>
+    <div class="conv-card">
+      <h4>Types</h4>
+      <div class="conv-row"><span class="conv-go">uint32 / int</span><span class="conv-java">int</span></div>
+      <div class="conv-row"><span class="conv-go">bool</span><span class="conv-java">boolean</span></div>
+      <div class="conv-row"><span class="conv-go">[]byte</span><span class="conv-java">byte[]</span></div>
+      <div class="conv-row"><span class="conv-go">[]T</span><span class="conv-java">List&lt;T&gt;</span></div>
+      <div class="conv-row"><span class="conv-go">string</span><span class="conv-java">String</span></div>
+    </div>
+    <div class="conv-card">
+      <h4>Naming</h4>
+      <div class="conv-row"><span class="conv-go">PascalCase methods</span><span class="conv-java">camelCase methods</span></div>
+      <div class="conv-row"><span class="conv-go">struct DTO</span><span class="conv-java">record DTO</span></div>
+      <div class="conv-row"><span class="conv-go">client.XxxManager</span><span class="conv-java">client.xxxManager()</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ ACCOUNT -->
+<div class="section" id="account">
+  <div class="section-title">AccountManager</div>
+  <div class="section-subtitle">Device account registration — <code>AccountService</code></div>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>Method</th><th>Go</th><th>Java</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Add account</td>
+          <td><code class="go-sig">AddAccount(email, password string) error</code></td>
+          <td><code class="java-sig">void addAccount(String email, String password) throws AccountException</code></td>
+        </tr>
+        <tr>
+          <td>Get status</td>
+          <td><code class="go-sig">GetStatus() (AccountStatus, error)</code></td>
+          <td><code class="java-sig">AccountStatus getStatus() throws AccountException</code></td>
+        </tr>
+        <tr>
+          <td>Remove account</td>
+          <td><code class="go-sig">RemoveAccount(password string) error</code></td>
+          <td><code class="java-sig">void removeAccount(String password) throws AccountException</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ POWER -->
+<div class="section" id="power">
+  <div class="section-title">PowerManager</div>
+  <div class="section-subtitle">Device power control — <code>PowerService</code></div>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>Method</th><th>Go</th><th>Java</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Reboot</td>
+          <td><code class="go-sig">Reboot(force bool, reason string) (PowerResult, error)</code></td>
+          <td><code class="java-sig">void reboot(boolean force, String reason) throws PowerException</code></td>
+        </tr>
+        <tr>
+          <td>Shutdown</td>
+          <td><code class="go-sig">Shutdown(force bool, reason string) (PowerResult, error)</code></td>
+          <td><code class="java-sig">void shutdown(boolean force, String reason) throws PowerException</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="divergence">
+    <strong>⚠ Divergência</strong>
+    Go devolve <code>PowerResult{Success, Message}</code>; Java é <code>void</code> (lança exceção em falha).
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ WIFI -->
+<div class="section" id="wifi">
+  <div class="section-title">WiFiManager</div>
+  <div class="section-subtitle">WiFi interface management — <code>WiFiService</code></div>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>Method</th><th>Go</th><th>Java</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>List interfaces</td>
+          <td><code class="go-sig">ListInterfaces() ([]WiFiInterfaceInfo, error)</code></td>
+          <td><code class="java-sig">List&lt;WiFiInterfaceInfo&gt; listInterfaces() throws WiFiException</code></td>
+        </tr>
+        <tr>
+          <td>Link properties</td>
+          <td><code class="go-sig">GetLinkProperties(ifname string) (WiFiInterfaceInfo, error)</code></td>
+          <td><code class="java-sig">WiFiInterfaceInfo getLinkProperties(String ifname) throws WiFiException</code></td>
+        </tr>
+        <tr>
+          <td>Is connected?</td>
+          <td><code class="go-sig">IsConnected(ifname string) (bool, error)</code></td>
+          <td><code class="java-sig">boolean isConnected(String ifname) throws WiFiException</code></td>
+        </tr>
+        <tr>
+          <td>Connect</td>
+          <td><code class="go-sig">Connect(cfg WiFiClientConfig) error</code></td>
+          <td><code class="java-sig">void connect(WiFiClientConfig cfg) throws WiFiException</code></td>
+        </tr>
+        <tr>
+          <td>Reconnect</td>
+          <td><code class="go-sig">Reconnect(ifname string) error</code></td>
+          <td><code class="java-sig">void reconnect(String ifname) throws WiFiException</code></td>
+        </tr>
+        <tr>
+          <td>Disconnect</td>
+          <td><code class="go-sig">Disconnect(ifname string) error</code></td>
+          <td><code class="java-sig">void disconnect(String ifname) throws WiFiException</code></td>
+        </tr>
+        <tr>
+          <td>Start hotspot</td>
+          <td><code class="go-sig">StartHotspot(cfg WiFiAPConfig) error</code></td>
+          <td><code class="java-sig">void startHotspot(WiFiAPConfig cfg) throws WiFiException</code></td>
+        </tr>
+        <tr>
+          <td>Stop hotspot</td>
+          <td><code class="go-sig">StopHotspot(ifname string) error</code></td>
+          <td><code class="java-sig">void stopHotspot(String ifname) throws WiFiException</code></td>
+        </tr>
+        <tr>
+          <td>Scan networks</td>
+          <td><code class="go-sig">Scan(ifname string, forceRescan bool) ([]ScannedNetwork, error)</code></td>
+          <td><code class="java-sig">List&lt;ScannedNetwork&gt; scan(String ifname, boolean forceRescan) throws WiFiException</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ ETHERNET -->
+<div class="section" id="ethernet">
+  <div class="section-title">EthernetManager</div>
+  <div class="section-subtitle">Ethernet interface management — <code>EthernetService</code></div>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>Method</th><th>Go</th><th>Java</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>List interfaces</td>
+          <td><code class="go-sig">ListInterfaces() ([]EthernetLinkInfo, error)</code></td>
+          <td><code class="java-sig">List&lt;EthernetInterfaceInfo&gt; listInterfaces() throws EthernetException</code></td>
+        </tr>
+        <tr>
+          <td>Link properties</td>
+          <td><code class="go-sig">GetLinkProperties(ifname string) (EthernetLinkInfo, error)</code></td>
+          <td><code class="java-sig">EthernetInterfaceInfo getLinkProperties(String ifname) throws EthernetException</code></td>
+        </tr>
+        <tr>
+          <td>Is connected?</td>
+          <td><code class="go-sig">IsConnected(ifname string) (bool, error)</code></td>
+          <td><code class="java-sig">boolean isConnected(String ifname) throws EthernetException</code></td>
+        </tr>
+        <tr>
+          <td>Apply config</td>
+          <td><code class="go-sig">SetConfig(cfg EthernetConfig) error</code></td>
+          <td><code class="java-sig">void setStaticConfig(String ifname, String ip, String gw, ...) throws EthernetException</code></td>
+        </tr>
+        <tr>
+          <td>Enable DHCP</td>
+          <td><code class="na">— (via SetConfig)</code></td>
+          <td><code class="java-sig">void setDhcp(String ifname) throws EthernetException</code></td>
+        </tr>
+        <tr>
+          <td>Enable</td>
+          <td><code class="go-sig">Enable(ifname string) error</code></td>
+          <td><code class="java-sig">void enable(String ifname) throws EthernetException</code></td>
+        </tr>
+        <tr>
+          <td>Disable</td>
+          <td><code class="go-sig">Disable(ifname string) error</code></td>
+          <td><code class="java-sig">void disable(String ifname) throws EthernetException</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="divergence">
+    <strong>⚠ Divergência</strong>
+    Go usa <code>SetConfig(EthernetConfig)</code> unificado; Java separa em <code>setStaticConfig(...)</code> e <code>setDhcp(ifname)</code>.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ FIREWALL -->
+<div class="section" id="firewall">
+  <div class="section-title">FirewallManager</div>
+  <div class="section-subtitle">Firewall zones &amp; rules — <code>FirewallService</code></div>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>Method</th><th>Go</th><th>Java</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>List zones</td>
+          <td><code class="go-sig">ListZones() ([]Zone, error)</code></td>
+          <td><code class="java-sig">List&lt;Zone&gt; listZones() throws FirewallException</code></td>
+        </tr>
+        <tr>
+          <td>Add zone</td>
+          <td><code class="go-sig">AddZone(z Zone) error</code></td>
+          <td><code class="java-sig">void addZone(Zone zone) throws FirewallException</code></td>
+        </tr>
+        <tr>
+          <td>Remove zone</td>
+          <td><code class="go-sig">RemoveZone(name string) error</code></td>
+          <td><code class="java-sig">void removeZone(String name) throws FirewallException</code></td>
+        </tr>
+        <tr>
+          <td>List rules</td>
+          <td><code class="go-sig">ListRules() ([]FirewallRule, error)</code></td>
+          <td><code class="java-sig">List&lt;FirewallRule&gt; listRules() throws FirewallException</code></td>
+        </tr>
+        <tr>
+          <td>Add rule</td>
+          <td><code class="go-sig">AddRule(r FirewallRule) error</code></td>
+          <td><code class="java-sig">void addRule(FirewallRule rule) throws FirewallException</code></td>
+        </tr>
+        <tr>
+          <td>Remove rule</td>
+          <td><code class="go-sig">RemoveRule(id string) error</code></td>
+          <td><code class="java-sig">void removeRule(String id) throws FirewallException</code></td>
+        </tr>
+        <tr>
+          <td>Flush rules</td>
+          <td><code class="go-sig">FlushRules() error</code></td>
+          <td><code class="java-sig">void flushRules() throws FirewallException</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ GPIO -->
+<div class="section" id="gpio">
+  <div class="section-title">GpioManager</div>
+  <div class="section-subtitle">GPIO &amp; PWM control — <code>GpioService</code></div>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>Method</th><th>Go</th><th>Java</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>List pins</td>
+          <td><code class="go-sig">ListPins() ([]GpioPin, error)</code></td>
+          <td><code class="java-sig">List&lt;GpioPin&gt; listPins() throws GpioException</code></td>
+        </tr>
+        <tr>
+          <td>Get level</td>
+          <td><code class="go-sig">GetLevel(pin GpioPin) (bool, error)</code></td>
+          <td><code class="java-sig">Level getLevel(GpioPin pin) throws GpioException</code></td>
+        </tr>
+        <tr>
+          <td>Set level</td>
+          <td><code class="go-sig">SetLevel(pin GpioPin, high bool) error</code></td>
+          <td><code class="java-sig">void setLevel(GpioPin pin, Level level) throws GpioException</code></td>
+        </tr>
+        <tr>
+          <td>Get direction</td>
+          <td><code class="go-sig">GetDirection(pin GpioPin) (bool, error)</code></td>
+          <td><code class="java-sig">Direction getDirection(GpioPin pin) throws GpioException</code></td>
+        </tr>
+        <tr>
+          <td>Set direction</td>
+          <td><code class="go-sig">SetDirection(pin GpioPin, out bool) error</code></td>
+          <td><code class="java-sig">void setDirection(GpioPin pin, Direction dir) throws GpioException</code></td>
+        </tr>
+        <tr>
+          <td>List PWM pins</td>
+          <td><code class="go-sig">ListPwmPins() ([]GpioPin, error)</code></td>
+          <td><code class="java-sig">List&lt;GpioPin&gt; listPwmPins() throws GpioException</code></td>
+        </tr>
+        <tr>
+          <td>Set PWM</td>
+          <td><code class="go-sig">SetPwm(pin GpioPin, dutyCycle, freqHz float64) error</code></td>
+          <td><code class="java-sig">PwmState setPwm(GpioPin pin, double dutyCycle, double freqHz) throws GpioException</code></td>
+        </tr>
+        <tr>
+          <td>Get PWM</td>
+          <td><code class="go-sig">GetPwm(pin GpioPin) (PwmState, error)</code></td>
+          <td><code class="java-sig">PwmState getPwm(GpioPin pin) throws GpioException</code></td>
+        </tr>
+        <tr>
+          <td>Disable PWM</td>
+          <td><code class="go-sig">DisablePwm(pin GpioPin) error</code></td>
+          <td><code class="java-sig">void disablePwm(GpioPin pin) throws GpioException</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="divergence">
+    <strong>⚠ Divergência</strong>
+    <ul>
+      <li>Go <code>GetLevel</code> → <code>bool</code> &nbsp;|&nbsp; Java → <code>Level</code> enum (<code>HIGH</code>/<code>LOW</code>)</li>
+      <li>Go <code>GetDirection</code> → <code>bool</code> &nbsp;|&nbsp; Java → <code>Direction</code> enum (<code>IN</code>/<code>OUT</code>)</li>
+      <li>Go <code>SetPwm</code> → <code>error</code> &nbsp;|&nbsp; Java → <code>PwmState</code></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ UART -->
+<div class="section" id="uart">
+  <div class="section-title">UartManager</div>
+  <div class="section-subtitle">UART serial communication — <code>GpioService</code></div>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>Method</th><th>Go</th><th>Java</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>List ports</td>
+          <td><code class="go-sig">ListPorts() ([]string, error)</code></td>
+          <td><code class="java-sig">List&lt;String&gt; listPorts() throws UartException</code></td>
+        </tr>
+        <tr>
+          <td>Open</td>
+          <td><code class="go-sig">Open(cfg UartConfig) error</code></td>
+          <td><code class="java-sig">void open(UartConfig cfg) throws UartException</code></td>
+        </tr>
+        <tr>
+          <td>Close</td>
+          <td><code class="go-sig">Close(port string) error</code></td>
+          <td><code class="java-sig">void close(String port) throws UartException</code></td>
+        </tr>
+        <tr>
+          <td>Get config</td>
+          <td><code class="go-sig">GetConfig(port string) (UartConfig, error)</code></td>
+          <td><code class="java-sig">UartConfig getConfig(String port) throws UartException</code></td>
+        </tr>
+        <tr>
+          <td>Write</td>
+          <td><code class="go-sig">Write(port string, data []byte) (int, error)</code></td>
+          <td><code class="java-sig">int write(String port, byte[] data) throws UartException</code></td>
+        </tr>
+        <tr>
+          <td>Listen (sync)</td>
+          <td><code class="go-sig">Listen(ctx, port string, chunkSize int, onChunk func([]byte)) error</code></td>
+          <td><code class="na">— (use listenAsync)</code></td>
+        </tr>
+        <tr>
+          <td>Listen (async)</td>
+          <td><code class="go-sig">ListenAsync(ctx, port string, chunkSize int) (&lt;-chan []byte, error)</code></td>
+          <td><code class="java-sig">StreamHandle listenAsync(String port, int chunkSize,
+  Consumer&lt;byte[]&gt; onData,
+  Consumer&lt;Throwable&gt; onError)</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ I2C -->
+<div class="section" id="i2c">
+  <div class="section-title">I²CManager</div>
+  <div class="section-subtitle">I²C bus communication — <code>GpioService</code></div>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>Method</th><th>Go</th><th>Java</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>List buses</td>
+          <td><code class="go-sig">ListBuses() ([]uint32, error)</code></td>
+          <td><code class="java-sig">List&lt;Integer&gt; listBuses() throws I2CException</code></td>
+        </tr>
+        <tr>
+          <td>Scan bus</td>
+          <td><code class="go-sig">ScanBus(bus uint32) ([]uint32, error)</code></td>
+          <td><code class="java-sig">List&lt;Integer&gt; scan(int bus) throws I2CException</code></td>
+        </tr>
+        <tr>
+          <td>Get config</td>
+          <td><code class="go-sig">GetConfig(bus uint32) (I2CConfig, error)</code></td>
+          <td><code class="java-sig">I2CConfig getConfig(int bus) throws I2CException</code></td>
+        </tr>
+        <tr>
+          <td>Set config</td>
+          <td><code class="go-sig">SetConfig(cfg I2CConfig) error</code></td>
+          <td><code class="java-sig">void setConfig(I2CConfig cfg) throws I2CException</code></td>
+        </tr>
+        <tr>
+          <td>Write</td>
+          <td><code class="go-sig">Write(bus, addr uint32, data []byte) error</code></td>
+          <td><code class="java-sig">void write(int bus, int address, byte[] data) throws I2CException</code></td>
+        </tr>
+        <tr>
+          <td>Read</td>
+          <td><code class="go-sig">Read(bus, addr, n uint32) ([]byte, error)</code></td>
+          <td><code class="java-sig">byte[] read(int bus, int address, int readLength) throws I2CException</code></td>
+        </tr>
+        <tr>
+          <td>Write+Read</td>
+          <td><code class="go-sig">WriteRead(bus, addr uint32, writeData []byte, readLen uint32) ([]byte, error)</code></td>
+          <td><code class="java-sig">byte[] writeRead(int bus, int address, byte[] data, int readLength) throws I2CException</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="divergence">
+    <strong>⚠ Divergência menor</strong>
+    Go usa <code>ScanBus(bus)</code>; Java usa <code>scan(bus)</code>. Sugestão: renomear Java para <code>scanBus(bus)</code>.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ SPI -->
+<div class="section" id="spi">
+  <div class="section-title">SpiManager</div>
+  <div class="section-subtitle">SPI bus communication — <code>GpioService</code></div>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>Method</th><th>Go</th><th>Java</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>List devices</td>
+          <td><code class="go-sig">ListDevices() ([]string, error)</code></td>
+          <td><code class="java-sig">List&lt;String&gt; listDevices() throws SpiException</code></td>
+        </tr>
+        <tr>
+          <td>Get config</td>
+          <td><code class="go-sig">GetConfig(bus, cs uint32) (SpiConfig, error)</code></td>
+          <td><code class="java-sig">SpiConfig getConfig(int bus, int chipSelect) throws SpiException</code></td>
+        </tr>
+        <tr>
+          <td>Set config</td>
+          <td><code class="go-sig">SetConfig(cfg SpiConfig) error</code></td>
+          <td><code class="java-sig">void setConfig(SpiConfig cfg) throws SpiException</code></td>
+        </tr>
+        <tr>
+          <td>Transfer</td>
+          <td><code class="go-sig">Transfer(bus, cs uint32, dataOut []byte, readLen uint32) ([]byte, error)</code></td>
+          <td><code class="java-sig">byte[] transfer(int bus, int chipSelect, byte[] dataOut, int readLength) throws SpiException</code></td>
+        </tr>
+        <tr>
+          <td>Write (helper)</td>
+          <td><code class="go-sig">Write(bus, cs uint32, data []byte) error</code></td>
+          <td><code class="na">— (use transfer com readLength=0)</code></td>
+        </tr>
+        <tr>
+          <td>Read (helper)</td>
+          <td><code class="go-sig">Read(bus, cs, n uint32) ([]byte, error)</code></td>
+          <td><code class="na">— (use transfer com dataOut=null)</code></td>
+        </tr>
+        <tr>
+          <td>WriteRead (helper)</td>
+          <td><code class="go-sig">WriteRead(bus, cs uint32, dataOut []byte) ([]byte, error)</code></td>
+          <td><code class="na">— (use transfer)</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="divergence">
+    <strong>⚠ Divergência</strong>
+    Go tem <code>Write</code>, <code>Read</code>, <code>WriteRead</code> como helpers de conveniência sobre <code>Transfer</code>. Java só expõe <code>transfer</code>.
+    Sugestão: adicionar os mesmos helpers em Java.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ BLUETOOTH -->
+<div class="section" id="bluetooth">
+  <div class="section-title">BluetoothManager</div>
+  <div class="section-subtitle">Bluetooth Classic, BLE &amp; GATT — <code>BluetoothService</code></div>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>Method</th><th>Go</th><th>Java</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Adapter info</td>
+          <td><code class="go-sig">GetAdapterInfo() (BluetoothAdapterInfo, error)</code></td>
+          <td><code class="java-sig">AdapterInfo getAdapterInfo() throws BluetoothException</code></td>
+        </tr>
+        <tr>
+          <td>Enable</td>
+          <td><code class="go-sig">Enable() error</code></td>
+          <td><code class="java-sig">void enable() throws BluetoothException</code></td>
+        </tr>
+        <tr>
+          <td>Disable</td>
+          <td><code class="go-sig">Disable() error</code></td>
+          <td><code class="java-sig">void disable() throws BluetoothException</code></td>
+        </tr>
+        <tr>
+          <td>Get local name</td>
+          <td><code class="go-sig">GetLocalName() (string, error)</code></td>
+          <td><code class="java-sig">String getLocalName() throws BluetoothException</code></td>
+        </tr>
+        <tr>
+          <td>Set local name</td>
+          <td><code class="go-sig">SetLocalName(name string) error</code></td>
+          <td><code class="java-sig">void setLocalName(String name) throws BluetoothException</code></td>
+        </tr>
+        <tr>
+          <td>Set discoverable</td>
+          <td><code class="go-sig">SetDiscoverable(enable bool, durationSec int32) error</code></td>
+          <td><code class="java-sig">void setDiscoverable(boolean disc, int timeoutSec) throws BluetoothException</code></td>
+        </tr>
+        <tr>
+          <td>Classic scan</td>
+          <td><code class="go-sig">ScanClassic(ctx, onResult func(BluetoothDevice)) error</code></td>
+          <td><code class="java-sig">StreamHandle startScan(Consumer&lt;BtDevice&gt; onDevice,
+  Consumer&lt;Throwable&gt; onError)</code></td>
+        </tr>
+        <tr>
+          <td>BLE scan</td>
+          <td><code class="go-sig">ScanBLE(ctx, filters []BLEScanFilter, onResult func(BLEScanResult)) error</code></td>
+          <td><code class="java-sig">StreamHandle startBleScan(List&lt;BleScanFilter&gt; filters, boolean inclAdv,
+  Consumer&lt;BLEScanResult&gt;, Consumer&lt;Throwable&gt;)</code></td>
+        </tr>
+        <tr>
+          <td>Bonded devices</td>
+          <td><code class="go-sig">GetBondedDevices() ([]BluetoothDevice, error)</code></td>
+          <td><code class="java-sig">List&lt;BtDevice&gt; getBondedDevices() throws BluetoothException</code></td>
+        </tr>
+        <tr>
+          <td>Bond device</td>
+          <td><code class="go-sig">BondDevice(ctx, address string, onEvent func(BondEvent)) error</code></td>
+          <td><code class="java-sig">StreamHandle bondDevice(String address,
+  Consumer&lt;BondEvent&gt; onEvent,
+  Consumer&lt;Throwable&gt; onError)</code></td>
+        </tr>
+        <tr>
+          <td>Remove bond</td>
+          <td><code class="go-sig">RemoveBond(address string) error</code></td>
+          <td><code class="java-sig">void removeBond(String address) throws BluetoothException</code></td>
+        </tr>
+        <tr>
+          <td>Connect device</td>
+          <td><code class="go-sig">Connect(address string) error</code></td>
+          <td><code class="java-sig">void connectDevice(String address) throws BluetoothException</code></td>
+        </tr>
+        <tr>
+          <td>Disconnect device</td>
+          <td><code class="go-sig">Disconnect(address string) error</code></td>
+          <td><code class="java-sig">void disconnectDevice(String address) throws BluetoothException</code></td>
+        </tr>
+        <tr>
+          <td>Connection state</td>
+          <td><code class="go-sig">GetConnectionState(address string) (string, error)</code></td>
+          <td><code class="na">— (não mapeado)</code></td>
+        </tr>
+        <tr>
+          <td>GATT connect</td>
+          <td><code class="na">— (não existe)</code></td>
+          <td><code class="java-sig">void gattConnect(String address) throws BluetoothException</code></td>
+        </tr>
+        <tr>
+          <td>GATT disconnect</td>
+          <td><code class="na">— (não existe)</code></td>
+          <td><code class="java-sig">void gattDisconnect(String address) throws BluetoothException</code></td>
+        </tr>
+        <tr>
+          <td>GATT discover</td>
+          <td><code class="na">— (não existe)</code></td>
+          <td><code class="java-sig">List&lt;GattService&gt; gattDiscoverServices(String address) throws BluetoothException</code></td>
+        </tr>
+        <tr>
+          <td>GATT read</td>
+          <td><code class="na">— (não existe)</code></td>
+          <td><code class="java-sig">byte[] gattRead(String addr, String svcUuid, String charUuid) throws BluetoothException</code></td>
+        </tr>
+        <tr>
+          <td>GATT write</td>
+          <td><code class="na">— (não existe)</code></td>
+          <td><code class="java-sig">void gattWrite(String addr, String svcUuid, String charUuid, byte[]) throws BluetoothException</code></td>
+        </tr>
+        <tr>
+          <td>GATT subscribe</td>
+          <td><code class="na">— (não existe)</code></td>
+          <td><code class="java-sig">StreamHandle gattSubscribe(String addr, String svcUuid,
+  String charUuid,
+  Consumer&lt;byte[]&gt; onNotify,
+  Consumer&lt;Throwable&gt; onError)</code></td>
+        </tr>
+        <tr>
+          <td>GATT RSSI</td>
+          <td><code class="na">— (não existe)</code></td>
+          <td><code class="java-sig">int gattReadRssi(String address) throws BluetoothException</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="divergence">
+    <strong>⚠ Divergências</strong>
+    <ul>
+      <li>Java tem GATT completo (connect / discover / read / write / subscribe / RSSI) — Go não tem.</li>
+      <li>Go tem <code>GetConnectionState</code> — Java não tem.</li>
+      <li>Nomes ligeiramente diferentes: Go <code>Connect</code>/<code>Disconnect</code> vs Java <code>connectDevice</code>/<code>disconnectDevice</code>.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ SYSTEM -->
+<div class="section" id="system">
+  <div class="section-title">SystemManager</div>
+  <div class="section-subtitle">Hardware identity, OS info, live metrics &amp; system policies — <code>SystemService</code></div>
+
+  <div class="table-wrapper" style="margin-bottom:10px">
+    <table>
+      <thead><tr><th>Method</th><th>Go</th><th>Java</th></tr></thead>
+      <tbody>
+
+        <!-- ── Aggregate helpers ── -->
+        <tr>
+          <td style="color:#58a6ff;font-size:12px;font-weight:600;letter-spacing:.05em" colspan="3">Hardware Identity</td>
+        </tr>
+        <tr>
+          <td>Get all (bulk)</td>
+          <td><code class="go-sig">GetDeviceInfo() (DeviceInfo, error)</code></td>
+          <td><code class="na">— (chamar métodos individuais)</code></td>
+        </tr>
+        <tr>
+          <td>Device name</td>
+          <td><code class="go-sig">GetDeviceName() (string, error)</code></td>
+          <td><code class="java-sig">String GetDeviceName() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>SoC model</td>
+          <td><code class="go-sig">GetSocModel() (string, error)</code></td>
+          <td><code class="java-sig">String GetSocModel() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>SoC vendor</td>
+          <td><code class="go-sig">GetSocVendor() (string, error)</code></td>
+          <td><code class="java-sig">String GetSocVendor() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Board model</td>
+          <td><code class="go-sig">GetBoardModel() (string, error)</code></td>
+          <td><code class="java-sig">String GetBoardModel() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Board vendor</td>
+          <td><code class="go-sig">GetBoardVendor() (string, error)</code></td>
+          <td><code class="java-sig">String GetBoardVendor() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>HW version</td>
+          <td><code class="go-sig">GetHardwareVersion() (string, error)</code></td>
+          <td><code class="java-sig">String GetHardwareVersion() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>HW model</td>
+          <td><code class="go-sig">GetHardwareModel() (string, error)</code></td>
+          <td><code class="java-sig">String GetHardwareModel() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>System UUID</td>
+          <td><code class="go-sig">GetSystemUuid() (string, error)</code></td>
+          <td><code class="java-sig">String GetSystemUuid() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Board serial</td>
+          <td><code class="go-sig">GetBoardSerial() (string, error)</code></td>
+          <td><code class="java-sig">String GetBoardSerial() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>CPU serial</td>
+          <td><code class="go-sig">GetCpuSerial() (string, error)</code></td>
+          <td><code class="java-sig">String GetCpuSerial() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Machine ID</td>
+          <td><code class="go-sig">GetMachineId() (string, error)</code></td>
+          <td><code class="java-sig">String GetMachineId() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Architecture</td>
+          <td><code class="go-sig">GetArchitecture() (string, error)</code></td>
+          <td><code class="java-sig">String GetArchitecture() throws SystemServiceException</code></td>
+        </tr>
+
+        <!-- ── CPU ── -->
+        <tr>
+          <td style="color:#58a6ff;font-size:12px;font-weight:600;letter-spacing:.05em" colspan="3">CPU &amp; Memory</td>
+        </tr>
+        <tr>
+          <td>Get all CPU (bulk)</td>
+          <td><code class="go-sig">GetCpuInfo() (CpuInfo, error)</code></td>
+          <td><code class="na">— (chamar métodos individuais)</code></td>
+        </tr>
+        <tr>
+          <td>CPU model</td>
+          <td><code class="go-sig">GetCpuModel() (string, error)</code></td>
+          <td><code class="java-sig">String GetCpuModel() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>CPU cores</td>
+          <td><code class="go-sig">GetCpuCores() (int64, error)</code></td>
+          <td><code class="java-sig">long GetCpuCores() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>CPU threads</td>
+          <td><code class="go-sig">GetCpuThreads() (int64, error)</code></td>
+          <td><code class="java-sig">long GetCpuThreads() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>CPU min MHz</td>
+          <td><code class="go-sig">GetCpuMinMhz() (float64, error)</code></td>
+          <td><code class="java-sig">double GetCpuMinMhz() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>CPU max MHz</td>
+          <td><code class="go-sig">GetCpuMaxMhz() (float64, error)</code></td>
+          <td><code class="java-sig">double GetCpuMaxMhz() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Total RAM</td>
+          <td><code class="go-sig">GetTotalRAM() (uint64, error)</code></td>
+          <td><code class="java-sig">long GetTotalRAM() throws SystemServiceException</code></td>
+        </tr>
+
+        <!-- ── OS / Software ── -->
+        <tr>
+          <td style="color:#58a6ff;font-size:12px;font-weight:600;letter-spacing:.05em" colspan="3">OS &amp; Software</td>
+        </tr>
+        <tr>
+          <td>Get all OS (bulk)</td>
+          <td><code class="go-sig">GetOsInfo() (OsInfo, error)</code></td>
+          <td><code class="na">— (chamar métodos individuais)</code></td>
+        </tr>
+        <tr>
+          <td>OS name</td>
+          <td><code class="go-sig">GetOsName() (string, error)</code></td>
+          <td><code class="java-sig">String GetOsName() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>OS version</td>
+          <td><code class="go-sig">GetOsVersion() (string, error)</code></td>
+          <td><code class="java-sig">String GetOsVersion() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Kernel version</td>
+          <td><code class="go-sig">GetKernelVersion() (string, error)</code></td>
+          <td><code class="java-sig">String GetKernelVersion() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Distro</td>
+          <td><code class="go-sig">GetDistro() (string, error)</code></td>
+          <td><code class="java-sig">String GetDistro() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Distro version</td>
+          <td><code class="go-sig">GetDistroVersion() (string, error)</code></td>
+          <td><code class="java-sig">String GetDistroVersion() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Runtime version</td>
+          <td><code class="go-sig">GetRuntimeVersion() (string, error)</code></td>
+          <td><code class="java-sig">String GetRuntimeVersion() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Build version</td>
+          <td><code class="go-sig">GetBuildVersion() (string, error)</code></td>
+          <td><code class="java-sig">String GetBuildVersion() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Build date</td>
+          <td><code class="go-sig">GetBuildDate() (string, error)</code></td>
+          <td><code class="java-sig">String GetBuildDate() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>API version</td>
+          <td><code class="na">— (não existe)</code></td>
+          <td><code class="java-sig">Types.APIVersionResponse GetApiVersion() throws SystemServiceException</code></td>
+        </tr>
+
+        <!-- ── Metrics ── -->
+        <tr>
+          <td style="color:#58a6ff;font-size:12px;font-weight:600;letter-spacing:.05em" colspan="3">Live Metrics</td>
+        </tr>
+        <tr>
+          <td>Get metrics</td>
+          <td><code class="go-sig">GetMetrics() (Metrics, error)</code></td>
+          <td><code class="java-sig">MetricsInfoResponse GetMetrics() throws SystemServiceException</code></td>
+        </tr>
+
+        <!-- ── Update ── -->
+        <tr>
+          <td style="color:#58a6ff;font-size:12px;font-weight:600;letter-spacing:.05em" colspan="3">OTA Update (client-streaming)</td>
+        </tr>
+        <tr>
+          <td>Send update</td>
+          <td><code class="go-sig">SendUpdate(ctx, data []byte, chunkSize int) (bool, error)</code></td>
+          <td><code class="java-sig">boolean Update(File updateFile) throws SystemServiceException, IOException</code></td>
+        </tr>
+        <tr>
+          <td>Send update (path)</td>
+          <td><code class="na">— (passar []byte lido do ficheiro)</code></td>
+          <td><code class="java-sig">boolean Update(String updatePath) throws SystemServiceException, IOException</code></td>
+        </tr>
+
+        <!-- ── Policies ── -->
+        <tr>
+          <td style="color:#58a6ff;font-size:12px;font-weight:600;letter-spacing:.05em" colspan="3">System Policies</td>
+        </tr>
+        <tr>
+          <td>Allow untrusted apps</td>
+          <td><code class="go-sig">AllowUntrustedApps() error</code></td>
+          <td><code class="java-sig">boolean AllowUntrustedApps() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Disallow untrusted apps</td>
+          <td><code class="go-sig">DisallowUntrustedApps() error</code></td>
+          <td><code class="java-sig">boolean DisallowUntrustedApps() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Untrusted apps?</td>
+          <td><code class="go-sig">IsUntrustedAppsAllowed() (bool, error)</code></td>
+          <td><code class="java-sig">boolean IsUntrustedAppsAllowed() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Enable reboot on fail</td>
+          <td><code class="go-sig">EnableRebootOnFailure() error</code></td>
+          <td><code class="java-sig">boolean EnableRebootOnFailure() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Disable reboot on fail</td>
+          <td><code class="go-sig">DisableRebootOnFailure() error</code></td>
+          <td><code class="java-sig">boolean DisableRebootOnFailure() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Reboot on fail?</td>
+          <td><code class="go-sig">IsRebootOnFailureEnabled() (bool, error)</code></td>
+          <td><code class="java-sig">boolean IsRebootOnFailureEnabled() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Enable dev mode</td>
+          <td><code class="go-sig">EnableDevMode() error</code></td>
+          <td><code class="java-sig">boolean EnableDevMode() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Disable dev mode</td>
+          <td><code class="go-sig">DisableDevMode() error</code></td>
+          <td><code class="java-sig">boolean DisableDevMode() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Dev mode?</td>
+          <td><code class="go-sig">IsDevModeEnabled() (bool, error)</code></td>
+          <td><code class="java-sig">boolean IsDevModeEnabled() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Enable SSH server</td>
+          <td><code class="go-sig">EnableSSHServer() error</code></td>
+          <td><code class="java-sig">boolean EnableSSHServer() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>Disable SSH server</td>
+          <td><code class="go-sig">DisableSSHServer() error</code></td>
+          <td><code class="java-sig">boolean DisableSSHServer() throws SystemServiceException</code></td>
+        </tr>
+        <tr>
+          <td>SSH enabled?</td>
+          <td><code class="go-sig">IsSSHServerEnabled() (bool, error)</code></td>
+          <td><code class="java-sig">boolean IsSSHServerEnabled() throws SystemServiceException</code></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+  <div class="divergence">
+    <strong>⚠ Divergências</strong>
+    <ul>
+      <li><strong>Naming:</strong> Java usa <code>PascalCase</code> nos métodos (<code>GetDeviceName</code>) em vez de <code>camelCase</code> como todos os outros managers Java — inconsistência a corrigir.</li>
+      <li><strong>Bulk DTOs:</strong> Go tem <code>GetDeviceInfo()</code>, <code>GetCpuInfo()</code>, <code>GetOsInfo()</code> que agregam os campos individuais num único DTO; Java não tem equivalente.</li>
+      <li><strong>GetMetrics:</strong> Go devolve <code>Metrics</code> DTO limpo; Java devolve o proto raw <code>MetricsInfoResponse</code>.</li>
+      <li><strong>Policies (Enable/Disable):</strong> Go devolve <code>error</code>; Java devolve <code>boolean</code>.</li>
+      <li><strong>SendUpdate:</strong> Go recebe <code>[]byte</code> + <code>chunkSize</code>; Java recebe <code>File</code> ou <code>String</code> path e faz chunking internamente.</li>
+      <li><strong>GetApiVersion:</strong> Existe em Java, não existe em Go.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ PACKAGES -->
+<div class="section" id="packages">
+  <div class="section-title">PackageManager</div>
+  <div class="section-subtitle">Application package management — <code>PackageManagerService</code></div>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>Method</th><th>Go</th><th>Java</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>List installed</td>
+          <td><code class="na">— (não existe em Go)</code></td>
+          <td><code class="java-sig">List&lt;InstalledPackage&gt; GetInstalledPackages() throws PackageManagerException</code></td>
+        </tr>
+        <tr>
+          <td>Install/Update (File)</td>
+          <td><code class="na">— (não existe em Go)</code></td>
+          <td><code class="java-sig">boolean InstallUpdatePackage(File packageFile) throws PackageManagerException, IOException</code></td>
+        </tr>
+        <tr>
+          <td>Install/Update (path)</td>
+          <td><code class="na">— (não existe em Go)</code></td>
+          <td><code class="java-sig">boolean InstallUpdatePackage(String packagePath) throws PackageManagerException, IOException</code></td>
+        </tr>
+        <tr>
+          <td>Remove package</td>
+          <td><code class="na">— (não existe em Go)</code></td>
+          <td><code class="java-sig">boolean RemovePackage(String appName) throws PackageManagerException</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="divergence">
+    <strong>⚠ Divergência</strong>
+    <code>PackageManager</code> existe apenas em Java. O Go SDK não tem equivalente — a implementar futuramente.
+    Tal como <code>SystemManager</code>, Java usa <code>PascalCase</code> nos métodos — inconsistência a corrigir.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ DEVELOPMENT -->
+<div class="section" id="development">
+  <div class="section-title">DevelopmentManager</div>
+  <div class="section-subtitle">Device log streaming — <code>DevelopmentService</code></div>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>Method</th><th>Go</th><th>Java</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Subscribe logs (sync)</td>
+          <td><code class="go-sig">SubscribeLogs(ctx, filter LogFilter, onEntry func(LogEntry)) error</code></td>
+          <td><code class="na">— (use subscribeLogsAsync)</code></td>
+        </tr>
+        <tr>
+          <td>Subscribe logs (async)</td>
+          <td><code class="go-sig">SubscribeLogsAsync(ctx, filter LogFilter) &lt;-chan LogEntry</code></td>
+          <td><code class="java-sig">StreamHandle subscribeLogsAsync(String app, String tag,
+  LogLevel minLevel,
+  Consumer&lt;LogEntry&gt; onEntry,
+  Consumer&lt;Throwable&gt; onError)</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="divergence">
+    <strong>⚠ Divergência</strong>
+    Go expõe tanto versão síncrona (<code>SubscribeLogs</code>) como canal (<code>SubscribeLogsAsync</code>).
+    Java só expõe a versão com callback (<code>subscribeLogsAsync</code>).
+    Go <code>LogFilter</code> é um DTO; Java passa os campos separadamente (<code>app</code>, <code>tag</code>, <code>minLevel</code>).
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ DIVERGENCES SUMMARY -->
+<div class="section" id="divergences">
+  <div class="section-title">⚠ Resumo das Divergências</div>
+  <div class="section-subtitle">Pontos a alinhar entre Go (source of truth) e Java</div>
+  <div class="summary-table-wrapper table-wrapper">
+    <table>
+      <thead><tr><th>#</th><th>Manager</th><th>Problema</th><th>Sugestão</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>PowerManager</td>
+          <td>Go devolve <code>PowerResult</code>; Java é <code>void</code></td>
+          <td>Uniformizar para <code>void</code> em Go ou devolver DTO em Java</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>GpioManager</td>
+          <td><code>GetLevel</code> → <code>bool</code> (Go) vs <code>Level</code> enum (Java). <code>GetDirection</code> igual.</td>
+          <td>Preferir enum em ambos — mais expressivo e type-safe</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>GpioManager</td>
+          <td><code>SetPwm</code> → <code>error</code> (Go) vs <code>PwmState</code> (Java)</td>
+          <td>Uniformizar — Go pode devolver <code>PwmState</code></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>EthernetManager</td>
+          <td>Go: <code>SetConfig(DTO)</code> — Java: <code>setStaticConfig(...)</code> + <code>setDhcp()</code></td>
+          <td>Alinhar Java para <code>setConfig(EthernetConfig)</code></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>SpiManager</td>
+          <td>Go tem <code>Write</code>, <code>Read</code>, <code>WriteRead</code> helpers; Java não</td>
+          <td>Adicionar helpers de conveniência em Java</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>I2CManager</td>
+          <td>Go: <code>ScanBus(bus)</code> — Java: <code>scan(bus)</code></td>
+          <td>Renomear Java para <code>scanBus(bus)</code></td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>BluetoothManager</td>
+          <td>Java tem GATT completo; Go não tem. Go tem <code>GetConnectionState</code>; Java não.</td>
+          <td>Implementar GATT em Go; adicionar <code>getConnectionState</code> em Java</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>BluetoothManager</td>
+          <td>Go: <code>Connect</code>/<code>Disconnect</code> — Java: <code>connectDevice</code>/<code>disconnectDevice</code></td>
+          <td>Uniformizar para <code>connect</code>/<code>disconnect</code> em Java</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>DevelopmentManager</td>
+          <td>Go <code>LogFilter</code> DTO — Java passa campos separados</td>
+          <td>Criar <code>LogFilter</code> record em Java</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>UartManager</td>
+          <td>Go tem <code>Listen</code> síncrono; Java não</td>
+          <td>Aceitável — Java usa sempre callback async</td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td>SystemManager</td>
+          <td>Java usa <code>PascalCase</code> nos métodos (<code>GetDeviceName</code>) — diferente de todos os outros managers Java que usam <code>camelCase</code></td>
+          <td>Renomear todos para <code>camelCase</code> em Java (<code>getDeviceName</code>, etc.)</td>
+        </tr>
+        <tr>
+          <td>12</td>
+          <td>SystemManager</td>
+          <td>Go tem DTOs bulk <code>GetDeviceInfo()</code>, <code>GetCpuInfo()</code>, <code>GetOsInfo()</code>; Java não tem</td>
+          <td>Adicionar métodos bulk em Java que agregam os campos num record</td>
+        </tr>
+        <tr>
+          <td>13</td>
+          <td>SystemManager</td>
+          <td><code>GetMetrics</code>: Go devolve <code>Metrics</code> DTO; Java devolve proto raw <code>MetricsInfoResponse</code></td>
+          <td>Criar <code>Metrics</code> record em Java e converter</td>
+        </tr>
+        <tr>
+          <td>14</td>
+          <td>SystemManager (policies)</td>
+          <td>Go <code>AllowUntrustedApps()</code> → <code>error</code>; Java → <code>boolean</code> (igual para Enable/Disable SSH, DevMode, RebootOnFailure)</td>
+          <td>Uniformizar para <code>void</code>/<code>error</code> em ambos — o <code>boolean</code> de retorno é redundante</td>
+        </tr>
+        <tr>
+          <td>15</td>
+          <td>SystemManager (update)</td>
+          <td>Go <code>SendUpdate(ctx, []byte, chunkSize)</code>; Java <code>Update(File)</code> / <code>Update(String)</code> com chunking interno</td>
+          <td>Adicionar overload <code>sendUpdate(byte[])</code> em Java para consistência com Go</td>
+        </tr>
+        <tr>
+          <td>16</td>
+          <td>PackageManager</td>
+          <td>Existe apenas em Java. Java também usa <code>PascalCase</code> nos métodos</td>
+          <td>Implementar em Go SDK; renomear Java para <code>camelCase</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</main>
+</body>
+</html>
