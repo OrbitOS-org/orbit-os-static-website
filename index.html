@@ -253,34 +253,63 @@
 
         <div class="code-block">
           <div class="code-header">
-            <span class="code-lang">Go SDK</span>
-            <span class="code-file">GPIO · PWM · UART · I²C</span>
+            <div class="code-tabs">
+              <button class="code-tab active" onclick="switchTab(this, 'tab-go')">Go</button>
+              <button class="code-tab" onclick="switchTab(this, 'tab-java')">Java</button>
+            </div>
+            <span class="code-file"></span>
           </div>
-          <pre class="code-body">       
-// Connect to the device — same API whether running on-device or remotely
-device, _ := sdk.NewClientAuto(tcpAddress, tcpPort, udsSocketPath)
+
+          <pre class="code-body" id="tab-go">// Connect — UDS on-device or TCP remotely, same API
+device, _ := sdk.NewClientAuto(DEVICE_IP_ADDRESS)
+defer device.Close()
 
 // GPIO — set direction and drive a pin high
-device.GpioManager.SetDirection("GPIO18", 0)
-device.GpioManager.SetLevel("GPIO18", 1)
+led := sdk.GpioPin{Number: 18, ChipNumber: 0}
+device.GpioManager.SetDirection(led, true)   // OUTPUT
+device.GpioManager.SetLevel(led, true)        // HIGH
 
 // PWM — 1 kHz signal at 50% duty cycle
 pwmPins, _ := device.GpioManager.ListPwmPins()
 device.GpioManager.SetPwm(pwmPins[0], 0.5, 1000.0)
 
 // UART — open ttyAMA0 at 115200 baud and send a command
-device.UartManager.Open("/dev/ttyAMA0", 115200)
-device.UartManager.Write("/dev/ttyAMA0", "AT\r\n")
+device.UartManager.Open(sdk.UartConfig{Port: "/dev/ttyAMA0", Baudrate: 115200})
+device.UartManager.Write("/dev/ttyAMA0", []byte("AT\r\n"))
 
 // I²C — scan bus and read a sensor register
 addrs, _ := device.I2CManager.ScanBus(1)
-data, _  := device.I2CManager.WriteRead(1, 0x48, []byte{0x00}, 2)</pre>
+data, _  := device.I2CManager.WriteRead(1, addrs[0], []byte{0x00}, 2)</pre>
+
+          <pre class="code-body" id="tab-java" style="display:none;">
+// Connect — UDS on-device or TCP remotely, same API
+var device = Client.connect(DEVICE_IP_ADDRESS)
+
+// GPIO — set direction and drive a pin high
+var led = new GpioManager.GpioPin("GPIO18", 18, 0);
+device.gpioManager().setDirection(led, GpioManager.Direction.OUTPUT);
+device.gpioManager().setLevel(led, GpioManager.Level.HIGH);
+
+// PWM — 1 kHz signal at 50% duty cycle
+var pwmPins = device.gpioManager().listPwmPins();
+device.gpioManager().setPwm(pwmPins.get(0), 0.5, 1000.0);
+
+// UART — open ttyAMA0 at 115200 baud and send a command
+device.uartManager().open(new UartManager.UartConfig("/dev/ttyAMA0", 115200, 8,
+UartManager.Parity.NONE, UartManager.StopBits.ONE, UartManager.FlowControl.NONE));
+device.uartManager().write("/dev/ttyAMA0", "AT\r\n".getBytes());
+
+// I²C — scan bus and read a sensor register
+var addrs = device.i2cManager().scanBus(1);
+byte[] data = device.i2cManager().transfer(
+new I2CManager.I2CTransferRequest(1, addrs.get(0), new byte[]{0x00}, 2));
+</pre>
         </div>
 
         <div class="sdk-langs">
           <div class="sdk-pill"><a href="sdk_comparison.html" target="_blank" class="sdk-lang-link">Go</a><span class="sdk-status ready">Available</span></div>
-          <div class="sdk-pill"><a href="sdk_comparison.html" target="_blank" class="sdk-lang-link">Python</a><span class="sdk-status wip">Beta soon</span></div>
-          <div class="sdk-pill"><a href="sdk_comparison.html" target="_blank" class="sdk-lang-link">Java</a><span class="sdk-status planned">Planned Q3</span></div>
+          <div class="sdk-pill"><a href="sdk_comparison.html" target="_blank" class="sdk-lang-link">Java</a><span class="sdk-status wip">Beta soon</span></div>
+          <div class="sdk-pill"><a href="sdk_comparison.html" target="_blank" class="sdk-lang-link">Python</a><span class="sdk-status planned">Planned Q3</span></div>
           <div class="sdk-pill"><a href="sdk_comparison.html" target="_blank" class="sdk-lang-link">C++</a><span class="sdk-status planned">Planned Q4</span></div>
         </div>
       </div>
@@ -315,5 +344,15 @@ data, _  := device.I2CManager.WriteRead(1, 0x48, []byte{0x00}, 2)</pre>
       </div>
     </footer>
 
+  <script>
+    function switchTab(btn, tabId) {
+      // Toggle tab buttons
+      btn.closest('.code-tabs').querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      // Toggle code panels
+      btn.closest('.code-block').querySelectorAll('.code-body').forEach(p => p.style.display = 'none');
+      document.getElementById(tabId).style.display = 'block';
+    }
+  </script>
   </body>
 </html>

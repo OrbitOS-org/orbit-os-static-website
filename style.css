@@ -499,9 +499,37 @@ code {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 0.7rem 1.25rem;
+  padding: 0.5rem 1.25rem;
   border-bottom: 1px solid var(--border);
   background: #0a0d16;
+}
+
+.code-tabs {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.code-tab {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: .05em;
+  padding: 0.35rem 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+  font-family: inherit;
+}
+
+.code-tab:hover {
+  color: var(--text);
+}
+
+.code-tab.active {
+  background: rgba(108, 99, 255, 0.15);
+  color: var(--accent-2);
 }
 
 .code-lang {
