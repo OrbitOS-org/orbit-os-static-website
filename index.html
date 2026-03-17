@@ -10,18 +10,21 @@
   <body>
 
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" id="navbar">
       <div class="nav-container">
         <div class="logo">
           <span class="logo-icon">⬡</span>
           <span class="logo-text">Orbit<strong>OS</strong></span>
         </div>
-        <ul class="nav-links">
-          <li><a href="#features">Features</a></li>
-          <li><a href="#platform">Platform</a></li>
-          <li><a href="#market">Store</a></li>
-          <li><a href="#sdk">SDK</a></li>
-          <li><a href="#contact" class="btn-nav">Early Access</a></li>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#features" class="nav-close">Features</a></li>
+          <li><a href="#platform" class="nav-close">Platform</a></li>
+          <li><a href="#market" class="nav-close">Store</a></li>
+          <li><a href="#sdk" class="nav-close">SDK</a></li>
+          <li><a href="#contact" class="btn-nav nav-close">Early Access</a></li>
         </ul>
       </div>
     </nav>
@@ -345,14 +348,30 @@ new I2CManager.I2CTransferRequest(1, addrs.get(0), new byte[]{0x00}, 2));
     </footer>
 
   <script>
+    // SDK tabs
     function switchTab(btn, tabId) {
-      // Toggle tab buttons
       btn.closest('.code-tabs').querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
       btn.classList.add('active');
-      // Toggle code panels
       btn.closest('.code-block').querySelectorAll('.code-body').forEach(p => p.style.display = 'none');
       document.getElementById(tabId).style.display = 'block';
     }
+
+    // Hamburger menu
+    const toggle   = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    toggle.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      toggle.classList.toggle('open', open);
+    });
+
+    // Close menu when a link is clicked
+    document.querySelectorAll('.nav-close').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        toggle.classList.remove('open');
+      });
+    });
   </script>
   </body>
 </html>
