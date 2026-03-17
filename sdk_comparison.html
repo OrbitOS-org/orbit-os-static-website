@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OrbitOS SDK — Go vs Java Method Reference</title>
+  <title>OrbitOS SDK — Go vs Java vs Python Method Reference</title>
   <style>
     :root {
       --bg: #0d1117;
@@ -11,6 +11,7 @@
       --border: #30363d;
       --accent-go: #00add8;
       --accent-java: #f89820;
+      --accent-python: #3776ab;
       --text: #e6edf3;
       --muted: #8b949e;
       --warn-bg: #3d2b00;
@@ -19,6 +20,7 @@
       --ok-border: #3fb950;
       --tag-go: rgba(0,173,216,.15);
       --tag-java: rgba(248,152,32,.15);
+      --tag-python: rgba(55,118,171,.15);
       --row-hover: rgba(255,255,255,.03);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -50,6 +52,7 @@
     }
     .badge-go   { background: var(--tag-go);   color: var(--accent-go);   border: 1px solid var(--accent-go); }
     .badge-java { background: var(--tag-java); color: var(--accent-java); border: 1px solid var(--accent-java); }
+    .badge-python { background: var(--tag-python); color: var(--accent-python); border: 1px solid var(--accent-python); }
 
     nav {
       position: sticky;
@@ -87,7 +90,7 @@
     /* ── Conventions box ────────────────────────────────────── */
     .conventions {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: repeat(2, minmax(420px, 1fr));
       gap: 12px;
       margin-bottom: 48px;
     }
@@ -98,10 +101,24 @@
       padding: 14px 16px;
     }
     .conv-card h4 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 8px; }
-    .conv-row { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .conv-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      padding: 4px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
     .conv-row:last-child { border-bottom: none; }
     .conv-go   { color: var(--accent-go); }
     .conv-java { color: var(--accent-java); }
+    .conv-python { color: var(--accent-python); }
+
+    @media (max-width: 1024px) {
+      .conventions {
+        grid-template-columns: 1fr;
+      }
+    }
 
     /* ── Table ──────────────────────────────────────────────── */
     .table-wrapper {
@@ -121,8 +138,8 @@
       border-bottom: 1px solid var(--border);
       background: rgba(255,255,255,.02);
     }
-    thead th:first-child { width: 16%; }
-    thead th:nth-child(2), thead th:nth-child(3) { width: 42%; }
+    thead th:first-child { width: 14%; }
+    thead th:nth-child(2), thead th:nth-child(3), thead th:nth-child(4) { width: 28.66%; }
     tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: var(--row-hover); }
@@ -130,12 +147,13 @@
     td:first-child { color: var(--muted); font-size: 13px; }
     code {
       font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
-      font-size: 12.5px;
+      font-size: 12px;
       white-space: pre-wrap;
-      word-break: break-all;
+      word-break: break-word;
     }
     .go-sig   { color: #79c0ff; }
     .java-sig { color: #ffa657; }
+    .py-sig { color: #a5d6ff; }
     .na       { color: #484f58; font-style: italic; font-size: 12px; }
 
     /* ── Divergence banner ──────────────────────────────────── */
@@ -174,10 +192,11 @@
 <header>
   <div>
     <h1>OrbitOS SDK — Method Reference</h1>
-    <p>Side-by-side comparison of Go &amp; Java public API signatures</p>
+    <p>Go SDK is the source of truth; Java and Python signatures are tracked side-by-side</p>
   </div>
   <span class="badge badge-go">Go</span>
   <span class="badge badge-java">Java</span>
+  <span class="badge badge-python">Python</span>
 </header>
 
 <nav>
@@ -207,29 +226,29 @@
   <div class="conventions">
     <div class="conv-card">
       <h4>Error Handling</h4>
-      <div class="conv-row"><span class="conv-go">error (return)</span><span class="conv-java">throws XxxException</span></div>
-      <div class="conv-row"><span class="conv-go">(T, error)</span><span class="conv-java">T throws XxxException</span></div>
-      <div class="conv-row"><span class="conv-go">error (no return)</span><span class="conv-java">void throws XxxException</span></div>
+      <div class="conv-row"><span class="conv-go">error (return)</span><span class="conv-java">throws XxxException</span><span class="conv-python">raises Exception</span></div>
+      <div class="conv-row"><span class="conv-go">(T, error)</span><span class="conv-java">T throws XxxException</span><span class="conv-python">T / raises Exception</span></div>
+      <div class="conv-row"><span class="conv-go">error (no return)</span><span class="conv-java">void throws XxxException</span><span class="conv-python">None / raises Exception</span></div>
     </div>
     <div class="conv-card">
       <h4>Streaming / Callbacks</h4>
-      <div class="conv-row"><span class="conv-go">func(T) callback</span><span class="conv-java">Consumer&lt;T&gt;</span></div>
-      <div class="conv-row"><span class="conv-go">&lt;-chan T</span><span class="conv-java">StreamHandle</span></div>
-      <div class="conv-row"><span class="conv-go">context.Context param</span><span class="conv-java">StreamHandle.cancel()</span></div>
+      <div class="conv-row"><span class="conv-go">func(T) callback</span><span class="conv-java">Consumer&lt;T&gt;</span><span class="conv-python">callable / iterator</span></div>
+      <div class="conv-row"><span class="conv-go">&lt;-chan T</span><span class="conv-java">StreamHandle</span><span class="conv-python">Iterator[T]</span></div>
+      <div class="conv-row"><span class="conv-go">context.Context param</span><span class="conv-java">StreamHandle.cancel()</span><span class="conv-python">timeout / close channel</span></div>
     </div>
     <div class="conv-card">
       <h4>Types</h4>
-      <div class="conv-row"><span class="conv-go">uint32 / int</span><span class="conv-java">int</span></div>
-      <div class="conv-row"><span class="conv-go">bool</span><span class="conv-java">boolean</span></div>
-      <div class="conv-row"><span class="conv-go">[]byte</span><span class="conv-java">byte[]</span></div>
-      <div class="conv-row"><span class="conv-go">[]T</span><span class="conv-java">List&lt;T&gt;</span></div>
-      <div class="conv-row"><span class="conv-go">string</span><span class="conv-java">String</span></div>
+      <div class="conv-row"><span class="conv-go">uint32 / int</span><span class="conv-java">int</span><span class="conv-python">int</span></div>
+      <div class="conv-row"><span class="conv-go">bool</span><span class="conv-java">boolean</span><span class="conv-python">bool</span></div>
+      <div class="conv-row"><span class="conv-go">[]byte</span><span class="conv-java">byte[]</span><span class="conv-python">bytes</span></div>
+      <div class="conv-row"><span class="conv-go">[]T</span><span class="conv-java">List&lt;T&gt;</span><span class="conv-python">list[T]</span></div>
+      <div class="conv-row"><span class="conv-go">string</span><span class="conv-java">String</span><span class="conv-python">str</span></div>
     </div>
     <div class="conv-card">
       <h4>Naming</h4>
-      <div class="conv-row"><span class="conv-go">PascalCase methods</span><span class="conv-java">camelCase methods</span></div>
-      <div class="conv-row"><span class="conv-go">struct DTO</span><span class="conv-java">record DTO</span></div>
-      <div class="conv-row"><span class="conv-go">client.XxxManager</span><span class="conv-java">client.xxxManager()</span></div>
+      <div class="conv-row"><span class="conv-go">PascalCase methods</span><span class="conv-java">camelCase methods</span><span class="conv-python">PascalCase methods</span></div>
+      <div class="conv-row"><span class="conv-go">struct DTO</span><span class="conv-java">record DTO</span><span class="conv-python">dataclass / class DTO</span></div>
+      <div class="conv-row"><span class="conv-go">client.XxxManager</span><span class="conv-java">client.xxxManager()</span><span class="conv-python">client.XxxManager</span></div>
     </div>
   </div>
 </div>
@@ -1112,7 +1131,7 @@
 <!-- ═══════════════════════════════════════════════════════════ DIVERGENCES SUMMARY -->
 <div class="section" id="divergences">
   <div class="section-title">⚠ Resumo das Divergências</div>
-  <div class="section-subtitle">Pontos a alinhar entre Go (source of truth) e Java</div>
+  <div class="section-subtitle">Pontos a alinhar entre Go (source of truth), Java e Python</div>
   <div class="summary-table-wrapper table-wrapper">
     <table>
       <thead><tr><th>#</th><th>Manager</th><th>Problema</th><th>Sugestão</th></tr></thead>
@@ -1216,8 +1235,258 @@
       </tbody>
     </table>
   </div>
+
+  <div class="section-subtitle" style="margin-top:16px">Divergências específicas Go ↔ Python</div>
+  <div class="summary-table-wrapper table-wrapper">
+    <table>
+      <thead><tr><th>#</th><th>Manager</th><th>Problema (Go vs Python)</th><th>Sugestão</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Client (TCP/TLS)</td>
+          <td>Go <code>NewTCPClient</code> tenta TLS por default; Python <code>NewClientTCP</code> é insecure por default.</td>
+          <td>Alinhar semântica: ou ambos insecure por default, ou ambos TLS por default.</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Client context</td>
+          <td>Go expõe contexto/cancelamento real; Python <code>get_context()</code> retorna placeholder.</td>
+          <td>Implementar API equivalente de timeout/cancel no Python (ou remover para evitar falsa paridade).</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>WiFiManager</td>
+          <td>Go expõe fluxo de reconnect; na tabela Python aparece <code>Reconnect</code> como não implementado.</td>
+          <td>Adicionar <code>Reconnect(interface_name)</code> no Python (ou remover da API comparada se não for requisito).</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>EthernetManager</td>
+          <td>Go possui operações de enable/disable explícitas; Python só tem <code>SetEthernetConfig</code>/<code>Enable DHCP</code> via config.</td>
+          <td>Adicionar <code>Enable(interface)</code>/<code>Disable(interface)</code> no Python para paridade de alto nível.</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>UartManager</td>
+          <td>Go oferece <code>Listen</code> e <code>ListenAsync</code>; Python só expõe stream iterator síncrono (<code>Listen</code>).</td>
+          <td>Adicionar helper async/callback no Python (<code>ListenAsync</code>) para alinhamento funcional.</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>SystemManager (update/policies)</td>
+          <td>Go inclui operações de update e toggles de políticas; vários itens aparecem como não implementados no Python.</td>
+          <td>Priorizar implementação no Python: <code>SendUpdate</code>, toggles de untrusted apps/dev mode/reboot on fail/SSH.</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>DevelopmentManager</td>
+          <td>Go expõe subscribe síncrono + async; Python só async/callback.</td>
+          <td>Adicionar versão síncrona no Python (ou documentar limitação como decisão intencional).</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>Shared DTOs</td>
+          <td>Go possui <code>types.go</code> (ex.: <code>SystemInfo</code>, <code>PowerResult</code>); Python não possui módulo equivalente consolidado.</td>
+          <td>Adicionar DTOs Python equivalentes (dataclasses) para manter contrato de alto nível consistente.</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Escopo de managers</td>
+          <td>Python inclui managers extras (<code>Account/Cellular/Time/Package/Sensor</code>) que não existem no go_sdk desta pasta.</td>
+          <td>Documentar como extensão Python (não divergência funcional) ou implementar correspondentes no Go se o objetivo for paridade total.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 </main>
+<script>
+  // Add Python as third language directly in existing Go|Java tables.
+  // Go is source of truth; this maps current Python SDK coverage.
+  (() => {
+    const pyBySection = {
+      account: {
+        "Add account": "AddAccount(email: str, password: str)",
+        "Get status": "GetAccountStatus()",
+        "Remove account": "RemoveAccount(email: str)",
+      },
+      power: {
+        Reboot: "Reboot(force: bool, reason: str) -> BooleanResponse",
+        Shutdown: "Shutdown(force: bool, reason: str) -> BooleanResponse",
+      },
+      wifi: {
+        "List interfaces": "ListWiFiInterfaces()",
+        "Link properties": "GetWiFiLinkProperties(interface_name: str)",
+        "Is connected?": "IsWiFiConnected(interface_name: str)",
+        Connect: "Connect(interface_name: str)",
+        Reconnect: "N/A (not implemented in current python SDK)",
+        Disconnect: "Disconnect(interface_name: str)",
+        "Start hotspot": "StartAP(interface_name: str)",
+        "Stop hotspot": "StopAP(interface_name: str)",
+        "Scan networks": "ScanWiFi(interface_name: str)",
+      },
+      ethernet: {
+        "List interfaces": "ListEthernetInterfaces()",
+        "Link properties": "GetEthernetLinkProperties(interface_name: str)",
+        "Is connected?": "IsEthernetConnected(interface_name: str)",
+        "Apply config": "SetEthernetConfig(interface_name, dhcp_enable, ipv4_address, ipv4_gateway, ipv4_dns)",
+        "Enable DHCP": "SetEthernetConfig(..., dhcp_enable=True, ...)",
+        Enable: "N/A (not implemented in current python SDK)",
+        Disable: "N/A (not implemented in current python SDK)",
+      },
+      firewall: {
+        "List zones": "ListZones()",
+        "Add zone": "AddZone(...)",
+        "Remove zone": "RemoveZone(name: str)",
+        "List rules": "ListRules()",
+        "Add rule": "AddRule(request)",
+        "Remove rule": "RemoveRule(rule_id: str)",
+        "Flush rules": "FlushRules()",
+      },
+      gpio: {
+        "List pins": "ListPins()",
+        "Get level": "GetLevel(pin: GpioPin) -> bool",
+        "Set level": "SetLevel(pin: GpioPin, high: bool)",
+        "Get direction": "GetDirection(pin: GpioPin) -> bool",
+        "Set direction": "SetDirection(pin: GpioPin, out: bool)",
+        "List PWM pins": "ListPwmPins()",
+        "Set PWM": "SetPwm(pin: GpioPin, duty_cycle: float, frequency_hz: float)",
+        "Get PWM": "GetPwm(pin: GpioPin) -> PwmState",
+        "Disable PWM": "DisablePwm(pin: GpioPin)",
+      },
+      uart: {
+        "List ports": "ListPorts()",
+        Open: "Open(cfg: UartConfig)",
+        Close: "Close(port: str)",
+        "Get config": "GetConfig(port: str) -> UartConfig",
+        Write: "Write(port: str, data: bytes) -> int",
+        "Listen (sync)": "Listen(port: str, max_chunk_size=256) -> Iterator[bytes]",
+        "Listen (async)": "N/A (not implemented in current python SDK)",
+      },
+      i2c: {
+        "List buses": "ListBuses()",
+        "Scan bus": "ScanBus(bus: int)",
+        "Get config": "GetConfig(bus: int) -> I2CConfig",
+        "Set config": "SetConfig(cfg: I2CConfig)",
+        Transfer: "Transfer(req: I2CTransferRequest) -> bytes",
+      },
+      spi: {
+        "List devices": "ListDevices()",
+        "Get config": "GetConfig(bus: int, chip_select: int) -> SpiConfig",
+        "Set config": "SetConfig(cfg: SpiConfig)",
+        Transfer: "Transfer(bus: int, chip_select: int, data_out: bytes, read_length: int) -> bytes",
+      },
+      bluetooth: {
+        "Adapter info": "GetAdapterInfo(request)",
+        Enable: "EnableBluetooth(request)",
+        Disable: "DisableBluetooth(request)",
+        "Get local name": "GetLocalName(request)",
+        "Set local name": "SetLocalName(request)",
+        "Set discoverable": "SetDiscoverable(request)",
+        "Classic scan": "StartScan(request)",
+        "BLE scan": "StartBleScan(request)",
+        "Bonded devices": "GetBondedDevices(request)",
+        "Bond device": "BondDevice(request)",
+        "Remove bond": "RemoveBond(request)",
+        "Connect device": "ConnectDevice(request)",
+        "Disconnect device": "DisconnectDevice(request)",
+        "Connection state": "GetConnectionState(request)",
+        "GATT connect": "GattConnect(request)",
+        "GATT disconnect": "GattDisconnect(request)",
+        "GATT discover": "GattDiscoverServices(request)",
+        "GATT read": "GattReadCharacteristic(request)",
+        "GATT write": "GattWriteCharacteristic(request)",
+        "GATT subscribe": "GattSubscribeCharacteristic(request)",
+        "GATT RSSI": "GattReadRssi(request)",
+      },
+      system: {
+        "API version": "GetApiVersion()",
+        "Device name": "GetDeviceName()",
+        "SoC model": "GetSocModel()",
+        "SoC vendor": "GetSocVendor()",
+        "Board model": "GetBoardModel()",
+        "Board vendor": "GetBoardVendor()",
+        "HW version": "GetHardwareVersion()",
+        "HW model": "GetHardwareModel()",
+        "System UUID": "GetSystemUuid()",
+        "Board serial": "GetBoardSerial()",
+        "CPU serial": "GetCpuSerial()",
+        "Machine ID": "GetMachineId()",
+        Architecture: "GetArchitecture()",
+        "CPU model": "GetCpuModel()",
+        "CPU cores": "GetCpuCores()",
+        "CPU threads": "GetCpuThreads()",
+        "CPU min MHz": "GetCpuMinMhz()",
+        "CPU max MHz": "GetCpuMaxMhz()",
+        "Total RAM": "GetTotalRAM()",
+        "OS name": "GetOsName()",
+        "OS version": "GetOSVersion()",
+        "Kernel version": "GetKernelVersion()",
+        Distro: "GetDistro()",
+        "Distro version": "GetDistroVersion()",
+        "Runtime version": "GetRuntimeVersion()",
+        "Build version": "GetBuildVersion()",
+        "Build date": "GetBuildDate()",
+        "Get metrics": "GetMetrics()",
+        "Send update": "N/A (not implemented in current python SDK)",
+        "Send update (path)": "N/A (not implemented in current python SDK)",
+        "Allow untrusted apps": "N/A (not implemented in current python SDK)",
+        "Disallow untrusted apps": "N/A (not implemented in current python SDK)",
+        "Untrusted apps?": "IsUntrustedAppsAllowed()",
+        "Enable reboot on fail": "N/A (not implemented in current python SDK)",
+        "Disable reboot on fail": "N/A (not implemented in current python SDK)",
+        "Reboot on fail?": "IsRebootOnFailureEnabled()",
+        "Enable dev mode": "N/A (not implemented in current python SDK)",
+        "Disable dev mode": "N/A (not implemented in current python SDK)",
+        "Dev mode?": "IsDevModeEnabled()",
+        "Enable SSH server": "N/A (not implemented in current python SDK)",
+        "Disable SSH server": "N/A (not implemented in current python SDK)",
+        "SSH enabled?": "IsSSHServerEnabled()",
+      },
+      packages: {
+        "List installed": "GetInstalledPackages()",
+        "Install/Update": "InstallUpdatePackage(timeout=60.0)",
+        "Remove package": "RemovePackage(app_name: str)",
+      },
+      development: {
+        "Subscribe logs (sync)": "N/A (not implemented in current python SDK)",
+        "Subscribe logs (async)": "SubscribeLogs(...)",
+      },
+    };
+
+    const tables = document.querySelectorAll(".table-wrapper table");
+    for (const table of tables) {
+      const sectionId = table.closest(".section")?.id;
+      const headerCells = table.querySelectorAll("thead th");
+      if (
+        sectionId &&
+        headerCells.length === 3 &&
+        headerCells[0].textContent.trim() === "Method" &&
+        headerCells[1].textContent.trim() === "Go" &&
+        headerCells[2].textContent.trim() === "Java"
+      ) {
+        const pyHeader = document.createElement("th");
+        pyHeader.textContent = "Python";
+        table.querySelector("thead tr")?.appendChild(pyHeader);
+
+        const rows = table.querySelectorAll("tbody tr");
+        for (const row of rows) {
+          if (row.children.length !== 3) continue;
+          const method = row.children[0].textContent.trim();
+          const pySig = pyBySection[sectionId]?.[method] || "N/A (not mapped yet)";
+          const td = document.createElement("td");
+          if (pySig.startsWith("N/A")) {
+            td.className = "na";
+            td.textContent = pySig;
+          } else {
+            td.innerHTML = `<code class="py-sig">${pySig}</code>`;
+          }
+          row.appendChild(td);
+        }
+      }
+    }
+  })();
+</script>
 </body>
 </html>
