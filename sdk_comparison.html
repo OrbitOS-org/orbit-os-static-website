@@ -11,7 +11,7 @@
       --border: #30363d;
       --accent-go: #00add8;
       --accent-java: #f89820;
-      --accent-python: #3776ab;
+      --accent-python: #3fb950;
       --text: #e6edf3;
       --muted: #8b949e;
       --warn-bg: #3d2b00;
@@ -20,7 +20,7 @@
       --ok-border: #3fb950;
       --tag-go: rgba(0,173,216,.15);
       --tag-java: rgba(248,152,32,.15);
-      --tag-python: rgba(55,118,171,.15);
+      --tag-python: rgba(63,185,80,.20);
       --row-hover: rgba(255,255,255,.03);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -153,7 +153,7 @@
     }
     .go-sig   { color: #79c0ff; }
     .java-sig { color: #ffa657; }
-    .py-sig { color: #a5d6ff; }
+    .py-sig { color: var(--accent-python); }
     .na       { color: #484f58; font-style: italic; font-size: 12px; }
 
     /* ── Divergence banner ──────────────────────────────────── */
@@ -214,7 +214,7 @@
   <a href="#system">System</a>
   <a href="#packages">Packages</a>
   <a href="#development">Development</a>
-  <a href="#divergences">⚠ Divergências</a>
+  <a href="#divergences">⚠ Divergences</a>
 </nav>
 
 <main>
@@ -303,7 +303,7 @@
     </table>
   </div>
   <div class="divergence">
-    <strong>⚠ Divergência</strong>
+    <strong>⚠ Divergence</strong>
     Go devolve <code>PowerResult{Success, Message}</code>; Java é <code>void</code> (lança exceção em falha).
   </div>
 </div>
@@ -413,8 +413,8 @@
     </table>
   </div>
   <div class="divergence">
-    <strong>⚠ Divergência</strong>
-    Go usa <code>SetConfig(EthernetConfig)</code> unificado; Java separa em <code>setStaticConfig(...)</code> e <code>setDhcp(ifname)</code>.
+    <strong>⚠ Divergence</strong>
+    Go uses unified <code>SetConfig(EthernetConfig)</code>; Java splits into <code>setStaticConfig(...)</code> and <code>setDhcp(ifname)</code>.
   </div>
 </div>
 
@@ -523,7 +523,7 @@
     </table>
   </div>
   <div class="divergence">
-    <strong>⚠ Divergência</strong>
+    <strong>⚠ Divergence</strong>
     <ul>
       <li>Go <code>GetLevel</code> → <code>bool</code> &nbsp;|&nbsp; Java → <code>Level</code> enum (<code>HIGH</code>/<code>LOW</code>)</li>
       <li>Go <code>GetDirection</code> → <code>bool</code> &nbsp;|&nbsp; Java → <code>Direction</code> enum (<code>IN</code>/<code>OUT</code>)</li>
@@ -619,7 +619,7 @@
     </table>
   </div>
   <div class="divergence" style="background:var(--ok-bg);border-color:var(--ok-border);color:#3fb950">
-    <strong>✔ Resolvido</strong>
+    <strong>✔ Resolved</strong>
     <code>scanBus</code> alinhado com Go.
   </div>
 </div>
@@ -656,8 +656,8 @@
     </table>
   </div>
   <div class="divergence" style="background:var(--ok-bg);border-color:var(--ok-border);color:#3fb950">
-    <strong>✔ Resolvido</strong>
-    API pública expõe apenas <code>transfer()</code> — alinhado com Go.
+    <strong>✔ Resolved</strong>
+    Public API exposes only <code>transfer()</code> — alinhado com Go.
   </div>
 </div>
 
@@ -741,36 +741,36 @@
         <tr>
           <td>Connection state</td>
           <td><code class="go-sig">GetConnectionState(address string) (string, error)</code></td>
-          <td><code class="na">— (não mapeado)</code></td>
+          <td><code class="na">— (not mapped)</code></td>
         </tr>
         <tr>
           <td>GATT connect</td>
-          <td><code class="na">— (não existe)</code></td>
+          <td><code class="na">— (not available)</code></td>
           <td><code class="java-sig">void gattConnect(String address) throws BluetoothException</code></td>
         </tr>
         <tr>
           <td>GATT disconnect</td>
-          <td><code class="na">— (não existe)</code></td>
+          <td><code class="na">— (not available)</code></td>
           <td><code class="java-sig">void gattDisconnect(String address) throws BluetoothException</code></td>
         </tr>
         <tr>
           <td>GATT discover</td>
-          <td><code class="na">— (não existe)</code></td>
+          <td><code class="na">— (not available)</code></td>
           <td><code class="java-sig">List&lt;GattService&gt; gattDiscoverServices(String address) throws BluetoothException</code></td>
         </tr>
         <tr>
           <td>GATT read</td>
-          <td><code class="na">— (não existe)</code></td>
+          <td><code class="na">— (not available)</code></td>
           <td><code class="java-sig">byte[] gattRead(String addr, String svcUuid, String charUuid) throws BluetoothException</code></td>
         </tr>
         <tr>
           <td>GATT write</td>
-          <td><code class="na">— (não existe)</code></td>
+          <td><code class="na">— (not available)</code></td>
           <td><code class="java-sig">void gattWrite(String addr, String svcUuid, String charUuid, byte[]) throws BluetoothException</code></td>
         </tr>
         <tr>
           <td>GATT subscribe</td>
-          <td><code class="na">— (não existe)</code></td>
+          <td><code class="na">— (not available)</code></td>
           <td><code class="java-sig">StreamHandle gattSubscribe(String addr, String svcUuid,
   String charUuid,
   Consumer&lt;byte[]&gt; onNotify,
@@ -778,18 +778,18 @@
         </tr>
         <tr>
           <td>GATT RSSI</td>
-          <td><code class="na">— (não existe)</code></td>
+          <td><code class="na">— (not available)</code></td>
           <td><code class="java-sig">int gattReadRssi(String address) throws BluetoothException</code></td>
         </tr>
       </tbody>
     </table>
   </div>
   <div class="divergence">
-    <strong>⚠ Divergências</strong>
+    <strong>⚠ Divergences</strong>
     <ul>
-      <li>Java tem GATT completo (connect / discover / read / write / subscribe / RSSI) — Go não tem.</li>
-      <li>Go tem <code>GetConnectionState</code> — Java não tem.</li>
-      <li><s>Nomes ligeiramente diferentes: Go <code>Connect</code>/<code>Disconnect</code> vs Java <code>connectDevice</code>/<code>disconnectDevice</code>.</s> ✔ <strong>Resolvido</strong> — Java renomeado para <code>connect</code>/<code>disconnect</code>.</li>
+      <li>Java has full GATT (connect / discover / read / write / subscribe / RSSI) — Go does not have.</li>
+      <li>Go has <code>GetConnectionState</code> — Java does not have.</li>
+      <li><s>Slightly different names: Go <code>Connect</code>/<code>Disconnect</code> vs Java <code>connectDevice</code>/<code>disconnectDevice</code>.</s> ✔ <strong>Resolved</strong> — Java renamed to <code>connect</code>/<code>disconnect</code>.</li>
     </ul>
   </div>
 </div>
@@ -1053,13 +1053,13 @@
     </table>
   </div>
   <div class="divergence">
-    <strong>⚠ Divergências</strong>
+    <strong>⚠ Divergences</strong>
     <ul>
-      <li><strong>Naming:</strong> Java usa <code>PascalCase</code> nos métodos (<code>GetDeviceName</code>) em vez de <code>camelCase</code> como todos os outros managers Java — inconsistência a corrigir.</li>
-      <li><strong>Bulk DTOs:</strong> Go tem <code>GetDeviceInfo()</code>, <code>GetCpuInfo()</code>, <code>GetOsInfo()</code> que agregam os campos individuais num único DTO; Java não tem equivalente.</li>
+      <li><strong>Naming:</strong> Java uses <code>PascalCase</code> in methods (<code>GetDeviceName</code>) instead of <code>camelCase</code> like all other Java managers — inconsistency to fix.</li>
+      <li><strong>Bulk DTOs:</strong> Go has <code>GetDeviceInfo()</code>, <code>GetCpuInfo()</code>, <code>GetOsInfo()</code> which aggregate individual fields into a single DTO; Java has no equivalent.</li>
       <li><strong>GetMetrics:</strong> Go devolve <code>Metrics</code> DTO limpo; Java devolve o proto raw <code>MetricsInfoResponse</code>.</li>
       <li><strong>Policies (Enable/Disable):</strong> Go devolve <code>error</code>; Java devolve <code>boolean</code>.</li>
-      <li><strong>SendUpdate:</strong> Go recebe <code>[]byte</code> + <code>chunkSize</code>; Java recebe <code>File</code> ou <code>String</code> path e faz chunking internamente.</li>
+      <li><strong>SendUpdate:</strong> Go accepts <code>[]byte</code> + <code>chunkSize</code>; Java recebe <code>File</code> ou <code>String</code> path and chunks internally.</li>
     </ul>
   </div>
 </div>
@@ -1091,7 +1091,7 @@
     </table>
   </div>
   <div class="divergence" style="background:var(--ok-bg);border-color:var(--ok-border);color:#3fb950">
-    <strong>✔ Resolvido</strong>
+    <strong>✔ Resolved</strong>
     <code>PackageManager</code> implementado em Go — alinhado com Java.
   </div>
 </div>
@@ -1121,32 +1121,32 @@
     </table>
   </div>
   <div class="divergence">
-    <strong>⚠ Divergência</strong>
-    Go expõe tanto versão síncrona (<code>SubscribeLogs</code>) como canal (<code>SubscribeLogsAsync</code>).
-    Java só expõe a versão com callback (<code>subscribeLogsAsync</code>).
+    <strong>⚠ Divergence</strong>
+    Go exposes both synchronous version (<code>SubscribeLogs</code>) como canal (<code>SubscribeLogsAsync</code>).
+    Java only exposes callback version (<code>subscribeLogsAsync</code>).
     Go <code>LogFilter</code> é um DTO; Java passa os campos separadamente (<code>app</code>, <code>tag</code>, <code>minLevel</code>).
   </div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════ DIVERGENCES SUMMARY -->
 <div class="section" id="divergences">
-  <div class="section-title">⚠ Resumo das Divergências</div>
-  <div class="section-subtitle">Pontos a alinhar entre Go (source of truth), Java e Python</div>
+  <div class="section-title">⚠ Divergences Summary</div>
+  <div class="section-subtitle">Alignment points between Go (source of truth), Java, and Python</div>
   <div class="summary-table-wrapper table-wrapper">
     <table>
-      <thead><tr><th>#</th><th>Manager</th><th>Problema</th><th>Sugestão</th></tr></thead>
+      <thead><tr><th>#</th><th>Manager</th><th>Issue</th><th>Suggestion</th></tr></thead>
       <tbody>
         <tr>
           <td>1</td>
           <td>PowerManager</td>
           <td>Go devolve <code>PowerResult</code>; Java é <code>void</code></td>
-          <td>Uniformizar para <code>void</code> em Go ou devolver DTO em Java</td>
+          <td>Normalize to <code>void</code> em Go ou devolver DTO in Java</td>
         </tr>
         <tr>
           <td>2</td>
           <td>GpioManager</td>
           <td><code>GetLevel</code> → <code>bool</code> (Go) vs <code>Level</code> enum (Java). <code>GetDirection</code> igual.</td>
-          <td>Preferir enum em ambos — mais expressivo e type-safe</td>
+          <td>Prefer enum in both — more expressive and type-safe</td>
         </tr>
         <tr>
           <td>3</td>
@@ -1163,137 +1163,137 @@
         <tr style="opacity:.5">
           <td>5 ✔</td>
           <td>SpiManager</td>
-          <td><s>Go tinha helpers <code>Write</code>/<code>Read</code>/<code>WriteRead</code> que Java não tinha</s></td>
-          <td>✔ Resolvido — API pública expõe só <code>transfer()</code></td>
+          <td><s>Go had helper methods <code>Write</code>/<code>Read</code>/<code>WriteRead</code> that Java did not have</s></td>
+          <td>✔ Resolved — API pública exposes only <code>transfer()</code></td>
         </tr>
         <tr style="opacity:.5">
           <td>6 ✔</td>
           <td>I2CManager</td>
           <td><s>Go: <code>ScanBus(bus)</code> — Java: <code>scan(bus)</code></s></td>
-          <td>✔ Resolvido — renomeado para <code>scanBus(bus)</code></td>
+          <td>✔ Resolved — renamed to <code>scanBus(bus)</code></td>
         </tr>
         <tr>
           <td>7</td>
           <td>BluetoothManager</td>
-          <td>Java tem GATT completo; Go não tem. Go tem <code>GetConnectionState</code>; Java não.</td>
-          <td>Implementar GATT em Go; adicionar <code>getConnectionState</code> em Java</td>
+          <td>Java has full GATT; Go does not have. Go has <code>GetConnectionState</code>; Java does not.</td>
+          <td>Implement GATT in Go; add <code>getConnectionState</code> in Java</td>
         </tr>
         <tr style="opacity:.5">
           <td>8 ✔</td>
           <td>BluetoothManager</td>
           <td><s>Go: <code>Connect</code>/<code>Disconnect</code> — Java: <code>connectDevice</code>/<code>disconnectDevice</code></s></td>
-          <td>✔ Resolvido — renomeado para <code>connect</code>/<code>disconnect</code></td>
+          <td>✔ Resolved — renamed to <code>connect</code>/<code>disconnect</code></td>
         </tr>
         <tr>
           <td>9</td>
           <td>DevelopmentManager</td>
-          <td>Go <code>LogFilter</code> DTO — Java passa campos separados</td>
-          <td>Criar <code>LogFilter</code> record em Java</td>
+          <td>Go <code>LogFilter</code> DTO — Java passes separate fields</td>
+          <td>Create <code>LogFilter</code> record in Java</td>
         </tr>
         <tr>
           <td>10</td>
           <td>UartManager</td>
-          <td>Go tem <code>Listen</code> síncrono; Java não</td>
-          <td>Aceitável — Java usa sempre callback async</td>
+          <td>Go has <code>Listen</code> synchronous; Java does not</td>
+          <td>Acceptable — Java always uses async callback</td>
         </tr>
         <tr style="opacity:.5">
           <td>11 ✔</td>
           <td>SystemManager</td>
-          <td><s>Java usava <code>PascalCase</code> (<code>GetDeviceName</code>) — diferente dos outros managers</s></td>
-          <td>✔ Resolvido — todos os métodos renomeados para <code>camelCase</code> (<code>getDeviceName</code>, etc.)</td>
+          <td><s>Java usesva <code>PascalCase</code> (<code>GetDeviceName</code>) — diferente dos outros managers</s></td>
+          <td>✔ Resolved — all methods renamed to <code>camelCase</code> (<code>getDeviceName</code>, etc.)</td>
         </tr>
         <tr style="opacity:.5">
           <td>12 ✔</td>
           <td>SystemManager</td>
-          <td><s>Go tinha <code>GetDeviceInfo()</code> bulk — não existe no proto</s></td>
-          <td>✔ Resolvido — removido de Go; ambas as APIs expõem apenas os métodos individuais por RPC</td>
+          <td><s>Go tinha <code>GetDeviceInfo()</code> bulk — does not exist in proto</s></td>
+          <td>✔ Resolved — removed from Go; both APIs expose only per-RPC individual methods</td>
         </tr>
         <tr>
           <td>13</td>
           <td>SystemManager</td>
-          <td><code>GetMetrics</code>: Go devolve <code>Metrics</code> DTO; Java devolve proto raw <code>MetricsInfoResponse</code></td>
-          <td>Criar <code>Metrics</code> record em Java e converter</td>
+          <td><code>GetMetrics</code>: Go returns <code>Metrics</code> DTO; Java returns raw proto <code>MetricsInfoResponse</code></td>
+          <td>Create <code>Metrics</code> record in Java and convert</td>
         </tr>
         <tr>
           <td>14</td>
           <td>SystemManager (policies)</td>
           <td>Go <code>AllowUntrustedApps()</code> → <code>error</code>; Java → <code>boolean</code> (igual para Enable/Disable SSH, DevMode, RebootOnFailure)</td>
-          <td>Uniformizar para <code>void</code>/<code>error</code> em ambos — o <code>boolean</code> de retorno é redundante</td>
+          <td>Normalize to <code>void</code>/<code>error</code> in both — returned <code>boolean</code> is redundant</td>
         </tr>
         <tr>
           <td>15</td>
           <td>SystemManager (update)</td>
-          <td>Go <code>SendUpdate(ctx, []byte, chunkSize)</code>; Java <code>Update(File)</code> / <code>Update(String)</code> com chunking interno</td>
-          <td>Adicionar overload <code>sendUpdate(byte[])</code> em Java para consistência com Go</td>
+          <td>Go <code>SendUpdate(ctx, []byte, chunkSize)</code>; Java <code>Update(File)</code> / <code>Update(String)</code> with internal chunking</td>
+          <td>Add overload <code>sendUpdate(byte[])</code> in Java for consistency with Go</td>
         </tr>
         <tr style="opacity:.5">
           <td>16 ✔</td>
           <td>PackageManager</td>
-          <td><s>Existia apenas em Java; métodos em <code>PascalCase</code></s></td>
-          <td>✔ Resolvido — implementado em Go + métodos Java renomeados para <code>camelCase</code></td>
+          <td><s>Existed only in Java; methods in <code>PascalCase</code></s></td>
+          <td>✔ Resolved — implemented in Go + Java methods renamed to <code>camelCase</code></td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <div class="section-subtitle" style="margin-top:16px">Divergências específicas Go ↔ Python</div>
+  <div class="section-subtitle" style="margin-top:16px">Go ↔ Python Specific Divergences</div>
   <div class="summary-table-wrapper table-wrapper">
     <table>
-      <thead><tr><th>#</th><th>Manager</th><th>Problema (Go vs Python)</th><th>Sugestão</th></tr></thead>
+      <thead><tr><th>#</th><th>Manager</th><th>Issue (Go vs Python)</th><th>Suggestion</th></tr></thead>
       <tbody>
         <tr>
           <td>1</td>
           <td>Client (TCP/TLS)</td>
           <td>Go <code>NewTCPClient</code> tenta TLS por default; Python <code>NewClientTCP</code> é insecure por default.</td>
-          <td>Alinhar semântica: ou ambos insecure por default, ou ambos TLS por default.</td>
+          <td>Align semantics: either both insecure by default, or both TLS by default.</td>
         </tr>
         <tr>
           <td>2</td>
           <td>Client context</td>
-          <td>Go expõe contexto/cancelamento real; Python <code>get_context()</code> retorna placeholder.</td>
-          <td>Implementar API equivalente de timeout/cancel no Python (ou remover para evitar falsa paridade).</td>
+          <td>Go exposes real context/cancellation; Python <code>get_context()</code> retorna placeholder.</td>
+          <td>Implement equivalent timeout/cancel API in Python (or remove to avoid false parity).</td>
         </tr>
         <tr>
           <td>3</td>
           <td>WiFiManager</td>
-          <td>Go expõe fluxo de reconnect; na tabela Python aparece <code>Reconnect</code> como não implementado.</td>
-          <td>Adicionar <code>Reconnect(interface_name)</code> no Python (ou remover da API comparada se não for requisito).</td>
+          <td>Go exposes reconnect flow; Python table shows <code>Reconnect</code> as not implemented.</td>
+          <td>Add <code>Reconnect(interface_name)</code> in Python (or remove from compared API if not required).</td>
         </tr>
         <tr>
           <td>4</td>
           <td>EthernetManager</td>
-          <td>Go possui operações de enable/disable explícitas; Python só tem <code>SetEthernetConfig</code>/<code>Enable DHCP</code> via config.</td>
-          <td>Adicionar <code>Enable(interface)</code>/<code>Disable(interface)</code> no Python para paridade de alto nível.</td>
+          <td>Go has explicit enable/disable operations; Python only has <code>SetEthernetConfig</code>/<code>Enable DHCP</code> via config.</td>
+          <td>Add <code>Enable(interface)</code>/<code>Disable(interface)</code> in Python for high-level parity.</td>
         </tr>
         <tr>
           <td>5</td>
           <td>UartManager</td>
-          <td>Go oferece <code>Listen</code> e <code>ListenAsync</code>; Python só expõe stream iterator síncrono (<code>Listen</code>).</td>
-          <td>Adicionar helper async/callback no Python (<code>ListenAsync</code>) para alinhamento funcional.</td>
+          <td>Go provides <code>Listen</code> and <code>ListenAsync</code>; Python only exposes synchronous stream iterator (<code>Listen</code>).</td>
+          <td>Add async/callback helper in Python (<code>ListenAsync</code>) for functional alignment.</td>
         </tr>
         <tr>
           <td>6</td>
           <td>SystemManager (update/policies)</td>
-          <td>Go inclui operações de update e toggles de políticas; vários itens aparecem como não implementados no Python.</td>
-          <td>Priorizar implementação no Python: <code>SendUpdate</code>, toggles de untrusted apps/dev mode/reboot on fail/SSH.</td>
+          <td>Go includes update operations and policy toggles; several items appear as not implemented in Python.</td>
+          <td>Prioritize implementation in Python: <code>SendUpdate</code>, toggles for untrusted apps/dev mode/reboot on fail/SSH.</td>
         </tr>
         <tr>
           <td>7</td>
           <td>DevelopmentManager</td>
-          <td>Go expõe subscribe síncrono + async; Python só async/callback.</td>
-          <td>Adicionar versão síncrona no Python (ou documentar limitação como decisão intencional).</td>
+          <td>Go exposes synchronous + async subscribe; Python only async/callback.</td>
+          <td>Add synchronous version in Python (or document limitation as intentional decision).</td>
         </tr>
         <tr>
           <td>8</td>
           <td>Shared DTOs</td>
-          <td>Go possui <code>types.go</code> (ex.: <code>SystemInfo</code>, <code>PowerResult</code>); Python não possui módulo equivalente consolidado.</td>
-          <td>Adicionar DTOs Python equivalentes (dataclasses) para manter contrato de alto nível consistente.</td>
+          <td>Go has <code>types.go</code> (ex.: <code>SystemInfo</code>, <code>PowerResult</code>); Python does not have consolidated equivalent module.</td>
+          <td>Add equivalent Python DTOs (dataclasses) to keep high-level contract consistent.</td>
         </tr>
         <tr>
           <td>9</td>
           <td>Escopo de managers</td>
-          <td>Python inclui managers extras (<code>Account/Cellular/Time/Package/Sensor</code>) que não existem no go_sdk desta pasta.</td>
-          <td>Documentar como extensão Python (não divergência funcional) ou implementar correspondentes no Go se o objetivo for paridade total.</td>
+          <td>Python includes extra managers (<code>Account/Cellular/Time/Package/Sensor</code>) que do not have no go_sdk in this folder.</td>
+          <td>Document as Python extension (not functional divergence) or implement equivalents in Go if full parity is the goal.</td>
         </tr>
       </tbody>
     </table>
