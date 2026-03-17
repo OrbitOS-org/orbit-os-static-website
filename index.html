@@ -305,8 +305,7 @@ device.uartManager().write("/dev/ttyAMA0", "AT\r\n".getBytes());
 
 // I²C — scan bus and read a sensor register
 var addrs = device.i2cManager().scanBus(1);
-byte[] data = device.i2cManager().transfer(
-    new I2CManager.I2CTransferRequest(1, addrs.get(0), new byte[]{0x00}, 2));</code></pre>
+byte[] data = device.i2cManager().transfer(new I2CManager.I2CTransferRequest(1, addrs.get(0), new byte[]{0x00}, 2));</code></pre>
         </div>
 
         <div class="sdk-langs">
