@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OrbitOS — Embedded Linux Platform</title>
-    <link rel="stylesheet" href="style.css?v=2" />
+    <link rel="stylesheet" href="style.css?v=3" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/tokyo-night-dark.min.css" />
   </head>
 
   <body>
@@ -264,7 +265,7 @@
             <span class="code-file"></span>
           </div>
 
-          <pre class="code-body" id="tab-go">// Connect — UDS on-device or TCP remotely, same API
+          <pre class="code-body" id="tab-go"><code class="language-go">// Connect — UDS on-device or TCP remotely, same API
 device, _ := sdk.NewClientAuto(DEVICE_IP_ADDRESS)
 defer device.Close()
 
@@ -283,10 +284,9 @@ device.UartManager.Write("/dev/ttyAMA0", []byte("AT\r\n"))
 
 // I²C — scan bus and read a sensor register
 addrs, _ := device.I2CManager.ScanBus(1)
-data, _  := device.I2CManager.WriteRead(1, addrs[0], []byte{0x00}, 2)</pre>
+data, _  := device.I2CManager.WriteRead(1, addrs[0], []byte{0x00}, 2)</code></pre>
 
-          <pre class="code-body" id="tab-java" style="display:none;">
-// Connect — UDS on-device or TCP remotely, same API
+          <pre class="code-body" id="tab-java" style="display:none;"><code class="language-java">// Connect — UDS on-device or TCP remotely, same API
 var device = Client.connect(DEVICE_IP_ADDRESS)
 
 // GPIO — set direction and drive a pin high
@@ -300,14 +300,13 @@ device.gpioManager().setPwm(pwmPins.get(0), 0.5, 1000.0);
 
 // UART — open ttyAMA0 at 115200 baud and send a command
 device.uartManager().open(new UartManager.UartConfig("/dev/ttyAMA0", 115200, 8,
-UartManager.Parity.NONE, UartManager.StopBits.ONE, UartManager.FlowControl.NONE));
+    UartManager.Parity.NONE, UartManager.StopBits.ONE, UartManager.FlowControl.NONE));
 device.uartManager().write("/dev/ttyAMA0", "AT\r\n".getBytes());
 
 // I²C — scan bus and read a sensor register
 var addrs = device.i2cManager().scanBus(1);
 byte[] data = device.i2cManager().transfer(
-new I2CManager.I2CTransferRequest(1, addrs.get(0), new byte[]{0x00}, 2));
-</pre>
+    new I2CManager.I2CTransferRequest(1, addrs.get(0), new byte[]{0x00}, 2));</code></pre>
         </div>
 
         <div class="sdk-langs">
@@ -346,6 +345,10 @@ new I2CManager.I2CTransferRequest(1, addrs.get(0), new byte[]{0x00}, 2));
         <p class="footer-copy">© 2026 OrbitOS · Open Source · Built for the edge</p>
       </div>
     </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/go.min.js"></script>
+  <script>hljs.highlightAll();</script>
 
   <script>
     // SDK tabs

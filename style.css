@@ -554,16 +554,17 @@ code {
   font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
   font-size: 0.85rem;
   line-height: 1.85;
-  color: #94a3b8;
+  color: #a9b1d6;
   overflow-x: auto;
 }
 
-.c-comment { color: #475569; }
-.c-func    { color: #7dd3fc; }
-.c-str     { color: #86efac; }
-.c-num     { color: #fde68a; }
-.c-const   { color: #c4b5fd; }
-.c-keyword { color: #f472b6; }
+/* highlight.js overrides — keep our bg, remove its padding/radius */
+.hljs {
+  background: transparent !important;
+  padding: 0 !important;
+  font-size: inherit;
+  line-height: inherit;
+}
 
 .sdk-langs {
   display: flex;
