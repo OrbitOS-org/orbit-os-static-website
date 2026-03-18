@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OrbitOS SDK — Go vs Java vs Python Method Reference</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <style>
     :root {
       --bg: #0d1117;
@@ -304,7 +305,7 @@
   </div>
   <div class="divergence">
     <strong>⚠ Divergence</strong>
-    Go devolve <code>PowerResult{Success, Message}</code>; Java é <code>void</code> (lança exceção em falha).
+    Go returns <code>PowerResult{Success, Message}</code>; Java is <code>void</code> (throws exception on failure).
   </div>
 </div>
 
@@ -620,7 +621,7 @@
   </div>
   <div class="divergence" style="background:var(--ok-bg);border-color:var(--ok-border);color:#3fb950">
     <strong>✔ Resolved</strong>
-    <code>scanBus</code> alinhado com Go.
+    <code>scanBus</code> aligned with Go.
   </div>
 </div>
 
@@ -657,7 +658,7 @@
   </div>
   <div class="divergence" style="background:var(--ok-bg);border-color:var(--ok-border);color:#3fb950">
     <strong>✔ Resolved</strong>
-    Public API exposes only <code>transfer()</code> — alinhado com Go.
+    Public API exposes only <code>transfer()</code> — aligned with Go.
   </div>
 </div>
 
@@ -1057,8 +1058,8 @@
     <ul>
       <li><strong>Naming:</strong> Java uses <code>PascalCase</code> in methods (<code>GetDeviceName</code>) instead of <code>camelCase</code> like all other Java managers — inconsistency to fix.</li>
       <li><strong>Bulk DTOs:</strong> Go has <code>GetDeviceInfo()</code>, <code>GetCpuInfo()</code>, <code>GetOsInfo()</code> which aggregate individual fields into a single DTO; Java has no equivalent.</li>
-      <li><strong>GetMetrics:</strong> Go devolve <code>Metrics</code> DTO limpo; Java devolve o proto raw <code>MetricsInfoResponse</code>.</li>
-      <li><strong>Policies (Enable/Disable):</strong> Go devolve <code>error</code>; Java devolve <code>boolean</code>.</li>
+      <li><strong>GetMetrics:</strong> Go returns clean <code>Metrics</code> DTO; Java returns raw proto <code>MetricsInfoResponse</code>.</li>
+      <li><strong>Policies (Enable/Disable):</strong> Go returns <code>error</code>; Java returns <code>boolean</code>.</li>
       <li><strong>SendUpdate:</strong> Go accepts <code>[]byte</code> + <code>chunkSize</code>; Java recebe <code>File</code> ou <code>String</code> path and chunks internally.</li>
     </ul>
   </div>
@@ -1092,7 +1093,7 @@
   </div>
   <div class="divergence" style="background:var(--ok-bg);border-color:var(--ok-border);color:#3fb950">
     <strong>✔ Resolved</strong>
-    <code>PackageManager</code> implementado em Go — alinhado com Java.
+    <code>PackageManager</code> implemented in Go — aligned with Java.
   </div>
 </div>
 
@@ -1124,7 +1125,7 @@
     <strong>⚠ Divergence</strong>
     Go exposes both synchronous version (<code>SubscribeLogs</code>) como canal (<code>SubscribeLogsAsync</code>).
     Java only exposes callback version (<code>subscribeLogsAsync</code>).
-    Go <code>LogFilter</code> é um DTO; Java passa os campos separadamente (<code>app</code>, <code>tag</code>, <code>minLevel</code>).
+    Go <code>LogFilter</code> is a DTO; Java passes fields separately (<code>app</code>, <code>tag</code>, <code>minLevel</code>).
   </div>
 </div>
 
@@ -1139,8 +1140,8 @@
         <tr>
           <td>1</td>
           <td>PowerManager</td>
-          <td>Go devolve <code>PowerResult</code>; Java é <code>void</code></td>
-          <td>Normalize to <code>void</code> em Go ou devolver DTO in Java</td>
+          <td>Go returns <code>PowerResult</code>; Java is <code>void</code></td>
+          <td>Normalize to <code>void</code> in Go or return DTO in Java</td>
         </tr>
         <tr>
           <td>2</td>
@@ -1158,13 +1159,13 @@
           <td>4</td>
           <td>EthernetManager</td>
           <td>Go: <code>SetConfig(DTO)</code> — Java: <code>setStaticConfig(...)</code> + <code>setDhcp()</code></td>
-          <td>Alinhar Java para <code>setConfig(EthernetConfig)</code></td>
+          <td>Align Java to <code>setConfig(EthernetConfig)</code></td>
         </tr>
         <tr style="opacity:.5">
           <td>5 ✔</td>
           <td>SpiManager</td>
           <td><s>Go had helper methods <code>Write</code>/<code>Read</code>/<code>WriteRead</code> that Java did not have</s></td>
-          <td>✔ Resolved — API pública exposes only <code>transfer()</code></td>
+          <td>✔ Resolved — public API exposes only <code>transfer()</code></td>
         </tr>
         <tr style="opacity:.5">
           <td>6 ✔</td>
@@ -1205,7 +1206,7 @@
         <tr style="opacity:.5">
           <td>12 ✔</td>
           <td>SystemManager</td>
-          <td><s>Go tinha <code>GetDeviceInfo()</code> bulk — does not exist in proto</s></td>
+          <td><s>Go had <code>GetDeviceInfo()</code> bulk — does not exist in proto</s></td>
           <td>✔ Resolved — removed from Go; both APIs expose only per-RPC individual methods</td>
         </tr>
         <tr>
@@ -1217,7 +1218,7 @@
         <tr>
           <td>14</td>
           <td>SystemManager (policies)</td>
-          <td>Go <code>AllowUntrustedApps()</code> → <code>error</code>; Java → <code>boolean</code> (igual para Enable/Disable SSH, DevMode, RebootOnFailure)</td>
+          <td>Go <code>AllowUntrustedApps()</code> → <code>error</code>; Java → <code>boolean</code> (same for Enable/Disable SSH, DevMode, RebootOnFailure)</td>
           <td>Normalize to <code>void</code>/<code>error</code> in both — returned <code>boolean</code> is redundant</td>
         </tr>
         <tr>
@@ -1244,7 +1245,7 @@
         <tr>
           <td>1</td>
           <td>Client (TCP/TLS)</td>
-          <td>Go <code>NewTCPClient</code> tenta TLS por default; Python <code>NewClientTCP</code> é insecure por default.</td>
+          <td>Go <code>NewTCPClient</code> attempts TLS by default; Python <code>NewClientTCP</code> is insecure by default.</td>
           <td>Align semantics: either both insecure by default, or both TLS by default.</td>
         </tr>
         <tr>
@@ -1291,7 +1292,7 @@
         </tr>
         <tr>
           <td>9</td>
-          <td>Escopo de managers</td>
+          <td>Manager scope</td>
           <td>Python includes extra managers (<code>Account/Cellular/Time/Package/Sensor</code>) que do not have no go_sdk in this folder.</td>
           <td>Document as Python extension (not functional divergence) or implement equivalents in Go if full parity is the goal.</td>
         </tr>
