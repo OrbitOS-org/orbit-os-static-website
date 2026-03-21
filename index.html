@@ -20,7 +20,7 @@
         </div>
         <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
           <span></span><span></span><span></span>
-        </button>
+        </button>a
         <ul class="nav-links" id="navLinks">
           <li><a href="#features" class="nav-close">Features</a></li>
           <li><a href="#platform" class="nav-close">Platform</a></li>
@@ -323,14 +323,23 @@ byte[] data = device.i2cManager().transfer(new I2CManager.I2CTransferRequest(1, 
       <div class="section-container">
         <h2 class="section-title">Get Early Access</h2>
         <p class="section-subtitle">
-          Be the first to know when the CommunityI
-        <form class="contact-form">
+          Be the first to know when the Community Edition is launching.
+        </p>
+        <!--
+          Web3Forms: restrict allowed domains in the dashboard.
+          Multiple inboxes: free tier is often 1 recipient; paid plans or forwarding for more.
+        -->
+        <form class="contact-form" id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+          <input type="hidden" name="access_key" value="5068cc6d-db1d-41c6-acac-092434b24257" />
+          <input type="hidden" name="subject" value="OrbitOS — Early access request" />
+          <input type="hidden" name="from_name" value="OrbitOS website" />
           <div class="form-row">
-            <input type="text" placeholder="Your name" required />
-            <input type="email" placeholder="Your email" required />
+            <input type="text" name="name" placeholder="Your name" required autocomplete="name" />
+            <input type="email" name="email" placeholder="Your email" required autocomplete="email" />
           </div>
-          <textarea placeholder="Tell us about your project or use case..." rows="4"></textarea>
-          <button type="submit" class="btn-primary">Request Early Access</button>
+          <textarea name="message" placeholder="Tell us about your project or use case..." rows="4" required></textarea>
+          <button type="submit" class="btn-primary" id="contact-submit">Request Early Access</button>
+          <p class="contact-form-status" id="contact-form-status" role="status" aria-live="polite" hidden></p>
         </form>
       </div>
     </section>
@@ -375,6 +384,41 @@ byte[] data = device.i2cManager().transfer(new I2CManager.I2CTransferRequest(1, 
         toggle.classList.remove('open');
       });
     });
+
+    // Contact form → Web3Forms (configure access_key + recipients in https://web3forms.com)
+    const contactForm = document.getElementById('contact-form');
+    const contactStatus = document.getElementById('contact-form-status');
+    const contactSubmit = document.getElementById('contact-submit');
+    if (contactForm && contactStatus) {
+      contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        contactStatus.hidden = true;
+        contactSubmit.disabled = true;
+        try {
+          const fd = new FormData(contactForm);
+          const res = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            body: fd,
+          });
+          const data = await res.json();
+          contactStatus.hidden = false;
+          if (data.success) {
+            contactStatus.className = 'contact-form-status success';
+            contactStatus.textContent = 'Thanks — your request was sent.';
+            contactForm.reset();
+          } else {
+            contactStatus.className = 'contact-form-status error';
+            contactStatus.textContent = data.message || 'Something went wrong. Please try again.';
+          }
+        } catch (err) {
+          contactStatus.hidden = false;
+          contactStatus.className = 'contact-form-status error';
+          contactStatus.textContent = 'Network error. Please try again.';
+        } finally {
+          contactSubmit.disabled = false;
+        }
+      });
+    }
   </script>
   </body>
 </html>

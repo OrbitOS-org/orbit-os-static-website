@@ -1288,100 +1288,82 @@
           <td>8</td>
           <td>Shared DTOs</td>
           <td>Go has <code>types.go</code> (ex.: <code>SystemInfo</code>, <code>PowerResult</code>); Python does not have consolidated equivalent module.</td>
-          <td>Add equivalent Python DTOs (dataclasses) to keep high-level contract consistent.</td>
+          <td>Add equivalent Python D>
+    </table>
+  </div>
+  <div class="divergence">
+    <strong>⚠ Divergences</strong>
+    <ul>
+      <li><strong>Naming:</strong> Java uses <code>PascalCase</code> in methods (<code>GetDeviceName</code>) instead of <code>camelCase</code> like all other Java managers — inconsistency to fix.</li>
+      <li><strong>Bulk DTOs:</strong> Go has <code>GetDeviceInfo()</code>, <code>GetCpuInfo()</code>, <code>GetOsInfo()</code> which aggregate individual fields into a single DTO; Java has no equivalent.</li>
+      <li><strong>GetMetrics:</strong> Go returns clean <code>Metrics</code> DTO; Java returns raw proto <code>MetricsInfoResponse</code>.</li>
+      <li><strong>Policies (Enable/Disable):</strong> Go returns <code>error</code>; Java returns <code>boolean</code>.</li>
+      <li><strong>SendUpdate:</strong> Go accepts <code>[]byte</code> + <code>chunkSize</code>; Java recebe <code>File</code> ou <code>String</code> path and chunks internally.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ PACKAGES -->
+<div class="section" id="packages">
+  <div class="section-title">PackageManager</div>
+  <div class="section-subtitle">Application package management — <code>PackageManagerService</code></div>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>Method</th><th>Go</th><th>Java</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>List installed</td>
+          <td><code class="go-sig">GetInstalledPackages() ([]InstalledPackage, error)</code></td>
+          <td><code class="java-sig">List&lt;InstalledPackage&gt; getInstalledPackages() throws PackageManagerException</code></td>
         </tr>
         <tr>
-          <td>9</td>
-          <td>Manager scope</td>
-          <td>Python includes extra managers (<code>Account/Cellular/Time/Package/Sensor</code>) que do not have no go_sdk in this folder.</td>
-          <td>Document as Python extension (not functional divergence) or implement equivalents in Go if full parity is the goal.</td>
+          <td>Install/Update</td>
+          <td><code class="go-sig">InstallUpdatePackage(filePath string, chunkSize int) (bool, error)</code></td>
+          <td><code class="java-sig">boolean installUpdatePackage(String filePath, int chunkSize) throws PackageManagerException, IOException</code></td>
+        </tr>
+        <tr>
+          <td>Remove package</td>
+          <td><code class="go-sig">RemovePackage(appName string) (bool, error)</code></td>
+          <td><code class="java-sig">boolean removePackage(String appName) throws PackageManagerException</code></td>
         </tr>
       </tbody>
     </table>
   </div>
+  <div class="divergence" style="background:var(--ok-bg);border-color:var(--ok-border);color:#3fb950">
+    <strong>✔ Resolved</strong>
+    <code>PackageManager</code> implemented in Go — aligned with Java.
+  </div>
 </div>
 
-</main>
-<script>
-  // Add Python as third language directly in existing Go|Java tables.
-  // Go is source of truth; this maps current Python SDK coverage.
-  (() => {
-    const pyBySection = {
-      account: {
-        "Add account": "AddAccount(email: str, password: str)",
-        "Get status": "GetAccountStatus()",
-        "Remove account": "RemoveAccount(email: str)",
-      },
-      power: {
-        Reboot: "Reboot(force: bool, reason: str) -> BooleanResponse",
-        Shutdown: "Shutdown(force: bool, reason: str) -> BooleanResponse",
-      },
-      wifi: {
-        "List interfaces": "ListWiFiInterfaces()",
-        "Link properties": "GetWiFiLinkProperties(interface_name: str)",
-        "Is connected?": "IsWiFiConnected(interface_name: str)",
-        Connect: "Connect(interface_name: str)",
-        Reconnect: "N/A (not implemented in current python SDK)",
-        Disconnect: "Disconnect(interface_name: str)",
-        "Start hotspot": "StartAP(interface_name: str)",
-        "Stop hotspot": "StopAP(interface_name: str)",
-        "Scan networks": "ScanWiFi(interface_name: str)",
-      },
-      ethernet: {
-        "List interfaces": "ListEthernetInterfaces()",
-        "Link properties": "GetEthernetLinkProperties(interface_name: str)",
-        "Is connected?": "IsEthernetConnected(interface_name: str)",
-        "Apply config": "SetEthernetConfig(interface_name, dhcp_enable, ipv4_address, ipv4_gateway, ipv4_dns)",
-        "Enable DHCP": "SetEthernetConfig(..., dhcp_enable=True, ...)",
-        Enable: "N/A (not implemented in current python SDK)",
-        Disable: "N/A (not implemented in current python SDK)",
-      },
-      firewall: {
-        "List zones": "ListZones()",
-        "Add zone": "AddZone(...)",
-        "Remove zone": "RemoveZone(name: str)",
-        "List rules": "ListRules()",
-        "Add rule": "AddRule(request)",
-        "Remove rule": "RemoveRule(rule_id: str)",
-        "Flush rules": "FlushRules()",
-      },
-      gpio: {
-        "List pins": "ListPins()",
-        "Get level": "GetLevel(pin: GpioPin) -> bool",
-        "Set level": "SetLevel(pin: GpioPin, high: bool)",
-        "Get direction": "GetDirection(pin: GpioPin) -> bool",
-        "Set direction": "SetDirection(pin: GpioPin, out: bool)",
-        "List PWM pins": "ListPwmPins()",
-        "Set PWM": "SetPwm(pin: GpioPin, duty_cycle: float, frequency_hz: float)",
-        "Get PWM": "GetPwm(pin: GpioPin) -> PwmState",
-        "Disable PWM": "DisablePwm(pin: GpioPin)",
-      },
-      uart: {
-        "List ports": "ListPorts()",
-        Open: "Open(cfg: UartConfig)",
-        Close: "Close(port: str)",
-        "Get config": "GetConfig(port: str) -> UartConfig",
-        Write: "Write(port: str, data: bytes) -> int",
-        "Listen (sync)": "Listen(port: str, max_chunk_size=256) -> Iterator[bytes]",
-        "Listen (async)": "N/A (not implemented in current python SDK)",
-      },
-      i2c: {
-        "List buses": "ListBuses()",
-        "Scan bus": "ScanBus(bus: int)",
-        "Get config": "GetConfig(bus: int) -> I2CConfig",
-        "Set config": "SetConfig(cfg: I2CConfig)",
-        Transfer: "Transfer(req: I2CTransferRequest) -> bytes",
-      },
-      spi: {
-        "List devices": "ListDevices()",
-        "Get config": "GetConfig(bus: int, chip_select: int) -> SpiConfig",
-        "Set config": "SetConfig(cfg: SpiConfig)",
-        Transfer: "Transfer(bus: int, chip_select: int, data_out: bytes, read_length: int) -> bytes",
-      },
-      bluetooth: {
-        "Adapter info": "GetAdapterInfo(request)",
-        Enable: "EnableBluetooth(request)",
-        Disable: "DisableBluetooth(request)",
+<!-- ═══════════════════════════════════════════════════════════ DEVELOPMENT -->
+<div class="section" id="development">
+  <div class="section-title">DevelopmentManager</div>
+  <div class="section-subtitle">Device log streaming — <code>DevelopmentService</code></div>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>Method</th><th>Go</th><th>Java</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Subscribe logs (sync)</td>
+          <td><code class="go-sig">SubscribeLogs(ctx, filter LogFilter, onEntry func(LogEntry)) error</code></td>
+          <td><code class="na">— (use subscribeLogsAsync)</code></td>
+        </tr>
+        <tr>
+          <td>Subscribe logs (async)</td>
+          <td><code class="go-sig">SubscribeLogsAsync(ctx, filter LogFilter) &lt;-chan LogEntry</code></td>
+          <td><code class="java-sig">StreamHandle subscribeLogsAsync(String app, String tag,
+  LogLevel minLevel,
+  Consumer&lt;LogEntry&gt; onEntry,
+  Consumer&lt;Throwable&gt; onError)</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="divergence">
+    <strong>⚠ Divergence</strong>
+    Go exposes both synchronous version (<code>SubscribeLogs</code>) como canal (<code>SubscribeLogsAsync</code>).
+    Java only exposes callback version (<code>subscribeLogsAsync</code>).
+    Go est)",
         "Get local name": "GetLocalName(request)",
         "Set local name": "SetLocalName(request)",
         "Set discoverable": "SetDiscoverable(request)",

@@ -690,6 +690,20 @@ code {
 
 .contact-form .btn-primary { align-self: flex-start; }
 
+.contact-form-status {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.contact-form-status.success { color: #86efac; }
+.contact-form-status.error { color: #f87171; }
+
+.contact-form button[disabled] {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
 /* ========================
    Footer
 ======================== */
