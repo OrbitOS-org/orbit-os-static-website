@@ -76,7 +76,19 @@ code {
   letter-spacing: -.01em;
 }
 
-.logo-icon { color: var(--accent); font-size: 1.4rem; }
+.logo-link {
+  display: flex;
+  align-items: center;
+  line-height: 0;
+}
+
+.logo-img {
+  height: 40px;
+  width: auto;
+  max-width: min(200px, 55vw);
+  display: block;
+  object-fit: contain;
+}
 
 .nav-links {
   list-style: none;
@@ -718,9 +730,10 @@ code {
   padding: 0 2rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 1rem;
+  text-align: center;
 }
 
 .footer-copy { color: var(--muted); font-size: 0.85rem; }

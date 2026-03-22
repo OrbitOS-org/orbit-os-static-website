@@ -15,8 +15,9 @@
     <nav class="navbar" id="navbar">
       <div class="nav-container">
         <div class="logo">
-          <span class="logo-icon">⬡</span>
-          <span class="logo-text">Orbit<strong>OS</strong></span>
+          <a href="index.html" class="logo-link" aria-label="Orbit OS — Home">
+            <img src="logo8.png" alt="Orbit OS" class="logo-img" width="200" height="48" />
+          </a>
         </div>
         <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
           <span></span><span></span><span></span>
@@ -347,11 +348,7 @@ byte[] data = device.i2cManager().transfer(new I2CManager.I2CTransferRequest(1, 
     <!-- Footer -->
     <footer class="footer">
       <div class="footer-container">
-        <div class="logo">
-          <span class="logo-icon">⬡</span>
-          <span class="logo-text">Orbit<strong>OS</strong></span>
-        </div>
-        <p class="footer-copy">© 2026 OrbitOS · Open Source · Built for the edge</p>
+        <p class="footer-copy">&copy; 2026 OrbitOS &middot; Open Source &middot; Built for the edge</p>
       </div>
     </footer>
 
