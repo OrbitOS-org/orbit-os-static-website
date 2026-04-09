@@ -264,7 +264,7 @@ code {
 .label-top    { top: 16px;  left: 50%; transform: translateX(-50%); }
 .label-right  { right: 10px; top: 50%; transform: translateY(-50%); }
 .label-bottom { bottom: 16px; left: 50%; transform: translateX(-50%); }
-.label-left   { left: 10px; top: 50%; transform: translateY(-50%); }
+.label-left   { left: 24px; top: 50%; transform: translateY(-50%); }
 
 @keyframes spin {
   from { transform: rotate(0deg); }
@@ -361,7 +361,28 @@ code {
   transform: translateY(-4px);
 }
 
-.card-icon { font-size: 1.8rem; margin-bottom: 0.9rem; }
+.card-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.9rem;
+  border-radius: 0.75rem;
+  background: rgba(167, 139, 250, 0.12);
+  border: 1px solid rgba(167, 139, 250, 0.35);
+  color: var(--accent-cyan);
+}
+
+.ui-icon {
+  width: 1.35rem;
+  height: 1.35rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 .card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
 .card p { color: var(--muted); font-size: 0.875rem; line-height: 1.65; }
 

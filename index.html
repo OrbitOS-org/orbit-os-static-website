@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Orbit OS — Build and control your own device ecosystem</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <link rel="stylesheet" href="style.css?v=3" />
+    <link rel="stylesheet" href="style.css?v=4" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/tokyo-night-dark.min.css" />
   </head>
 
@@ -27,7 +27,7 @@
           <li><a href="#platform" class="nav-close">Platform</a></li>
           <li><a href="#sdk" class="nav-close">SDK</a></li>
           <li><a href="https://forum.orbit-os.org" class="nav-close" target="_blank" rel="noopener noreferrer">Forum</a></li>
-          <li><a href="https://store.orbit-os.org" class="btn-nav nav-close" target="_blank" rel="noopener noreferrer">App Store</a></li>
+          <li><a href="#" class="btn-nav nav-close" aria-disabled="true" onclick="return false;">App Store (Coming Soon)</a></li>
         </ul>
       </div>
     </nav>
@@ -37,7 +37,8 @@
       <div class="hero-content">
         <h1>The missing platform<br/>for <span class="highlight">Embedded Linux</span></h1>
         <p class="hero-subtitle">
-          Orbit OS transforms embedded Linux devices into a programmable ecosystem. Access hardware, networking, and system services locally or remotely, with built-in security and real-time control.
+          Orbit OS turns embedded Linux devices into a programmable ecosystem.
+          Expose hardware, networking, and system services as secure, unified APIs — locally and remotely — with built-in security, real-time control, and full application lifecycle management.
         </p>
         <div class="under-construction">
           🚧 Full website under construction · Community Edition launching soon
@@ -55,7 +56,7 @@
         <span class="orbit-label label-top">OTA</span>
         <span class="orbit-label label-right">Apps</span>
         <span class="orbit-label label-bottom">SDK</span>
-        <span class="orbit-label label-left">Edge</span>
+        <span class="orbit-label label-left">AI</span>
       </div>
     </section>
 
@@ -67,187 +68,262 @@
           Every embedded project<br/>reinvents the same infrastructure.
         </h2>
         <p class="section-desc">
-          Reading GPIO, configuring networking, securing remote access,
-          handling OTA updates and building APIs — every team ends up writing
-          the same platform code again and again.
-          <strong>Orbit OS provides that platform.</strong>
+          GPIO handling. Networking. Remote access. OTA updates. Application lifecycle. APIs.
+        </p>
+        <p class="section-desc">
+          Teams repeatedly rebuild the same platform layer instead of focusing on their product.
+        </p>
+        <p class="section-desc">
+          <strong>Orbit OS removes that burden.</strong>
+        </p>
+        <p class="section-desc">
+          It provides a complete runtime platform — from low-level device control to secure
+          connectivity, centralized application management, controlled resource access, and
+          seamless OTA updates for both system and applications.
+        </p>
+        <p class="section-desc">
+          Instead of stitching infrastructure together, teams focus on what actually matters:
+          building the logic that differentiates their product.
         </p>
       </div>
     </section>
 
-    <!-- Features -->
-    <section class="features" id="features">
-      <div class="section-container">
-        <p class="section-label">What it does</p>
-        <h2 class="section-title">One runtime. All hardware.</h2>
-        <p class="section-subtitle">Access and control your device from any language, locally or remotely.</p>
-        <div class="cards">
+<!-- Features -->
+<section class="features" id="features">
+  <div class="section-container">
+    <p class="section-label">What it does</p>
+    <h2 class="section-title">One runtime. All hardware.</h2>
+    <p class="section-subtitle">Access and control your device from any language, locally or remotely.</p>
 
-          <div class="card">
-            <div class="card-icon">🔌</div>
-            <h3>One API for All Hardware</h3>
-            <p>
-              Orbit OS exposes device capabilities as APIs you can call from apps or tools —
-              locally via UDS or remotely via TCP/mTLS. GPIO, PWM, I²C, SPI, UART, WiFi, Ethernet, Bluetooth and network controls
-              all work consistently across every Orbit OS device.
-            </p>
-          </div>
+    <div class="cards">
 
-          <div class="card">
-            <div class="card-icon">🔐</div>
-            <h3>Security by Default</h3>
-            <p>
-              Every connection is encrypted and authenticated. Orbit OS verifies every caller before granting access —
-              no open ports, no implicit trust. Safe for field and industrial deployments.
-            </p>
-          </div>
-
-          <div class="card">
-            <div class="card-icon">📦</div>
-            <h3>Isolated Apps</h3>
-            <p>
-              Applications run in isolation and communicate through defined interfaces.
-              If an app fails, the runtime restarts it automatically — giving you reliability and maintainability.
-            </p>
-          </div>
-
-          <div class="card">
-            <div class="card-icon">🔄</div>
-            <h3>Atomic OS Updates</h3>
-            <p>
-              OSTree-backed updates with delta downloads, instant rollback and zero-downtime upgrades.
-              Devices can safely update in the field without risk of bricking.
-            </p>
-          </div>
-
-          <div class="card">
-            <div class="card-icon">🌍</div>
-            <h3>Multi-Language SDK</h3>
-            <p>
-              Develop applications in <strong>Go</strong>, <strong>Python</strong>, <strong>Java</strong> or <strong>C++</strong>.
-              Apps are packaged into a unified <code>.orb</code> format ensuring consistent deployment across any Orbit OS device.
-            </p>
-          </div>
-
-          <div class="card">
-            <div class="card-icon">💻</div>
-            <h3>Real-Time Remote Development</h3>
-            <p>
-              Develop against real hardware without deploying first. Run your application directly from your laptop while interacting with device peripherals in real time using the same SDK and APIs.
-              <strong>Develop locally. Test on real hardware. Deploy when ready.</strong>
-            </p>
-          </div>
-
-          <div class="card">
-            <div class="card-icon">⚡</div>
-            <h3>Edge-Ready Runtime</h3>
-            <p>
-              Orbit OS is designed for embedded and edge systems. Efficient runtime services allow apps to run on resource-constrained devices while maintaining modern development capabilities.
-            </p>
-          </div>
-
+      <div class="card">
+        <div class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="ui-icon" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7v4m6-4v4M8 11h8l1 4a4 4 0 0 1-4 4h-2a4 4 0 0 1-4-4l1-4Z"/></svg>
         </div>
-      </div>
-    </section>
-
-    <!-- Platform -->
-    <section class="platform" id="platform">
-      <div class="section-container">
-
-        <!-- Header -->
-        <div class="platform-header">
-          <p class="section-label">Architecture</p>
-          <h2>Built like <span class="highlight">Android</span>.<br/>For the edge.</h2>
-          <p class="platform-intro">
-            Gravity RT — the core of Orbit OS — runs your applications, controls hardware,
-            and enforces security in a single unified runtime.
-            Orbit OS exposes device capabilities as APIs you can call from apps or tools —
-            locally or remotely, with security built in. Every request is verified before access is granted.
-          </p>
-        </div>
-
-        <!-- Architecture diagram -->
-        <div class="diagram-wrapper">
-          <img src="diagram.jpeg" alt="Orbit OS architecture diagram — Hardware, Linux, Gravity RT, Orbit OS runtime, .orb apps, Cloud Store, Remote Management and Remote Development" class="diagram-img" />
-        </div>
-
-        <!-- Chips + Stats row -->
-        <div class="platform-bottom">
-          <div class="platform-meta">
-            <p class="chips-label">Supported Devices</p>
-            <div class="platform-chips">
-              <span class="chip">Raspberry Pi 2 / 3 / 4 / 5</span>
-              <span class="chip">Arduino UNO Q</span>
-              <span class="chip">BeagleBone Black / AI</span>
-              <span class="chip">NVIDIA Jetson Nano / Xavier</span>
-              <span class="chip">Rock Pi 4 / 5</span>
-              <span class="chip">Odroid N2+</span>
-              <span class="chip">Banana Pi M2 / M5 / M7</span>
-            <span class="chip">x86_64 SBCs & NUCs</span>
-            </div>
-            <p class="chips-label">Architectures</p>
-            <div class="platform-chips">
-              <span class="chip">ARM64 (aarch64)</span>
-              <span class="chip">ARM32 (ARMv7)</span>
-              <span class="chip">x86_64</span>
-            </div>
-          </div>
-          <div class="about-stats">
-            <div class="stat">
-              <span class="stat-number">Unified</span>
-              <span class="stat-label">API & Packages</span>
-            </div>
-            <div class="stat">
-              <span class="stat-number">Secure</span>
-              <span class="stat-label">Local & Remote Access</span>
-            </div>
-            <div class="stat">
-              <span class="stat-number">App Store</span>
-              <span class="stat-label">Install & Update Apps</span>
-            </div>
-            <div class="stat">
-              <span class="stat-number">Safe</span>
-              <span class="stat-label">System Updates</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- Store -->
-    <section class="market" id="market">
-      <div class="section-container">
-        <p class="section-label">App Distribution</p>
-        <h2 class="section-title">Application Store</h2>
-        <p class="section-subtitle">
-          Browse, install, and manage applications from a central store. Each app is verified and encrypted, ensuring trusted deployment on your devices.
+        <h3>One API for all hardware</h3>
+        <p>
+          Device capabilities are exposed as unified APIs — locally or remotely.
+          GPIO, PWM, I²C, SPI, UART, WiFi, Ethernet and Bluetooth behave consistently across all devices.
         </p>
-
-        <div class="cards">
-          <div class="card">
-            <div class="card-icon">🛒</div>
-            <h3>Secure App Store</h3>
-            <p>Users can browse and install apps safely from a centralized store.</p>
-          </div>
-          <div class="card">
-            <div class="card-icon">🔏</div>
-            <h3>Verified Packages</h3>
-            <p>Apps are packaged in <code>.orb</code> format and cryptographically verified before installation.</p>
-          </div>
-          <div class="card">
-            <div class="card-icon">⚙️</div>
-            <h3>Atomic Install & Updates</h3>
-            <p>Installations and updates are transactional — complete fully or rollback automatically.</p>
-          </div>
-          <div class="card">
-            <div class="card-icon">🔄</div>
-            <h3>Managed Lifecycle</h3>
-            <p>The runtime manages app lifecycle: start, stop, supervise apps automatically, with granular permissions.</p>
-          </div>
-        </div>
       </div>
-    </section>
+
+      <div class="card">
+        <div class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="ui-icon" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V8a4 4 0 0 1 8 0v2"/></svg>
+        </div>
+        <h3>Security by default</h3>
+        <p>
+          Every connection is encrypted and authenticated. Orbit OS verifies every caller before granting access —
+          no open ports, no implicit trust. Built for secure industrial deployments.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="ui-icon" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7l8 4 8-4-8-4Z"/><path d="M4 7v10l8 4 8-4V7"/><path d="M12 11v10"/></svg>
+        </div>
+        <h3>Isolated applications</h3>
+        <p>
+          Applications run in isolated environments and communicate through defined interfaces.
+          Faulty apps are automatically restarted by the runtime to maintain system stability.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="ui-icon" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-5V2"/><path d="M20 7a8 8 0 1 0 2.3 5.7"/><path d="M4 17h5v5"/><path d="M4 17A8 8 0 0 0 19.7 12"/></svg>
+        </div>
+        <h3>Atomic system updates</h3>
+        <p>
+          Safe, atomic updates with full or delta downloads, instant rollback, and zero-downtime upgrades.
+          Update devices in the field without risk of bricking.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="ui-icon" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg>
+        </div>
+        <h3>Multi-language SDK</h3>
+        <p>
+          Build applications in Go, Python, Java, or C++. Applications are packaged into a unified <code>.orb</code> format
+          for consistent deployment across all Orbit OS devices.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="ui-icon" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+        </div>
+        <h3>Real-time development</h3>
+        <p>
+          Develop against real hardware without deploying first. Run applications from your laptop while interacting
+          with device peripherals in real time using the same SDK and APIs.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="ui-icon" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 5 13h6l-1 9 9-12h-6l0-8Z"/></svg>
+        </div>
+        <h3>Edge-ready runtime</h3>
+        <p>
+          Optimized for embedded and edge systems. Lightweight runtime services enable modern application patterns
+          on resource-constrained devices.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Platform -->
+<section class="platform" id="platform">
+  <div class="section-container">
+
+    <!-- Header -->
+    <div class="platform-header">
+      <p class="section-label">Architecture</p>
+
+      <h2>
+        Built like <span class="highlight">Android</span>.<br/>
+        Designed for the edge.
+      </h2>
+
+      <p class="platform-intro">
+        Gravity RT is the core execution layer of Orbit OS. It orchestrates applications, hardware access,
+        and system services within a unified runtime environment.
+        Every interaction with the device passes through a controlled API layer with strict authentication and policy enforcement.
+      </p>
+    </div>
+
+    <!-- Architecture diagram -->
+    <div class="diagram-wrapper">
+      <img 
+        src="diagram.jpeg" 
+        alt="Orbit OS architecture diagram showing hardware layer, Linux base, Gravity RT execution layer, API enforcement layer, .orb applications, and remote management system" 
+        class="diagram-img" 
+      />
+    </div>
+
+    <!-- Chips + Stats row -->
+    <div class="platform-bottom">
+
+      <!-- Supported devices -->
+      <div class="platform-meta">
+
+        <p class="chips-label">Supported devices</p>
+        <div class="platform-chips">
+          <span class="chip">Raspberry Pi 2–5</span>
+          <span class="chip">Arduino UNO Q</span>
+          <span class="chip">BeagleBone Black / AI</span>
+          <span class="chip">NVIDIA Jetson series</span>
+          <span class="chip">Rock Pi 4 / 5</span>
+          <span class="chip">Odroid N2+</span>
+          <span class="chip">Banana Pi family</span>
+          <span class="chip">x86_64 edge devices</span>
+        </div>
+
+        <p class="chips-label">Architectures</p>
+        <div class="platform-chips">
+          <span class="chip">ARM64</span>
+          <span class="chip">ARM32</span>
+          <span class="chip">x86_64</span>
+        </div>
+
+      </div>
+
+      <!-- Stats -->
+      <div class="about-stats">
+
+        <div class="stat">
+          <span class="stat-number">Execution layer</span>
+          <span class="stat-label">Unified runtime for applications and system services</span>
+        </div>
+
+        <div class="stat">
+          <span class="stat-number">Policy-driven security</span>
+          <span class="stat-label">All requests are authenticated, authorized, and enforced at runtime</span>
+        </div>
+
+        <div class="stat">
+          <span class="stat-number">Controlled ecosystem</span>
+          <span class="stat-label">Verified .orb packages run in isolated, managed environments</span>
+        </div>
+
+        <div class="stat">
+          <span class="stat-number">Reliable updates</span>
+          <span class="stat-label">Atomic upgrades with instant rollback and zero-downtime deployment</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- Store -->
+<section class="market" id="market">
+  <div class="section-container">
+
+    <p class="section-label">Application/OTA Distribution</p>
+
+    <h2 class="section-title">App Store</h2>
+
+    <p class="section-subtitle">
+      Deploy and manage applications across your devices from a central store.
+      Every package is verified, signed, and delivered in the unified <code>.orb</code> format.
+      The store also handles automatic updates and OTA system upgrades.
+    </p>
+
+    <div class="cards">
+
+      <div class="card">
+        <div class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="ui-icon" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l2.2 10.5a2 2 0 0 0 2 1.5h8.8a2 2 0 0 0 2-1.6L22 8H7.2"/></svg>
+        </div>
+        <h3>Secure distribution</h3>
+        <p>
+          Applications are installed from a centralized store with encrypted delivery and trusted execution on all devices.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="ui-icon" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7v6c0 4.3 2.9 7.8 8 9 5.1-1.2 8-4.7 8-9V7l-8-4Z"/><path d="M9.5 12.5 11 14l3.5-3.5"/></svg>
+        </div>
+        <h3>Verified packages</h3>
+        <p>
+          Apps are packaged in <code>.orb</code> format and cryptographically verified before installation or update.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="ui-icon" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1 1 0 0 0 .2 1.1l.1.1a1 1 0 0 1 0 1.4l-1.3 1.3a1 1 0 0 1-1.4 0l-.1-.1a1 1 0 0 0-1.1-.2 1 1 0 0 0-.6.9V20a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-.2a1 1 0 0 0-.6-.9 1 1 0 0 0-1.1.2l-.1.1a1 1 0 0 1-1.4 0L4.3 18a1 1 0 0 1 0-1.4l.1-.1a1 1 0 0 0 .2-1.1 1 1 0 0 0-.9-.6H3.5a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1h.2a1 1 0 0 0 .9-.6 1 1 0 0 0-.2-1.1l-.1-.1a1 1 0 0 1 0-1.4L5.6 4a1 1 0 0 1 1.4 0l.1.1a1 1 0 0 0 1.1.2 1 1 0 0 0 .6-.9V3.2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v.2a1 1 0 0 0 .6.9 1 1 0 0 0 1.1-.2l.1-.1a1 1 0 0 1 1.4 0l1.3 1.3a1 1 0 0 1 0 1.4l-.1.1a1 1 0 0 0-.2 1.1 1 1 0 0 0 .9.6h.2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-.2a1 1 0 0 0-.9.6Z"/></svg>
+        </div>
+        <h3>Atomic updates</h3>
+        <p>
+          Installations and updates are transactional — they either complete fully or roll back automatically to a safe state.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="ui-icon" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-5V2"/><path d="M20 7a8 8 0 1 0 2.3 5.7"/><path d="M4 17h5v5"/><path d="M4 17A8 8 0 0 0 19.7 12"/></svg>
+        </div>
+        <h3>Fleet lifecycle management</h3>
+        <p>
+          The store manages full application and system lifecycle — including automatic updates, version control,
+          and OTA system upgrades across your entire device fleet.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
 
     <!-- SDK -->
     <section class="sdk-section" id="sdk">
@@ -320,9 +396,9 @@ byte[] data = device.i2cManager().transfer(new I2CManager.I2CTransferRequest(1, 
     <!-- Contact -->
     <section class="contact" id="contact">
       <div class="section-container">
-        <h2 class="section-title">Get Early Access</h2>
+        <h2 class="section-title">Contact Us</h2>
         <p class="section-subtitle">
-          Be the first to know when the Community Edition is launching.
+          Have a question, partnership idea, or technical use case? Send us a message.
         </p>
         <!--
           Web3Forms: restrict allowed domains in the dashboard.
@@ -330,14 +406,14 @@ byte[] data = device.i2cManager().transfer(new I2CManager.I2CTransferRequest(1, 
         -->
         <form class="contact-form" id="contact-form" action="https://api.web3forms.com/submit" method="POST">
           <input type="hidden" name="access_key" value="5068cc6d-db1d-41c6-acac-092434b24257" />
-          <input type="hidden" name="subject" value="Orbit OS — Early access request" />
+          <input type="hidden" name="subject" value="Orbit OS — Contact request" />
           <input type="hidden" name="from_name" value="Orbit OS website" />
           <div class="form-row">
             <input type="text" name="name" placeholder="Your name" required autocomplete="name" />
             <input type="email" name="email" placeholder="Your email" required autocomplete="email" />
           </div>
-          <textarea name="message" placeholder="Tell us about your project or use case..." rows="4" required></textarea>
-          <button type="submit" class="btn-primary" id="contact-submit">Request Early Access</button>
+          <textarea name="message" placeholder="Tell us how we can help your team..." rows="4" required></textarea>
+          <button type="submit" class="btn-primary" id="contact-submit">Contact Team</button>
           <p class="contact-form-status" id="contact-form-status" role="status" aria-live="polite" hidden></p>
         </form>
       </div>
