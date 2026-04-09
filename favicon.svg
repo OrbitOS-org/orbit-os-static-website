@@ -8,7 +8,7 @@
 
   <rect width="64" height="64" rx="10" fill="#0a0f1a"/>
 
-  <!-- OrbitOS brand-inspired hex -->
+  <!-- Orbit OS brand-inspired hex -->
   <polygon
     points="32,11 49,21 49,43 32,53 15,43 15,21"
     fill="none"
@@ -17,6 +17,4 @@
     stroke-linejoin="round"
   />
 
-  <!-- subtle inner core for embedded/runtime feel -->
-  <circle cx="32" cy="32" r="4" fill="#22d3ee" opacity="0.9"/>
 </svg>
