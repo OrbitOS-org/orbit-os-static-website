@@ -204,10 +204,13 @@
 <body>
 
 <header>
-  <a href="index.html" class="header-logo" aria-label="Orbit OS — Home">
-    <img src="logo8.png" alt="Orbit OS" width="200" height="48" />
-  </a>
-  <div>
+  <div style="display: flex; align-items: center; gap: 24px;">
+    <a href="index.html" class="header-logo" aria-label="Orbit OS — Home">
+      <img src="logo8.png" alt="Orbit OS" width="200" height="48" />
+    </a>
+    <a href="docs.html" style="color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; transition: color .15s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Docs</a>
+  </div>
+  <div style="flex-grow: 1;">
     <h1>Orbit OS SDK — Method Reference</h1>
     <p>Go SDK is the source of truth; Java and Python signatures are tracked side-by-side</p>
   </div>
