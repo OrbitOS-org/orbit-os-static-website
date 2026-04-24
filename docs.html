@@ -113,6 +113,14 @@
       gap: 0.75rem;
     }
 
+    .docs-content h2.tab-heading {
+      font-size: 1.35rem;
+      color: var(--accent-2);
+      margin-top: 2rem;
+      border-left: 3px solid var(--accent-2);
+      padding-left: 0.75rem;
+    }
+
     .docs-content h3 {
       font-size: 1.25rem;
       margin: 2rem 0 1rem;
@@ -249,6 +257,36 @@
       margin-top: auto;
     }
 
+    /* Lightbox */
+    .zoomable {
+      cursor: zoom-in;
+      transition: opacity 0.2s;
+    }
+
+    .zoomable:hover { opacity: 0.85; }
+
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 999;
+      cursor: zoom-out;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    #lightbox.open { display: flex; }
+
+    #lightbox img {
+      max-width: 100%;
+      max-height: 90vh;
+      border-radius: var(--radius);
+      box-shadow: 0 0 60px rgba(0,0,0,0.8);
+      cursor: zoom-out;
+    }
+
     @media (max-width: 1024px) {
       .docs-sidebar {
         display: none;
@@ -257,6 +295,74 @@
       .docs-layout {
         padding: 1rem;
         margin-top: 100px;
+      }
+
+      .docs-content h1 {
+        font-size: 1.8rem;
+      }
+
+      .docs-content h2 {
+        font-size: 1.35rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .docs-layout {
+        padding: 0.75rem;
+        margin-top: 80px;
+        gap: 0;
+      }
+
+      .docs-content h1 {
+        font-size: 1.5rem;
+      }
+
+      .docs-content h2 {
+        font-size: 1.2rem;
+        margin: 2rem 0 1rem;
+      }
+
+      .docs-content h2.tab-heading {
+        font-size: 1.1rem;
+      }
+
+      .docs-content h3 {
+        font-size: 1rem;
+      }
+
+      /* Tables scroll horizontally on small screens */
+      .api-table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        font-size: 0.85rem;
+      }
+
+      .api-table th,
+      .api-table td {
+        padding: 0.6rem 0.75rem;
+        white-space: nowrap;
+      }
+
+      /* Code blocks */
+      pre {
+        font-size: 0.8rem;
+        overflow-x: auto;
+      }
+
+      .architecture-box {
+        font-size: 0.75rem;
+        padding: 1rem;
+      }
+
+      .note-box {
+        padding: 1rem;
+        margin: 1.25rem 0;
+      }
+
+      /* Images fill width */
+      img.zoomable {
+        margin: 1rem 0;
       }
     }
   </style>
@@ -289,6 +395,36 @@
     <!-- Sidebar -->
     <aside class="docs-sidebar">
       <nav class="sidebar-nav">
+        <div class="sidebar-group">
+          <h3 class="sidebar-title">Getting Started</h3>
+          <a href="#gs-overview" class="sidebar-link">Overview</a>
+          <a href="#gs-requirements" class="sidebar-link">Requirements</a>
+          <a href="#gs-install" class="sidebar-link">Download & Install</a>
+          <a href="#gs-apphub" class="sidebar-link">First Access — Launcher</a>
+          <a href="#gs-settings" class="sidebar-link">Settings</a>
+          <a href="#gs-settings-system" class="sidebar-link" style="padding-left: 1.75rem; margin-left: -1rem;">System</a>
+          <a href="#gs-settings-system-information" class="sidebar-link" style="padding-left: 2.5rem; margin-left: -1rem; font-size: 0.85rem;">Information</a>
+          <a href="#gs-settings-system-metrics" class="sidebar-link" style="padding-left: 2.5rem; margin-left: -1rem; font-size: 0.85rem;">Metrics</a>
+          <a href="#gs-settings-system-update" class="sidebar-link" style="padding-left: 2.5rem; margin-left: -1rem; font-size: 0.85rem;">Update</a>
+          <a href="#gs-settings-system-time" class="sidebar-link" style="padding-left: 2.5rem; margin-left: -1rem; font-size: 0.85rem;">Time</a>
+          <a href="#gs-settings-system-security" class="sidebar-link" style="padding-left: 2.5rem; margin-left: -1rem; font-size: 0.85rem;">Security</a>
+          <a href="#gs-settings-network" class="sidebar-link" style="padding-left: 1.75rem; margin-left: -1rem;">Network</a>
+          <a href="#gs-settings-apps" class="sidebar-link" style="padding-left: 1.75rem; margin-left: -1rem;">Apps</a>
+          <a href="#gs-settings-firewall" class="sidebar-link" style="padding-left: 1.75rem; margin-left: -1rem;">Firewall</a>
+          <a href="#gs-settings-power" class="sidebar-link" style="padding-left: 1.75rem; margin-left: -1rem;">Power</a>
+          <a href="#gs-settings-about" class="sidebar-link" style="padding-left: 1.75rem; margin-left: -1rem;">About</a>
+          <a href="#gs-store-setup" class="sidebar-link">Create Account</a>
+          <a href="#gs-store-tour" class="sidebar-link">Exploring the Store</a>
+          <a href="#gs-store-developer" class="sidebar-link">Store — Developer</a>
+          <a href="#gs-register-device" class="sidebar-link">Register Your Device</a>
+        </div>
+        <div class="sidebar-group">
+          <h3 class="sidebar-title">Developer Setup</h3>
+          <a href="#gs-devmode" class="sidebar-link">Enable Developer Mode</a>
+          <a href="#gs-sdk-install" class="sidebar-link">Install the SDK</a>
+          <a href="#gs-connect" class="sidebar-link">Connect to Your Device</a>
+          <a href="#gs-hello-world" class="sidebar-link">Hello World — GPIO from laptop</a>
+        </div>
         <div class="sidebar-group">
           <h3 class="sidebar-title">Foundation</h3>
           <a href="#introduction" class="sidebar-link">Introduction</a>
@@ -325,6 +461,409 @@
 
     <!-- Content -->
     <main class="docs-content">
+
+      <!-- ── GETTING STARTED ── -->
+      <section id="gs-overview">
+        <h1>Getting <span class="highlight">Started</span></h1>
+        <p>
+          This guide walks you through installing Orbit OS on a supported device,
+          accessing the Launcher, setting up your Store account, and registering your first device.
+        </p>
+        <div class="note-box">
+          <p>Orbit OS runs on top of your existing Linux installation — it does not replace your OS. You keep full control of the underlying system.</p>
+        </div>
+        <p style="text-align: right;"><a href="#gs-requirements" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Requirements →</a></p>
+      </section>
+
+      <section id="gs-requirements">
+        <h2>📋 Requirements</h2>
+
+        <h3>Supported hardware — Community Edition</h3>
+        <ul>
+          <li>Raspberry Pi 3, 4, 5, or Zero 2W</li>
+          <li>Arduino UNO Q (Qualcomm QRB2210)</li>
+        </ul>
+
+        <h3>Linux Distro</h3>
+        <ul>
+          <li><strong>Debian 13 Lite (Trixie)</strong> (recommended)</li>
+          <li>Must be accessible over the local network</li>
+        </ul>
+
+        <h3>Before you begin</h3>
+        <ul>
+          <li>Know the IP address of your device</li>
+          <li>SSH, SCP, or FTP access to the device</li>
+          <li>At least 256 MB of available RAM</li>
+          <li>Internet connection on the device (for first-run dependency installation)</li>
+        </ul>
+        <p style="text-align: right;"><a href="#gs-install" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Download & Install →</a></p>
+      </section>
+
+      <section id="gs-install">
+        <h2>⬇️ Download & Install</h2>
+
+        <div class="note-box">
+          <p>🚧 The installer is coming soon. The instructions below describe the installation process for when it becomes available.</p>
+        </div>
+
+        <h3>Step 1 — Transfer the installer to your device</h3>
+        <p>
+          Download <code>orbit-os-installer.run</code> and transfer it to your device. You can use SCP from the terminal or a graphical tool like FileZilla.
+        </p>
+
+        <p><strong>Via terminal (SCP):</strong></p>
+        <pre><code class="language-bash">scp orbit-os-installer.run user@&lt;device-ip&gt;:~/</code></pre>
+
+        <p><strong>Via FileZilla:</strong></p>
+        <img src="images/via_filezilla.png" alt="FileZilla — installer file transferred to device home directory" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1rem 0;" />
+
+        <h3>Step 2 — Make it executable</h3>
+        <pre><code class="language-bash">chmod 700 orbit-os-installer.run</code></pre>
+
+        <h3>Step 3 — Run the installer</h3>
+        <pre><code class="language-bash">./orbit-os-installer.run</code></pre>
+        <p>
+          The installer sets up Gravity RT, mounts the required directories, and configures the runtime automatically.
+          On first run, it installs dependencies (JVM, etc.) via <code>apt</code> — this only happens once.
+        </p>
+
+        <h3>Step 4 — Device restarts</h3>
+        <p>
+          Once the installation is complete, the device restarts Gravity RT automatically.
+          After a few seconds, your device is running Orbit OS and ready to use.
+        </p>
+
+        <p style="text-align: right;"><a href="#gs-apphub" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: First Access — Launcher →</a></p>
+      </section>
+
+      <section id="gs-apphub">
+        <h2>🖥️ First Access — Launcher</h2>
+        <p>
+          After installation, open a browser on any device on the same local network and navigate to:
+        </p>
+        <pre><code class="language-bash">http://&lt;device-ip&gt;</code></pre>
+        <p>
+          This is the <strong>Launcher</strong> — the central interface for your Orbit OS device.
+          It shows all installed apps and gives you access to device settings and other installed apps.
+        </p>
+        <p>The Launcher always requires a <strong>Device Login</strong>. On first access, use the default credentials:</p>
+        <img src="images/launcher_login.png" alt="Launcher — Device Login screen" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1rem 0;" />
+        <ul>
+          <li><strong>Username:</strong> <code>admin</code></li>
+          <li><strong>Password:</strong> <code>admin</code></li>
+        </ul>
+        <div class="note-box">
+          <p>On first login, you will be immediately prompted to change your password. This step is mandatory before you can proceed.</p>
+        </div>
+        <img src="images/launcher.png" alt="Launcher — home screen with installed apps" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1rem 0;" />
+        <p>
+          The Launcher shows the icons of all installed apps. Click any icon to open that app directly in the browser —
+          no additional software or client needed. Apps with a web interface open their own UI instantly.
+        </p>
+        <ul>
+          <li><strong>Settings</strong> — always present, gives you access to device configuration and Developer Mode</li>
+          <li>Each installed app appears as its own icon — click to open</li>
+          <li>As you install more apps from the Store, their icons appear here automatically</li>
+        </ul>
+        <p style="text-align: right;"><a href="#gs-store-setup" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Store Account Setup →</a></p>
+      </section>
+
+      <section id="gs-settings">
+        <h2>⚙️ Settings</h2>
+        <p>
+          Clicking the <strong>Settings</strong> icon in the Launcher opens the device settings panel.
+        </p>
+
+        <p>The left-side menu gives you access to all configuration areas of your device:</p>
+
+
+        <p style="text-align: right;"><a href="#gs-settings-system" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: System →</a></p>
+      </section>
+
+      <section id="gs-settings-system">
+        <h2>⚙️ Settings — System</h2>
+        <p>The System section has five tabs: <strong>Information</strong>, <strong>Metrics</strong>, <strong>Update</strong>, <strong>Time</strong>, and <strong>Security</strong>.</p>
+        <p style="text-align: right;"><a href="#gs-settings-system-information" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Information →</a></p>
+      </section>
+
+      <section id="gs-settings-system-information">
+        <h2 class="tab-heading">System — Information</h2>
+        <p>The Information tab shows a full snapshot of your device — software versions, hardware details, and processor information.</p>
+
+        <img src="images/settings_1.png" alt="Settings — main view" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1rem 0;" />
+
+
+        <p style="text-align: right;"><a href="#gs-settings-system-metrics" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Metrics →</a></p>
+      </section>
+
+      <section id="gs-settings-system-metrics">
+        <h2 class="tab-heading">System — Metrics</h2>
+        <p>The Metrics tab gives you a live view of your device's resource usage — useful for monitoring performance, diagnosing issues, and understanding the impact of running apps.</p>
+
+        <img src="images/settings_system_metrics.png" alt="Settings — System Metrics" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
+
+        <p style="text-align: right;"><a href="#gs-settings-system-update" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Update →</a></p>
+      </section>
+
+      <section id="gs-settings-system-update">
+        <h2 class="tab-heading">System — Update</h2>
+        <p>The Update tab lets you apply a full Orbit OS runtime update directly from the device — no internet connection or Store account required. Updates are delivered as signed <code>.orbit</code> files.</p>
+
+        <img src="images/settings_system_update.png" alt="Settings — System Update" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
+
+        <p style="text-align: right;"><a href="#gs-settings-system-time" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Time →</a></p>
+      </section>
+
+      <section id="gs-settings-system-time">
+        <h2 class="tab-heading">System — Time</h2>
+        <p>The Time tab shows the current system time and uptime, and lets you configure NTP synchronization. You can set custom NTP servers to ensure the device clock stays accurate — one server per line.</p>
+
+        <img src="images/settings_system_time.png" alt="Settings — System Time" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
+
+        <p style="text-align: right;"><a href="#gs-settings-system-security" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Security →</a></p>
+      </section>
+
+      <section id="gs-settings-system-security">
+        <h2 class="tab-heading">System — Security</h2>
+        <p>The Security tab controls access and trust boundaries for the device. Three toggles define the device's exposure surface:</p>
+        <ul>
+          <li><strong>SSH Server</strong> — allows remote SSH access to the device over the network.</li>
+          <li><strong>Developer Mode</strong> — enables the SDK connection and debug access from a development machine.</li>
+          <li><strong>Untrusted Apps</strong> — allows installation of <code>.orb</code> packages signed via the SDK. Store-signed packages are always considered trusted; this toggle is only required for packages distributed outside the Store.</li>
+        </ul>
+
+        <img src="images/settings_system_security.png" alt="Settings — System Security" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
+
+        <p style="text-align: right;"><a href="#gs-settings-network" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Network →</a></p>
+      </section>
+
+      <section id="gs-settings-network">
+        <h2>⚙️ Settings — Network</h2>
+        <p>The Network section lists all available network interfaces on the device as individual cards. Each card shows the interface name, type, and current connection status, and lets you configure it independently.</p>
+        <p>In the example below, two interfaces are available: <strong>Ethernet</strong> and <strong>Wi-Fi</strong>.</p>
+
+        <img src="images/settings_network.png" alt="Settings — Network" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
+
+        <p style="text-align: right;"><a href="#gs-settings-apps" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Apps →</a></p>
+      </section>
+
+      <section id="gs-settings-apps">
+        <h2>⚙️ Settings — Apps</h2>
+        <p>The Apps section lists all installed <code>.orb</code> apps running on the device. For each app you can see its current status, uptime, and whether auto-restart is enabled. Apps can also be installed locally from a <code>.orb</code> file or uninstalled directly from this view.</p>
+
+        <img src="images/settings_apps.png" alt="Settings — Apps" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
+
+        <p style="text-align: right;"><a href="#gs-settings-firewall" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Firewall →</a></p>
+      </section>
+
+      <section id="gs-settings-firewall">
+        <h2>⚙️ Settings — Firewall</h2>
+        <p>The Firewall section lets you define zones and traffic rules to control what network traffic the device accepts, forwards, or drops. Changes are staged and only take effect once you explicitly apply them to the running firewall.</p>
+        <ul>
+          <li><strong>Zones</strong> — group network interfaces into logical trust boundaries (e.g. LAN, WAN). Each zone defines a default policy for traffic originating from that interface.</li>
+          <li><strong>Rules</strong> — define specific allow or deny conditions on top of zone policies, matching by protocol, port, source, or destination.</li>
+        </ul>
+
+        <img src="images/settings_firewall.png" alt="Settings — Firewall" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
+
+        <p style="text-align: right;"><a href="#gs-settings-power" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Power →</a></p>
+      </section>
+
+      <section id="gs-settings-power">
+        <h2>⚙️ Settings — Power</h2>
+        <p>The Power section lets you control the system power state directly from the Launcher. Two actions are available — both take effect immediately.</p>
+        <ul>
+          <li><strong>Reboot</strong> — restarts the device. All running <code>.orb</code> apps will be relaunched automatically after boot.</li>
+          <li><strong>Shutdown</strong> — powers the device off completely.</li>
+        </ul>
+
+        <img src="images/settings_power.png" alt="Settings — Power" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
+
+        <p style="text-align: right;"><a href="#gs-settings-about" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: About →</a></p>
+      </section>
+
+      <section id="gs-settings-about">
+        <h2>⚙️ Settings — About</h2>
+        <p>The About section shows version and metadata for the Settings app itself, along with quick links to the Orbit OS website, Store, and Forum.</p>
+
+        <img src="images/settings_about.png" alt="Settings — About" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
+
+
+        <p style="text-align: right;"><a href="#gs-store-setup" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Store Account Setup →</a></p>
+      </section>
+
+      <section id="gs-store-setup">
+        <h2>🏪 Create Account</h2>
+        <p>
+          The Orbit OS Store is the marketplace for edge apps — browse, install, and update <code>.orb</code> packages on your devices with one click. No manual transfers, no SSH.
+        </p>
+        <p>You can browse the Store without an account — explore available apps, read descriptions, and check ratings freely. To install apps or manage devices, you'll need to sign in. Click <strong>Sign In</strong> in the top-right corner to log in or create a new account.</p>
+        <img src="images/create_account.png" alt="Store — Create Account" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
+
+        <p>Registration requires only an email address and a password. Once submitted, you will receive a confirmation email — click the link inside to activate your account. After activation, log in and you're ready to go.</p>
+
+        <ol>
+          <li>Go to <a href="https://store.orbit-os.org" target="_blank" rel="noopener noreferrer" style="color: var(--accent-cyan);">store.orbit-os.org</a></li>
+          <li>Click <strong>Sign In → Register</strong> and enter your email and password</li>
+          <li>Check your inbox and confirm your email address</li>
+          <li>Log in — your account is active and ready</li>
+        </ol>
+        <p style="text-align: right;"><a href="#gs-store-tour" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Exploring the Store →</a></p>
+      </section>
+
+      <section id="gs-store-tour">
+        <h2>🏪 Exploring the Store</h2>
+        <p>
+          The Orbit OS Store works like a mobile app store — browse available <code>.orb</code> apps, read descriptions and reviews, and install directly to your registered devices. No terminal, no file transfers.
+        </p>
+        <p>
+          The home screen surfaces a <strong>For You</strong> section with personalised recommendations, followed by curated categories — Edge AI, Networking, Tools, Industrial, and more. Each app card shows its icon, name, and rating at a glance.
+        </p>
+
+        <img src="images/store_1.png" alt="Orbit OS Store — Home" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
+
+        <p style="text-align: right;"><a href="#gs-register-device" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Register Your Device →</a></p>
+      </section>
+
+
+
+      <section id="gs-store-account">
+        <p>Once signed in, the top-right corner of the Store shows your account menu with four options: <strong>Apps</strong>, <strong>Devices</strong>, <strong>Developer</strong>, and <strong>Sign Out</strong>.</p>
+
+        <h3>Apps</h3>
+        <p>Lists all apps available in the Store. Clicking an app opens its detail page — icon, title, description, ratings, and install count. From there you can install the app directly to any of your registered devices.</p>
+
+        <img src="images/store_app_install.png" alt="Store — App Install" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
+
+        <p>The <strong>Install</strong> button includes a dropdown listing all devices linked to your account. Select the target device and press <strong>Install</strong> — the <code>.orb</code> package is delivered and installed remotely without any manual file transfer or SSH access.</p>
+        <p>As an example, the <strong>MCP Server</strong> app exposes your Orbit OS device to the Model Context Protocol, allowing AI assistants and tools like Cursor to interact with the device through a defined set of capabilities:</p>
+        <ul>
+          <li><strong>System</strong> — retrieve hardware info, software info, and device metrics</li>
+          <li><strong>Applications & Packages</strong> — list installed apps, install <code>.orb</code> packages, uninstall by package ID</li>
+          <li><strong>Power Management</strong> — reboot or shut down the device</li>
+        </ul>
+
+        <h3>Devices</h3>
+        <p>Shows all Orbit OS devices linked to your account. Each device card displays a green indicator when the device is online and reachable. From here you can search the list and manage each device individually.</p>
+
+        <img src="images/store_devices.png" alt="Store — Devices" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
+
+        <p>In this example, three devices are registered and online: <strong>unoq</strong> (Arduino UNO Q), <strong>pi4</strong> (Raspberry Pi 4) and <strong>pi5</strong> (Raspberry Pi 5).</p>
+        <p>Each device in the list has three actions: <strong>Details</strong>, <strong>Apps</strong>, and <strong>Edit</strong>.</p>
+
+        <h3>Device Details</h3>
+        <p>Full hardware and software snapshot of the device.</p>
+
+        <img src="images/store_device_details.png" alt="Store — Device Details" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
+
+        <h3>Device Apps</h3>
+        <p>Lists the <code>.orb</code> apps currently installed on that device, with their version numbers. Each entry has an <strong>Uninstall</strong> action — removing an app from here uninstalls it from the device remotely.</p>
+
+        <img src="images/store_devices_apps.png" alt="Store — Device Apps" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
+
+        <h3>Device Edit</h3>
+        <p>Allows you to configure per-device behaviour directly from the Store:</p>
+
+        <img src="images/store_devices_edit.png" alt="Store — Device Edit" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
+
+        <ul>
+          <li><strong>Device name</strong> — rename the device in your fleet</li>
+          <li><strong>Enable auto update OTA / OS</strong> — automatically apply runtime updates when available</li>
+          <li><strong>Enable auto update Apps</strong> — automatically update installed <code>.orb</code> apps</li>
+          <li><strong>Sync interval (seconds)</strong> — how often the device checks in with the Store</li>
+        </ul>
+
+        <p style="text-align: right;"><a href="#gs-store-developer" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Store — Developer →</a></p>
+      </section>
+
+      <section id="gs-store-developer">
+        <h2>🏪 Store — Developer</h2>
+        <p>The Developer area is for publishers who want to distribute apps through the Orbit OS Store. It provides two sections: <strong>Your Submissions</strong> and <strong>Your Apps</strong>.</p>
+        <ul>
+          <li><strong>Your Submissions</strong> — submit a new <code>.orb</code> app for Store approval. Each submission goes through a review process before being published and made available to all users.</li>
+          <li><strong>Your Apps</strong> — view and manage the apps you currently have published on the Store, including version history and listing details.</li>
+        </ul>
+
+        <img src="images/store_developer.png" alt="Store — Developer" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
+
+        <p style="text-align: right;"><a href="#gs-devmode" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Enable Developer Mode →</a></p>
+      </section>
+
+
+      <section id="gs-register-device">
+        <h2>📡 Register Your Device</h2>
+        <p>
+          Registration links the device to your Store account — enabling remote app installs, OTA updates, and fleet management. The process is done directly on the device, not from the Store website.
+        </p>
+        <ol>
+          <li>Open the Launcher at <code>http://&lt;device-ip&gt;</code> and go to <strong>Settings</strong></li>
+          <li>Navigate to <strong>Account</strong></li>
+          <li>Enter the email and password of your Store account and press <strong>Connect</strong></li>
+        </ol>
+
+        <img src="images/settings_account_reg.png" alt="Settings — Account Registration" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
+
+        <p>Once registration succeeds, the page updates to confirm the device is linked — showing a green checkmark, the <strong>Device linked</strong> status, and the associated Store account email. A button to unlink the account is also available from this screen.</p>
+
+        <img src="images/settings_account_linked.png" alt="Settings — Account Linked" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
+
+        <div class="note-box">
+          <p>The device requires an active internet connection to complete registration.</p>
+        </div>
+        <p>Once linked, go to <a href="https://store.orbit-os.org" target="_blank" rel="noopener noreferrer" style="color: var(--accent-cyan);">store.orbit-os.org</a> → <strong>Devices</strong> in your account — the new device will appear in your fleet with its status showing as online. From this point, you can install and uninstall apps remotely from the Store. Automatic app updates and OTA updates are delivered if the respective auto-update options are enabled in the device settings.</p>
+        <p style="text-align: right;"><a href="#gs-store-account" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Your Account →</a></p>
+      </section>
+
+
+
+
+
+
+
+      <!-- ── DEVELOPER SETUP ── -->
+      <section id="gs-devmode">
+        <h2>🧪 Enable Developer Mode</h2>
+        <p>
+          Developer Mode allows your laptop to connect directly to the device and call its APIs in real time —
+          without packaging or deploying anything.
+        </p>
+        <ol>
+          <li>Open the Launcher at <code>http://&lt;device-ip&gt;</code></li>
+          <li>Go to <strong>Settings</strong></li>
+          <li>Enable <strong>Developer Mode</strong></li>
+          <li>Read and confirm the security notice — the device will inform you of the implications</li>
+        </ol>
+        <div class="note-box">
+          <p>Always disable Developer Mode in production. In Dev Mode, the mTLS SDK certificate is sufficient to connect — no password required.</p>
+        </div>
+        <p style="text-align: right;"><a href="#gs-sdk-install" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Install the SDK →</a></p>
+      </section>
+
+      <section id="gs-sdk-install">
+        <h2>🛠️ Install the SDK</h2>
+        <div class="note-box">
+          <p>🚧 The SDK is coming soon. Installation instructions will be available at launch.</p>
+        </div>
+        <p style="text-align: right;"><a href="#gs-connect" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Connect to Your Device →</a></p>
+      </section>
+
+      <section id="gs-connect">
+        <h2>🔗 Connect to Your Device</h2>
+        <div class="note-box">
+          <p>🚧 Coming soon — connection instructions will be available with the SDK launch.</p>
+        </div>
+        <p style="text-align: right;"><a href="#gs-hello-world" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Hello World →</a></p>
+      </section>
+
+      <section id="gs-hello-world">
+        <h2>👋 Hello World — GPIO from laptop</h2>
+        <div class="note-box">
+          <p>🚧 Coming soon — full Hello World guide will be available with the SDK launch.</p>
+        </div>
+        <p style="text-align: right;"><a href="#introduction" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Architecture →</a></p>
+      </section>
+
       <section id="introduction">
         <h1>Orbit OS <span class="highlight">Documentation</span></h1>
         <p>
@@ -550,17 +1089,16 @@
 
         <h3>Orbit OS Developer Mode</h3>
         <p style="font-family: monospace; background: var(--bg-card); border: 1px solid var(--border); padding: 1rem; border-radius: var(--radius); font-size: 0.9rem; color: #10b981;">
-          Write code on your PC → SDK connects to device → Call real device APIs → Logs stream instantly → Iterate
-        </p>
+          Write code → Your code connects to device → Call real device APIs → Observe → Repeat
 
         <p>
           Your code runs on your development machine, your code connects to the real device over the network.
           Running in your laptop, your code call device APIs and you can remotely activate GPIO pins, run AI inference, configure networking, access the camera,
           and use any other device capability — all through the same API that production apps use.
-          No packaging, no deploying, no rebooting.
+          No packaging, no deploying, no rebooting needed.
         </p>
         <p>
-          Only once the behavior is validated do you generate the <code>.orb</code> and publish to the Store.
+          Only once the behavior is validated do you generate the <code>.orb</code> and you can intall in devices localy or from the Store.
         </p>
 
         <ul>
@@ -683,10 +1221,9 @@
         <p>The full lifecycle from development to production deployment:</p>
         <ol>
           <li><strong>Enable Developer Mode</strong> on the device (Settings)</li>
-          <li><strong>Write and run your code</strong> directly against the device — no packaging needed</li>
+          <li><strong>Write and run your code</strong> directly form yout PC against the device — no packaging needed</li>
           <li><strong>Iterate in real time</strong> — logs and results stream back instantly</li>
           <li><strong>Package as .orb</strong> once behavior is validated</li>
-          <li><strong>Sign via the SDK</strong> (Dev-signed for testing, Store pipeline for production)</li>
           <li><strong>Submit to the Store</strong> and deploy form store to your devices.</li>
         </ol>
 
@@ -866,7 +1403,7 @@
           <tbody>
             <tr>
               <td>Linux distro</td>
-              <td>Debian 13</td>
+              <td>Debian 13 Lite (Trixie)</td>
             </tr>
             <tr>
               <td>CPU usage (idle)</td>
@@ -948,10 +1485,33 @@
     </div>
   </footer>
 
+  <!-- Lightbox overlay -->
+  <div id="lightbox">
+    <img id="lightbox-img" src="" alt="" />
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
   <script>hljs.highlightAll();</script>
 
   <script>
+    // Lightbox
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+
+    document.querySelectorAll('.zoomable').forEach(img => {
+      img.addEventListener('click', () => {
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt;
+        lightbox.classList.add('open');
+      });
+    });
+
+    lightbox.addEventListener('click', () => lightbox.classList.remove('open'));
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') lightbox.classList.remove('open');
+    });
+
     // Hamburger menu
     const toggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');

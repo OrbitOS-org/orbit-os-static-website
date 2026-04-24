@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orbit OS — An Android-like runtime for embedded Linux, without Docker</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/tokyo-night-dark.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #09090d;
+      --surface:    #0f0f15;
+      --border:     #1c1c28;
+      --accent:     #6c63ff;
+      --cyan:       #22d3ee;
+      --text:       #e4e4ef;
+      --muted:      #6b6b8a;
+      --subtle:     #13131c;
+      --radius:     10px;
+      --green:      #10b981;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Georgia', 'Times New Roman', serif;
+      font-size: 18px;
+      line-height: 1.85;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--cyan); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Top bar ── */
+    .topbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 50;
+      background: rgba(9,9,13,.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: system-ui, sans-serif;
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .topbar-logo img { height: 28px; width: auto; opacity: 0.9; }
+
+    .topbar-links {
+      display: flex;
+      gap: 1.5rem;
+      font-family: system-ui, sans-serif;
+      font-size: 0.85rem;
+    }
+
+    .topbar-links a { color: var(--muted); transition: color .2s; }
+    .topbar-links a:hover { color: var(--text); text-decoration: none; }
+
+    .topbar-cta {
+      background: var(--accent);
+      color: #fff !important;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: opacity .2s;
+    }
+    .topbar-cta:hover { opacity: .85; text-decoration: none !important; }
+
+    /* ── Progress bar ── */
+    #progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      background: var(--cyan);
+      width: 0%;
+      z-index: 100;
+      transition: width .1s linear;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 9rem 2rem 4rem;
+    }
+
+    .hero-label {
+      font-family: system-ui, sans-serif;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--cyan);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .hero-label::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 1px;
+      background: var(--cyan);
+    }
+
+    .hero h1 {
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: #fff;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--cyan);
+    }
+
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-family: system-ui, sans-serif;
+      font-size: 0.85rem;
+      color: var(--muted);
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .hero-meta-item { display: flex; align-items: center; gap: 0.4rem; }
+
+    .badge {
+      background: rgba(108,99,255,.15);
+      border: 1px solid rgba(108,99,255,.3);
+      color: #a78bfa;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-family: system-ui, sans-serif;
+      font-weight: 500;
+    }
+
+    /* ── Article ── */
+    .article {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+    }
+
+    /* ── Prose ── */
+    .prose p {
+      color: #c8c8da;
+      margin-bottom: 1.5rem;
+    }
+
+    .prose strong { color: var(--text); font-weight: 600; }
+
+    .prose h2 {
+      font-family: system-ui, sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 3.5rem 0 1.25rem;
+      letter-spacing: -0.01em;
+      padding-top: 3.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .prose h3 {
+      font-family: system-ui, sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #a78bfa;
+      margin: 2.5rem 0 0.75rem;
+    }
+
+    .prose ul, .prose ol {
+      padding-left: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: #c8c8da;
+    }
+
+    .prose li { margin-bottom: 0.5rem; }
+
+    .prose hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+
+    /* ── Callout ── */
+    .callout {
+      background: rgba(108,99,255,.06);
+      border-left: 3px solid var(--accent);
+      padding: 1.25rem 1.5rem;
+      border-radius: 0 8px 8px 0;
+      margin: 2rem 0;
+    }
+
+    .callout p {
+      margin: 0;
+      color: var(--text);
+      font-style: italic;
+      font-size: 1rem;
+    }
+
+    .callout-cyan {
+      background: rgba(34,211,238,.05);
+      border-left-color: var(--cyan);
+    }
+
+    /* ── Code ── */
+    code {
+      font-family: 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.82em;
+      color: #a78bfa;
+      background: rgba(167,139,250,.1);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    pre {
+      background: #0d0d16;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      overflow-x: auto;
+      margin: 1.75rem 0;
+      font-size: 0.82rem;
+      line-height: 1.6;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: inherit;
+    }
+
+    /* ── Tables ── */
+    .table-wrap { overflow-x: auto; margin: 1.75rem 0; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: system-ui, sans-serif;
+      font-size: 0.9rem;
+    }
+
+    thead th {
+      background: var(--subtle);
+      color: var(--cyan);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      padding: 0.85rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: #c8c8da;
+      vertical-align: top;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: var(--subtle); }
+
+    table { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+
+    /* ── Stat row ── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 2rem 0;
+    }
+
+    .stat-item {
+      background: var(--surface);
+      padding: 1.5rem;
+    }
+
+    .stat-num {
+      font-family: system-ui, sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--cyan);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-family: system-ui, sans-serif;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* ── Two-col layout for benchmark ── */
+    .bench-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .bench-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+    }
+
+    .bench-card h4 {
+      font-family: system-ui, sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .bench-row {
+      display: flex;
+      justify-content: space-between;
+      font-family: system-ui, sans-serif;
+      font-size: 0.82rem;
+      padding: 0.3rem 0;
+      color: #c8c8da;
+    }
+
+    .bench-row span:last-child {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .bench-highlight span:last-child { color: var(--green); }
+
+    /* ── CTA footer ── */
+    .article-footer {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+    }
+
+    .cta-box {
+      background: linear-gradient(135deg, rgba(108,99,255,.12), rgba(34,211,238,.06));
+      border: 1px solid rgba(108,99,255,.25);
+      border-radius: 16px;
+      padding: 2.5rem;
+      text-align: center;
+    }
+
+    .cta-box h3 {
+      font-family: system-ui, sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.75rem;
+    }
+
+    .cta-box p {
+      color: var(--muted);
+      font-family: system-ui, sans-serif;
+      font-size: 0.95rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .cta-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .cta-btn {
+      font-family: system-ui, sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.65rem 1.5rem;
+      border-radius: 8px;
+      transition: opacity .2s, transform .15s;
+    }
+
+    .cta-btn:hover { opacity: .85; transform: translateY(-1px); text-decoration: none; }
+
+    .cta-primary { background: var(--accent); color: #fff; }
+    .cta-secondary { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+
+    /* ── Page footer ── */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      font-family: system-ui, sans-serif;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 640px) {
+      .bench-grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr; }
+      .topbar-links { display: none; }
+      .hero h1 { font-size: 1.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<!-- Top bar -->
+<header class="topbar">
+  <a href="index.html" class="topbar-logo">
+    <img src="logo8.png" alt="Orbit OS" />
+  </a>
+  <nav class="topbar-links">
+    <a href="docs.html">Docs</a>
+    <a href="https://forum.orbit-os.org" target="_blank" rel="noopener">Forum</a>
+    <a href="https://store.orbit-os.org" target="_blank" rel="noopener" class="topbar-cta">App Store</a>
+  </nav>
+</header>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-label">Show HN</div>
+  <h1>An <em>Android-like</em> runtime for embedded Linux, without Docker</h1>
+  <div class="hero-meta">
+    <span class="hero-meta-item">Orbit OS Team</span>
+    <span class="hero-meta-item">·</span>
+    <span class="hero-meta-item">April 2026</span>
+    <span class="hero-meta-item">·</span>
+    <span class="badge">Pre-launch</span>
+  </div>
+</div>
+
+<!-- Article body -->
+<article class="article prose">
+
+  <p>Every embedded team rebuilds the same infrastructure. GPIO handling. OTA updates. Remote access. Application lifecycle. Secure APIs. Over and over again.</p>
+
+  <p>We decided to fix that. Without Docker.</p>
+
+  <hr>
+
+  <h2>The Problem</h2>
+
+  <p>If you've worked on embedded Linux, you know the pattern:</p>
+  <ul>
+    <li>Project starts. You write the app logic.</li>
+    <li>Then you spend weeks building the platform layer nobody talks about — device management, remote access, OTA updates, hardware abstraction, process supervision.</li>
+    <li>Then the next project starts. You do it again.</li>
+  </ul>
+
+  <p>Balena solved part of this with Docker containers on edge devices. It works — but containers weren't designed for hardware that boots in seconds, runs on 256MB of RAM, and needs to survive in the field for years without intervention. You're running a Docker daemon, overlay filesystems, and container images just to blink an LED.</p>
+
+  <p>We think Docker is the wrong abstraction for embedded. So we built a different one.</p>
+
+  <hr>
+
+  <h2>What We Built</h2>
+
+  <p><strong>Orbit OS</strong> is a secure edge operating system for embedded Linux devices. It runs on top of existing Linux distributions and turns devices into managed compute nodes — with a unified API for hardware, networking, AI, and system services.</p>
+
+  <p>The core is <strong>Gravity RT</strong>, a native execution runtime inspired by Android. Instead of containers, apps are distributed as signed <code>.orb</code> packages — think APK for edge devices.</p>
+
+  <div class="callout">
+    <p>Nothing executes outside Gravity RT.</p>
+  </div>
+
+  <hr>
+
+  <h2>The Architecture</h2>
+
+<pre><code class="language-plaintext">Hardware
+└── Linux (Debian base)
+    └── Gravity RT
+        ├── Gravity RT Server (Go binary) — always running, minimal footprint
+        ├── gRPC / UDS  — internal .orb app communication
+        ├── gRPC / TCP mTLS — external SDK, CLI, mobile apps
+        ├── JVM — lazy loaded, only when a Java .orb is running
+        ├── Python VM — lazy loaded, only when a Python .orb is running
+        └── TFLite (C++) — AI inference, lazy loaded</code></pre>
+
+  <p><strong>Gravity RT Server</strong> is written in Go — static binary, minimal RSS, always active. It's the process parent for every <code>.orb</code> — if an app crashes, it restarts it. If the Gravity RT Server itself falls, systemd brings it back up.</p>
+
+  <p><strong>Two gRPC APIs, two trust boundaries:</strong></p>
+  <ul>
+    <li><strong>UDS</strong> for internal <code>.orb</code> apps — only accessible locally on the device, apps cannot escape</li>
+    <li><strong>TCP mTLS</strong> for external tools — mutual TLS authentication, no open ports, no implicit trust</li>
+  </ul>
+
+  <p><strong>Lazy loading everywhere</strong> — the JVM, Python VM, and TFLite only start when an app that needs them is launched. On a 512MB device, this matters.</p>
+
+  <hr>
+
+  <h2>The .orb Package Format</h2>
+
+  <p>A <code>.orb</code> is the unit of deployment in Orbit OS. Here's the real structure of our Face Recognition app — <strong>6MB total</strong>, including 3 TFLite models:</p>
+
+<pre><code class="language-plaintext">.
+├── bin
+│   └── face_recognition_client      ← native compiled binary
+├── data
+│   ├── blaze_face_full_range.tflite ← face detection model
+│   ├── face_landmark.tflite         ← facial landmarks model
+│   └── mobilefacenet.tflite         ← face identification model
+├── icon.svg
+├── lib
+├── manifest.json
+└── META-INF
+    ├── CERT.crt
+    ├── CERT.SF
+    ├── CERT.sig
+    └── MANIFEST.MF</code></pre>
+
+  <p>And the manifest:</p>
+
+<pre><code class="language-json">{
+  "package_id": "org.orbit-os.service.face-recognition",
+  "version": "0.3.0",
+  "name": "Edge AI - Face Recognition",
+  "type": "binary",
+  "architecture": "arm64",
+  "entry_point": "face_recognition_client",
+  "git_commit": "d1d9709",
+  "permissions": [
+    "SystemService/*",
+    "CameraService/*",
+    "AiService/*",
+    "AppHubService/*"
+  ]
+}</code></pre>
+
+  <p>Notice what's <strong>not</strong> in the permissions: <code>NetworkService</code>. This app has no network access — by design, enforced by the runtime. The face recognition data never leaves the device. Privacy enforced at the architecture level, not by policy.</p>
+
+  <p>Gravity RT reads the manifest at launch, validates the signature chain, and only exposes the declared APIs to the app. Nothing more.</p>
+
+  <p>Each <code>.orb</code> also gets a persistent data directory at <code>/data/orb/&lt;app-id&gt;/</code> that survives both app restarts and full runtime OTA updates. The runtime never deletes app data automatically.</p>
+
+  <hr>
+
+  <h2>Real-Time Development — No Deploy Loop</h2>
+
+  <p>This is the part that changes how embedded development feels.</p>
+
+  <h3>Traditional embedded workflow</h3>
+<pre><code class="language-plaintext">Write code → Compile → Flash → Boot → See error → Repeat</code></pre>
+
+  <h3>Orbit OS workflow</h3>
+<pre><code class="language-plaintext">Write code on your laptop
+  → SDK connects to the real device
+  → Your code calls real device APIs — GPIO, AI, camera, sensors
+  → Logs stream back to your terminal in real time
+  → Iterate instantly
+  → When it works: package as .orb, sign, publish</code></pre>
+
+  <p>Your code runs on your development machine — not on the device. The SDK connects it to the real device over the network, and from your laptop you can activate GPIO pins, run AI inference, configure networking, control relays, access the camera — all through the same API that production <code>.orb</code> apps use. The device is a live API target, not a deployment destination.</p>
+
+  <p>No SSH required. No flashing. No waiting. Dev Mode is enabled in Settings (Android-style), which activates the SDK certificate for passwordless mTLS auth — the device warns you explicitly about the security tradeoff when you enable it.</p>
+
+  <div class="callout callout-cyan">
+    <p>This is what Chrome DevTools did for web development. We think embedded deserves the same.</p>
+  </div>
+
+  <hr>
+
+  <h2>OTA Updates — Built on OSTree</h2>
+
+  <p>System updates use <strong>OSTree</strong> — the same technology behind ChromeOS, Fedora Silverblue, and Automotive Grade Linux. Domains where a failed update is unacceptable.</p>
+
+  <p>OSTree keeps the system partition immutable. Updates are atomic — they either apply completely or don't apply at all. Instant rollback if something goes wrong.</p>
+
+<pre><code class="language-plaintext">Orbit OS Store generates a .orbit file
+└── Sent to device via gRPC: SystemUpdate(OtaFile)
+    └── OSTree installs into internal repo
+        └── Boot process is killed (takes the whole child chain with it)
+            └── Boot relaunches — new version active
+                └── All .orb apps restart automatically</code></pre>
+
+  <p>This is a <strong>soft restart</strong> — the Linux base doesn't reboot, only the Gravity RT chain. Fast and safe.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th></th><th><code>.orb</code> — App update</th><th><code>.orbit</code> — Runtime update</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>What</strong></td><td>Individual app</td><td>Full runtime</td></tr>
+        <tr><td><strong>Published by</strong></td><td>Developers</td><td>Orbit OS team only</td></tr>
+        <tr><td><strong>Impact</strong></td><td>Only that app</td><td>Full runtime restart</td></tr>
+        <tr><td><strong>Android equivalent</strong></td><td>APK</td><td>OS update</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <h2>Edge AI — First-Class, Not an Add-On</h2>
+
+  <p>TFLite is included in the OS base, compiled in C++ with direct access to ARM NEON acceleration. Any <code>.orb</code> can use AI inference without installing anything extra.</p>
+
+  <p>We ran the same Face Recognition <code>.orb</code> — same package, no changes — on two completely different devices.</p>
+
+  <div class="bench-grid">
+    <div class="bench-card">
+      <h4>Raspberry Pi 4 — Cortex-A72 (no AI hardware)</h4>
+      <div class="bench-row"><span>CPU (idle)</span><span>2.3%</span></div>
+      <div class="bench-row"><span>CPU (face recognition)</span><span>18.2%</span></div>
+      <div class="bench-row"><span>RAM (idle)</span><span>139 MB</span></div>
+      <div class="bench-row"><span>RAM (face recognition)</span><span>224 MB</span></div>
+      <div class="bench-row"><span>Thermal</span><span>57.5°C</span></div>
+      <div class="bench-row"><span>Confidence</span><span>93.9%</span></div>
+    </div>
+    <div class="bench-card">
+      <h4>Arduino UNO Q — Qualcomm QRB2210 + Hexagon DSP</h4>
+      <div class="bench-row bench-highlight"><span>CPU (face recognition)</span><span>1.9%</span></div>
+      <div class="bench-row"><span>RAM</span><span>507 MB / 1.70 GB</span></div>
+      <div class="bench-row bench-highlight"><span>Thermal</span><span>44.4°C</span></div>
+      <div class="bench-row"><span>Uptime</span><span>~9 days continuous</span></div>
+    </div>
+  </div>
+
+  <p>Same <code>.orb</code>. Same Store. Two completely different hardware profiles.</p>
+
+  <p>On the Raspberry Pi 4, TFLite runs inference on the CPU — 18% load, temperature climbs to 57°C. On the Arduino UNO Q, TFLite automatically delegates inference to the Qualcomm Hexagon DSP. The CPU sits at <strong>1.9%</strong> while the dedicated AI hardware does all the work — running face recognition continuously for 9 days straight.</p>
+
+  <p>The developer wrote zero hardware-specific code. The runtime figures it out.</p>
+
+  <hr>
+
+  <h2>Launcher — A Browser Desktop for Your Device</h2>
+
+  <p>Every Orbit OS device runs an <strong>Launcher</strong> — a web portal that aggregates the UIs of all installed apps into a single authenticated entry point. Think of it as a desktop OS, but in the browser, running on the device itself.</p>
+
+  <p>Any <code>.orb</code> with a web interface registers itself via <code>RegisterWebUI(addr, route)</code> and becomes accessible at a dedicated path:</p>
+
+<pre><code class="language-plaintext">http://&lt;device-ip&gt;/apphub  (login)
+    └── /portflux           → PortFlux traffic routing UI
+    └── /relay4             → Relay Controller UI
+    └── /face-recognition   → Face Recognition UI
+    └── /mqtt               → MQTT Broker UI
+    └── ...</code></pre>
+
+  <p>One login. All your apps. No browser extensions, no client software, no scattered ports.</p>
+
+  <hr>
+
+  <h2>MCP Server — Your Device as an AI Agent Tool</h2>
+
+  <p>We have an MCP Server <code>.orb</code> in the Store (★ 5.0). It exposes your device's full Gravity RT API as an MCP tool — AI agents (Claude, or any MCP-compatible client) can directly control physical hardware:</p>
+
+<pre><code class="language-plaintext">AI Agent (cloud)
+└── MCP Protocol
+    └── MCP Server .orb on device
+        └── Gravity RT
+            └── GPIO / Camera / Sensors / Relays / BLE / ...</code></pre>
+
+  <p>Edge AI running locally on the device. Cloud AI orchestrating through MCP. Both at the same time.</p>
+
+  <hr>
+
+  <h2>SDK Ecosystem</h2>
+
+  <p>All SDKs are generated from the same <code>.proto</code> files — consistent API across every language.</p>
+
+  <h3>Apps, tools &amp; CLI</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Language</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Go</strong></td><td>Available soon</td></tr>
+        <tr><td><strong>Java</strong></td><td>Beta soon</td></tr>
+        <tr><td><strong>Python</strong></td><td>Planned Q3</td></tr>
+        <tr><td><strong>C++</strong></td><td>Planned Q4</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Mobile tools</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Language</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Android Kotlin</strong></td><td>Available soon</td></tr>
+        <tr><td><strong>iOS Swift</strong></td><td>Planned Q4</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <h2>Security Model</h2>
+
+<pre><code class="language-plaintext">Production (Dev Mode OFF):    mTLS certificate + user/pass
+Development (Dev Mode ON):    mTLS certificate only (SDK official cert)</code></pre>
+
+  <p>The SDK ships with an official Orbit OS mTLS certificate. In Dev Mode, this certificate alone grants access — no password friction during development. The device explicitly informs you of the security implication when you enable it. In production, Dev Mode is off. The extra layer comes back automatically.</p>
+
+  <div class="callout">
+    <p>Zero compromise on production security. Zero friction in development.</p>
+  </div>
+
+  <p>All <code>.orb</code> apps run as <strong>non-privileged processes</strong> — no root access, no direct hardware access. Every system call goes through Gravity RT, which enforces the permissions declared in the manifest. An app cannot reach anything it didn't ask for, and cannot escalate privileges at runtime.</p>
+
+  <hr>
+
+  <h2>Numbers</h2>
+
+  <div class="stats">
+    <div class="stat-item">
+      <span class="stat-num">25 MB</span>
+      <span class="stat-label">Installer (.run file)</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">21 MB</span>
+      <span class="stat-label">Full OTA runtime update</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">6 MB</span>
+      <span class="stat-label">Face Recognition app (3 TFLite models)</span>
+    </div>
+  </div>
+
+  <hr>
+
+  <h2>What's Available Now</h2>
+
+  <p>The Store is live at <a href="https://store.orbit-os.org" target="_blank" rel="noopener">store.orbit-os.org</a> with apps already available: IOFlow, Edge AI Face Recognition, Edge AI Smart Image Detection, MCP Server (★ 5.0), Mochi MQTT Broker, RPI 4-Channel Relay Controller (★ 5.0), WireShield VPN, PortFlux, Webcam Preview, Serial Console.</p>
+
+  <p>The <strong>Go SDK and installer</strong> are launching soon. Community Edition targets the following hardware on Debian 13:</p>
+  <ul>
+    <li>Raspberry Pi 3 / 4 / 5 / Zero 2W</li>
+    <li>Arduino UNO Q (Qualcomm QRB2210)</li>
+  </ul>
+
+  <hr>
+
+  <h2>What We're Looking For</h2>
+
+  <ul>
+    <li><strong>Developers</strong> who want to try real-time embedded development without the Docker overhead</li>
+    <li><strong>Hardware makers</strong> interested in certifying devices for the Orbit OS ecosystem</li>
+    <li><strong>Feedback</strong> on the architecture, the package model, the security decisions</li>
+  </ul>
+
+  <p>We're a team of three. We've been building this for a while. The Community Edition launches soon and we'd love early testers who aren't afraid to break things and tell us what's wrong.</p>
+
+</article>
+
+<!-- CTA -->
+<div class="article-footer">
+  <div class="cta-box">
+    <h3>Join the community</h3>
+    <p>Early access, feedback, and discussions happen on the forum.</p>
+    <div class="cta-links">
+      <a href="https://forum.orbit-os.org" target="_blank" rel="noopener" class="cta-btn cta-primary">Visit the Forum</a>
+      <a href="https://store.orbit-os.org" target="_blank" rel="noopener" class="cta-btn cta-secondary">Browse the Store</a>
+      <a href="docs.html" class="cta-btn cta-secondary">Read the Docs</a>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  &copy; 2026 Orbit OS &middot; Built for the edge
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script>
+  const bar = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const total = document.body.scrollHeight - window.innerHeight;
+    bar.style.width = (window.scrollY / total * 100) + '%';
+  });
+</script>
+</body>
+</html>
