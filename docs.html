@@ -411,11 +411,15 @@
           <a href="#gs-settings-network" class="sidebar-link" style="padding-left: 1.75rem; margin-left: -1rem;">Network</a>
           <a href="#gs-settings-apps" class="sidebar-link" style="padding-left: 1.75rem; margin-left: -1rem;">Apps</a>
           <a href="#gs-settings-firewall" class="sidebar-link" style="padding-left: 1.75rem; margin-left: -1rem;">Firewall</a>
+          <a href="#gs-settings-account" class="sidebar-link" style="padding-left: 1.75rem; margin-left: -1rem;">Account</a>
+          <a href="#gs-settings-developer" class="sidebar-link" style="padding-left: 1.75rem; margin-left: -1rem;">Developer</a>
           <a href="#gs-settings-power" class="sidebar-link" style="padding-left: 1.75rem; margin-left: -1rem;">Power</a>
           <a href="#gs-settings-about" class="sidebar-link" style="padding-left: 1.75rem; margin-left: -1rem;">About</a>
           <a href="#gs-store-setup" class="sidebar-link">Create Account</a>
           <a href="#gs-store-tour" class="sidebar-link">Exploring the Store</a>
-          <a href="#gs-store-developer" class="sidebar-link">Store — Developer</a>
+          <a href="#gs-store-apps" class="sidebar-link" style="padding-left: 1.75rem; margin-left: -1rem; font-size: 0.85rem;">Apps</a>
+          <a href="#gs-store-devices" class="sidebar-link" style="padding-left: 1.75rem; margin-left: -1rem; font-size: 0.85rem;">Devices</a>
+          <a href="#gs-store-developer" class="sidebar-link" style="padding-left: 1.75rem; margin-left: -1rem; font-size: 0.85rem;">Developer</a>
           <a href="#gs-register-device" class="sidebar-link">Register Your Device</a>
         </div>
         <div class="sidebar-group">
@@ -575,8 +579,7 @@
           Clicking the <strong>Settings</strong> icon in the Launcher opens the device settings panel.
         </p>
 
-        <p>The left-side menu gives you access to all configuration areas of your device:</p>
-
+        <p>The left-side menu gives you access to all configuration areas of your device: <strong>System</strong>, <strong>Network</strong>, <strong>Apps</strong>, <strong>Firewall</strong>, <strong>Account</strong>, <strong>Power</strong>, and <strong>About</strong>. A <strong>Developer</strong> menu also appears when Developer Mode is enabled.</p>
 
         <p style="text-align: right;"><a href="#gs-settings-system" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: System →</a></p>
       </section>
@@ -667,6 +670,34 @@
 
         <img src="images/settings_firewall.png" alt="Settings — Firewall" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
 
+        <p style="text-align: right;"><a href="#gs-settings-account" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Account →</a></p>
+      </section>
+
+      <section id="gs-settings-account">
+        <h2>⚙️ Settings — Account</h2>
+        <p>The Account section is where you link the device to your Orbit OS Store account. Enter your Store email and password and press <strong>Connect</strong> — once registered, the device appears in your fleet and is ready for remote app installs and OTA updates.</p>
+        <p>See <a href="#gs-register-device" style="color: var(--accent-cyan);">Register Your Device</a> for the full registration flow and screenshots.</p>
+        <p style="text-align: right;"><a href="#gs-settings-developer" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Developer →</a></p>
+      </section>
+
+      <section id="gs-settings-developer">
+        <h2>⚙️ Settings — Developer</h2>
+        <p>The Developer menu is only visible when Developer Mode is active. It can be enabled under <strong>System → Security → Developer Mode</strong>.</p>
+        <p>It has two tabs: <strong>Tools</strong> and <strong>Logs</strong>.</p>
+
+        <h3>Tools</h3>
+        <p>Exposes the SDK connection details needed to connect from a laptop and call device APIs in real time — without packaging or deploying anything.</p>
+
+        <h3>Logs</h3>
+        <p>Streams live logs from all running <code>.orb</code> apps on the device. Useful for monitoring output and debugging in real time without SSH access. The log view supports three filters to narrow down the output:</p>
+        <ul>
+          <li><strong>Log level</strong> — filter by severity (e.g. DEBUG, INFO, WARN, ERROR)</li>
+          <li><strong>App name</strong> — show logs from a specific app only</li>
+          <li><strong>Tag</strong> — filter by a specific log tag within the output</li>
+        </ul>
+
+        <img src="images/settings_developer_logs.png" alt="Settings — Developer Logs" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
+
         <p style="text-align: right;"><a href="#gs-settings-power" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Power →</a></p>
       </section>
 
@@ -731,7 +762,7 @@
       <section id="gs-store-account">
         <p>Once signed in, the top-right corner of the Store shows your account menu with four options: <strong>Apps</strong>, <strong>Devices</strong>, <strong>Developer</strong>, and <strong>Sign Out</strong>.</p>
 
-        <h3>Apps</h3>
+        <h2 id="gs-store-apps">🏪 Store — Apps</h2>
         <p>Lists all apps available in the Store. Clicking an app opens its detail page — icon, title, description, ratings, and install count. From there you can install the app directly to any of your registered devices.</p>
 
         <img src="images/store_app_install.png" alt="Store — App Install" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
@@ -744,7 +775,7 @@
           <li><strong>Power Management</strong> — reboot or shut down the device</li>
         </ul>
 
-        <h3>Devices</h3>
+        <h2 id="gs-store-devices">🏪 Store — Devices</h2>
         <p>Shows all Orbit OS devices linked to your account. Each device card displays a green indicator when the device is online and reachable. From here you can search the list and manage each device individually.</p>
 
         <img src="images/store_devices.png" alt="Store — Devices" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1.5rem 0; cursor: zoom-in;" />
@@ -830,12 +861,13 @@
         </p>
         <ol>
           <li>Open the Launcher at <code>http://&lt;device-ip&gt;</code></li>
-          <li>Go to <strong>Settings</strong></li>
-          <li>Enable <strong>Developer Mode</strong></li>
-          <li>Read and confirm the security notice — the device will inform you of the implications</li>
+          <li>Go to <strong>Settings → System → Security</strong></li>
+          <li>Toggle <strong>Developer Mode</strong> on</li>
+          <li>Read and confirm the security notice</li>
         </ol>
+        <p>Once enabled, a <strong>Developer</strong> menu appears in the Settings sidebar with two tabs — <strong>Tools</strong> and <strong>Logs</strong>. The Tools tab contains the SDK connection details needed to connect from your laptop.</p>
         <div class="note-box">
-          <p>Always disable Developer Mode in production. In Dev Mode, the mTLS SDK certificate is sufficient to connect — no password required.</p>
+          <p>In Developer Mode, the mTLS SDK certificate is sufficient to connect — no password required. Disable it when the device is in production.</p>
         </div>
         <p style="text-align: right;"><a href="#gs-sdk-install" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Install the SDK →</a></p>
       </section>
