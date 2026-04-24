@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Platform — Orbit OS</title>
+
+  <meta name="description"
+    content="Orbit OS architecture — Gravity RT runtime, .orb package model, permissions, trust model, security, OTA updates, SDK, and design principles.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="style.css?v=5" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/tokyo-night-dark.min.css" />
+
+  <style>
+    :root {
+      --sidebar-width: 280px;
+    }
+
+    body {
+      background-color: var(--bg);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .docs-layout {
+      display: flex;
+      max-width: 1400px;
+      margin: 80px auto 0;
+      width: 100%;
+      flex: 1;
+      padding: 2rem;
+      gap: 3rem;
+    }
+
+    .docs-sidebar {
+      width: var(--sidebar-width);
+      position: sticky;
+      top: 100px;
+      height: calc(100vh - 120px);
+      overflow-y: auto;
+      padding-right: 1rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .docs-sidebar::-webkit-scrollbar { width: 4px; }
+    .docs-sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+    .sidebar-nav { list-style: none; }
+
+    .sidebar-group { margin-bottom: 2rem; }
+
+    .sidebar-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+      font-weight: 700;
+    }
+
+    .sidebar-link {
+      display: block;
+      padding: 0.5rem 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      transition: color var(--transition);
+      border-left: 2px solid transparent;
+      padding-left: 1rem;
+      margin-left: -1rem;
+    }
+
+    .sidebar-link:hover,
+    .sidebar-link.active {
+      color: var(--accent-cyan);
+      border-left-color: var(--accent-cyan);
+    }
+
+    .docs-content {
+      flex: 1;
+      max-width: 850px;
+      line-height: 1.8;
+    }
+
+    .docs-content h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #fff, var(--muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .docs-content h2 {
+      font-size: 1.75rem;
+      margin: 3rem 0 1.25rem;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .docs-content h3 {
+      font-size: 1.25rem;
+      margin: 2rem 0 1rem;
+      color: var(--accent-2);
+    }
+
+    .docs-content p {
+      margin-bottom: 1.25rem;
+      color: var(--muted);
+    }
+
+    .docs-content ul,
+    .docs-content ol {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+      color: var(--muted);
+    }
+
+    .docs-content li { margin-bottom: 0.5rem; }
+
+    .docs-content strong { color: var(--text); }
+
+    .architecture-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin: 2rem 0;
+      font-family: monospace;
+      white-space: pre;
+      overflow-x: auto;
+      color: var(--accent-cyan);
+      line-height: 1.2;
+    }
+
+    .note-box {
+      background: rgba(108, 99, 255, 0.05);
+      border-left: 4px solid var(--accent);
+      padding: 1.25rem 1.5rem;
+      border-radius: 4px 12px 12px 4px;
+      margin: 2rem 0;
+    }
+
+    .note-box p {
+      margin-bottom: 0;
+      color: var(--text);
+      font-style: italic;
+    }
+
+    .trust-rule {
+      background: #07090f;
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      font-family: 'Fira Code', monospace;
+      margin: 1.5rem 0;
+    }
+
+    .trust-rule code {
+      background: none;
+      padding: 0;
+      color: var(--accent-cyan);
+    }
+
+    .outcome-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      list-style: none !important;
+      padding: 0 !important;
+    }
+
+    .outcome-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      border-radius: var(--radius);
+      border-top: 3px solid transparent;
+    }
+
+    .outcome-prod { border-top-color: #10b981; }
+    .outcome-dev  { border-top-color: #f59e0b; }
+    .outcome-reject { border-top-color: #ef4444; }
+
+    .outcome-card h4 {
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .api-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .api-table th,
+    .api-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .api-table th {
+      background: var(--bg-card);
+      color: var(--accent-cyan);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .api-table tr:last-child td { border-bottom: none; }
+
+    footer { margin-top: auto; }
+
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 999;
+      cursor: zoom-out;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    #lightbox.open { display: flex; }
+
+    #lightbox img {
+      max-width: 100%;
+      max-height: 90vh;
+      border-radius: var(--radius);
+      box-shadow: 0 0 60px rgba(0,0,0,0.8);
+      cursor: zoom-out;
+    }
+
+    @media (max-width: 1024px) {
+      .docs-sidebar { display: none; }
+      .docs-layout { padding: 1rem; margin-top: 100px; }
+      .docs-content h1 { font-size: 1.8rem; }
+      .docs-content h2 { font-size: 1.35rem; }
+    }
+
+    @media (max-width: 640px) {
+      .docs-layout { padding: 0.75rem; margin-top: 80px; gap: 0; }
+      .docs-content h1 { font-size: 1.5rem; }
+      .docs-content h2 { font-size: 1.2rem; margin: 2rem 0 1rem; }
+      .docs-content h3 { font-size: 1rem; }
+      .api-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; font-size: 0.85rem; }
+      .api-table th, .api-table td { padding: 0.6rem 0.75rem; white-space: nowrap; }
+      pre { font-size: 0.8rem; overflow-x: auto; }
+      .architecture-box { font-size: 0.75rem; padding: 1rem; }
+      .note-box { padding: 1rem; margin: 1.25rem 0; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <a href="index.html" class="logo-link" aria-label="Orbit OS — Home">
+          <img src="logo8.png" alt="Orbit OS" class="logo-img" width="200" height="48" />
+        </a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#features" class="nav-close">Features</a></li>
+        <li><a href="platform.html" class="nav-close active">Platform</a></li>
+        <li><a href="getting_started.html" class="nav-close">Getting Started</a></li>
+        <li><a href="downloads.html" class="nav-close">Downloads</a></li>
+        <li><a href="https://forum.orbit-os.org" class="nav-close" target="_blank">Forum</a></li>
+        <li><a href="https://store.orbit-os.org" class="btn-nav nav-close" target="_blank">App Store</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="docs-layout">
+    <!-- Sidebar -->
+    <aside class="docs-sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-group">
+          <h3 class="sidebar-title">Foundation</h3>
+          <a href="#introduction" class="sidebar-link">Introduction</a>
+          <a href="#overview" class="sidebar-link">System Overview</a>
+          <a href="#gravity-rt" class="sidebar-link">Gravity RT</a>
+        </div>
+        <div class="sidebar-group">
+          <h3 class="sidebar-title">Architecture</h3>
+          <a href="#package-model" class="sidebar-link">.orb Package Model</a>
+          <a href="#permissions" class="sidebar-link">Permissions</a>
+          <a href="#trust-model" class="sidebar-link">Trust Model</a>
+          <a href="#security" class="sidebar-link">Security</a>
+        </div>
+        <div class="sidebar-group">
+          <h3 class="sidebar-title">Developer Tools</h3>
+          <a href="#developer-mode" class="sidebar-link">Developer Mode</a>
+          <a href="#sdk" class="sidebar-link">SDK & CLI</a>
+          <a href="#workflow" class="sidebar-link">Developer Workflow</a>
+        </div>
+        <div class="sidebar-group">
+          <h3 class="sidebar-title">Operations</h3>
+          <a href="#store" class="sidebar-link">Orbit OS Store</a>
+          <a href="#fleet" class="sidebar-link">Fleet Management</a>
+          <a href="#ota" class="sidebar-link">OTA Updates</a>
+        </div>
+        <div class="sidebar-group">
+          <h3 class="sidebar-title">Reference</h3>
+          <a href="#gravity-api-model" class="sidebar-link">Execution Model</a>
+          <a href="#footprint" class="sidebar-link">Footprint</a>
+          <a href="#principles" class="sidebar-link">Design Principles</a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <main class="docs-content">
+
+      <section id="introduction">
+        <h1>Orbit OS <span class="highlight">Platform</span></h1>
+        <p>
+          Orbit OS is an operating system for embedded Linux and IoT devices.
+          It provides a complete runtime platform — from hardware access to application lifecycle,
+          remote control, OTA updates, and Edge AI — out of the box.
+        </p>
+        <p>
+          Applications are packaged as signed <strong>.orb</strong> files and executed by
+          <strong>Gravity RT</strong>, the unified runtime at the heart of Orbit OS.
+          The same API works for local development and production deployments.
+        </p>
+        <div class="note-box">
+          <p>Core principle: one runtime, one API, for every device, every language, every use case.</p>
+        </div>
+      </section>
+
+      <section id="overview">
+        <h2><svg viewBox="0 0 24 24" class="ui-icon" width="22" height="22" fill="none" stroke="currentColor"
+            stroke-width="1.8">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <path d="M3 9h18M9 21V9" />
+          </svg> System Overview</h2>
+        <p>
+          The diagram below shows the full Orbit OS stack — from hardware up through Gravity RT,
+          the application layer, and the remote management plane.
+        </p>
+        <div class="diagram-wrapper">
+          <img src="diagram.jpeg" alt="Orbit OS Architecture Diagram" class="diagram-img" />
+        </div>
+      </section>
+
+      <section id="gravity-rt">
+        <h2>⚙️ Gravity RT</h2>
+        <p>
+          Gravity RT is the execution core of Orbit OS — the single layer through which all applications
+          and system services run. It is always active, extremely lightweight, and acts as the supervisor
+          for everything on the device.
+        </p>
+        <ul>
+          <li><strong>Application lifecycle:</strong> start, stop, restart, and update every <code>.orb</code> app</li>
+          <li><strong>Automatic recovery:</strong> crashed apps are restarted automatically</li>
+          <li><strong>Hardware access:</strong> all device capabilities exposed as a unified, secure API</li>
+          <li><strong>Resource control:</strong> CPU, memory, and I/O limits enforced per application</li>
+          <li><strong>Security enforcement:</strong> every package verified before execution</li>
+          <li><strong>Edge AI:</strong> TFLite runtime included by default — no add-on required</li>
+        </ul>
+        <div class="note-box">
+          <p>Nothing runs on the device outside of Gravity RT. There is no back door, no bypass.</p>
+        </div>
+        <p style="text-align: right;"><a href="#package-model" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: .orb Package Model →</a></p>
+      </section>
+
+      <section id="package-model">
+        <h2>📦 .orb Package Model</h2>
+        <p>
+          All software on Orbit OS is distributed as <strong>.orb</strong> packages —
+          the equivalent of an APK on Android. A <code>.orb</code> can be an application, a background service, or a system tool.
+        </p>
+
+        <h3>What's inside a <code>.orb</code></h3>
+        <ul>
+          <li><strong>Executable code</strong> — Go, Python, Java, or C++ binary</li>
+          <li><strong>Manifest</strong> — declares the app's runtime, permissions, and resource limits</li>
+          <li><strong>Resources</strong> — data files, AI models, configuration, assets</li>
+          <li><strong>Cryptographic signature</strong> — required for execution</li>
+        </ul>
+
+        <h3>Self-contained and efficient</h3>
+        <p>
+          A <code>.orb</code> bundles everything the app needs. As an example, a full Edge AI face recognition app —
+          including three TFLite models for detection, landmarks, and identification — weighs only <strong>6 MB</strong>.
+          The TFLite runtime lives in the OS, not in each package, keeping sizes small.
+        </p>
+
+        <h3>Persistent data</h3>
+        <p>
+          Each app has its own isolated data directory that survives restarts and OTA updates.
+          One app cannot access another app's data. Developers have full control — the runtime never
+          deletes app data automatically.
+        </p>
+
+        <div class="note-box">
+          <p>Every <code>.orb</code> is signed. Packages without a valid signature are rejected before execution.</p>
+        </div>
+        <p style="text-align: right;"><a href="#permissions" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Permissions →</a></p>
+      </section>
+
+      <section id="permissions">
+        <h2>🔑 Permissions</h2>
+        <p>
+          Every <code>.orb</code> declares the hardware and system capabilities it needs in its manifest.
+          Gravity RT reads this list at launch and exposes only those APIs to the app —
+          nothing more. This is the principle of least privilege, applied natively.
+        </p>
+        <p>Examples of available permissions:</p>
+        <ul>
+          <li>GPIO, PWM, I²C, SPI, UART</li>
+          <li>WiFi, Ethernet, Bluetooth (BLE)</li>
+          <li>Camera</li>
+          <li>AI Service (TFLite inference)</li>
+          <li>Network access</li>
+          <li>Package Manager</li>
+          <li>Firewall</li>
+        </ul>
+        <p>
+          An app that only declares <code>CameraService</code> and <code>AiService</code> has no access
+          to GPIO, networking, or any other capability — by design, not by configuration.
+        </p>
+        <p style="text-align: right;"><a href="#trust-model" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Trust Model →</a></p>
+      </section>
+
+      <section id="trust-model">
+        <h2>🔐 Trust Model</h2>
+        <p>
+          Every <code>.orb</code> belongs to one of two signing domains. The signing domain determines
+          how the package is treated at runtime.
+        </p>
+
+        <div class="cards">
+          <div class="card">
+            <h3>🏪 Store-Signed</h3>
+            <p><strong>Production</strong></p>
+            <p>Apps distributed through the Orbit OS Store, signed by the official pipeline.</p>
+            <ul style="font-size: 0.85rem; margin: 0.5rem 0 0; padding-left: 1.2rem;">
+              <li>Fully trusted execution</li>
+              <li>Eligible for automatic updates</li>
+              <li>Fleet deployment enabled</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>🧪 Dev-Signed</h3>
+            <p><strong>Development</strong></p>
+            <p>Apps built locally with the SDK for development and testing purposes.</p>
+            <ul style="font-size: 0.85rem; margin: 0.5rem 0 0; padding-left: 1.2rem;">
+              <li>Valid and verifiable</li>
+              <li>Debuggable on-device</li>
+              <li>No fleet deployment</li>
+            </ul>
+          </div>
+        </div>
+
+        <p style="margin-top: 1.25rem;">
+          The trust level is determined by the signature, not by configuration.
+          There is no way to promote a dev-signed package to production — it must go through the Store pipeline.
+        </p>
+        <p style="text-align: right;"><a href="#security" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Security →</a></p>
+      </section>
+
+      <section id="security">
+        <h2>🔒 Security</h2>
+        <p>
+          Security in Orbit OS is not a layer added on top — it is built into the execution model.
+          Every connection is authenticated, every package is verified, and every app runs with
+          only the permissions it declared.
+        </p>
+
+        <h3>Before any app runs</h3>
+        <p>Gravity RT always performs these steps before execution:</p>
+        <ol>
+          <li>Verify the cryptographic signature</li>
+          <li>Validate the certificate chain</li>
+          <li>Classify the trust domain (Store or Dev)</li>
+          <li>Apply device policies</li>
+          <li>Enforce declared permissions</li>
+        </ol>
+
+        <h3>Remote connections</h3>
+        <p>
+          All remote access — from the SDK, CLI, or mobile app — requires mutual authentication.
+          There are no open ports and no implicit trust. In production, both a valid certificate
+          and credentials are required. In Developer Mode, credentials are not required,
+          but the cryptographic certificate still is.
+        </p>
+
+        <h3>Developer Mode security</h3>
+        <p>
+          Developer Mode is enabled manually in device Settings — the same model as Android's USB Debugging.
+          The device explicitly informs the user of the security implications when enabling it.
+          In production, Developer Mode is always off.
+        </p>
+
+        <div class="note-box">
+          <p>Zero compromise on production security. Zero friction in development.</p>
+        </div>
+
+        <h3>Execution outcomes</h3>
+        <div class="outcome-list">
+          <div class="outcome-card outcome-prod">
+            <h4>🟢 Production</h4>
+            <p style="font-size: 0.85rem;">Store-signed <code>.orb</code>. Full managed lifecycle. Fleet deployable.</p>
+          </div>
+          <div class="outcome-card outcome-dev">
+            <h4>🟡 Development</h4>
+            <p style="font-size: 0.85rem;">Dev-signed <code>.orb</code>. Debuggable. No fleet deployment.</p>
+          </div>
+          <div class="outcome-card outcome-reject">
+            <h4>❌ Rejected</h4>
+            <p style="font-size: 0.85rem;">Invalid or missing signature. Package is never executed.</p>
+          </div>
+        </div>
+        <p style="text-align: right;"><a href="#developer-mode" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Developer Mode →</a></p>
+      </section>
+
+      <section id="developer-mode">
+        <h2>🧪 Developer Mode</h2>
+        <p>
+          Developer Mode changes how you interact with your device during development.
+          Instead of the traditional embedded cycle — write, compile, flash, reboot, observe —
+          Orbit OS lets you develop entirely on your laptop against real hardware, in real time.
+        </p>
+
+        <h3>Traditional embedded workflow</h3>
+        <p style="font-family: monospace; background: var(--bg-card); border: 1px solid var(--border); padding: 1rem; border-radius: var(--radius); font-size: 0.9rem; color: var(--accent-cyan);">
+          Write code → Compile → Deploy → Reboot → Observe → Repeat
+        </p>
+
+        <h3>Orbit OS Developer Mode</h3>
+        <p style="font-family: monospace; background: var(--bg-card); border: 1px solid var(--border); padding: 1rem; border-radius: var(--radius); font-size: 0.9rem; color: #10b981;">
+          Write code → Your code connects to device → Call real device APIs → Observe → Repeat
+        </p>
+
+        <p>
+          Your code runs on your development machine and connects to the real device over the network.
+          From your laptop, your code calls device APIs — you can remotely activate GPIO pins, run AI inference,
+          configure networking, access the camera, and use any other device capability — all through the same
+          API that production apps use. No packaging, no deploying, no rebooting needed.
+        </p>
+        <p>
+          Only once the behavior is validated do you generate the <code>.orb</code> and install it locally or publish it to the Store.
+        </p>
+
+        <ul>
+          <li>Same API in development and production — no surprises when shipping</li>
+          <li>Logs stream in real time, with filtering by tag and level (similar to Android logcat)</li>
+          <li>No SSH required — all access goes through the Gravity RT API</li>
+          <li>Enabled and disabled explicitly in device Settings</li>
+        </ul>
+
+        <div class="note-box">
+          <p>
+            This is the same shift that happened with browser DevTools for web and live reload for mobile —
+            now available natively for embedded Linux.
+          </p>
+        </div>
+        <p style="text-align: right;"><a href="#sdk" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: SDK & CLI →</a></p>
+      </section>
+
+      <section id="sdk">
+        <h2>🛠️ SDK & CLI</h2>
+        <p>
+          The Orbit OS SDK lets you build applications, connect to devices, and control hardware
+          from your language of choice. All SDKs expose the same API — generated from a shared
+          interface definition — so behavior is consistent across languages.
+        </p>
+
+        <h3>Apps, tools &amp; CLI</h3>
+        <table class="api-table" style="table-layout: fixed; width: 100%;">
+          <colgroup>
+            <col style="width: 50%;">
+            <col style="width: 50%;">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Language</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Go</strong></td><td>Available soon</td></tr>
+            <tr><td><strong>Java</strong></td><td>Beta soon</td></tr>
+            <tr><td><strong>Python</strong></td><td>Planned Q3</td></tr>
+            <tr><td><strong>C++</strong></td><td>Planned Q4</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size: 0.82rem; color: var(--muted); margin-top: 0.5rem;">
+          * These languages support both building internal <code>.orb</code> apps that run on the device and CLI/tools that interact with the device remotely.
+        </p>
+
+        <h3>Mobile tools</h3>
+        <table class="api-table" style="table-layout: fixed; width: 100%;">
+          <colgroup>
+            <col style="width: 50%;">
+            <col style="width: 50%;">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Language</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Android Kotlin</strong></td><td>Available soon</td></tr>
+            <tr><td><strong>iOS Swift</strong></td><td>Planned Q4</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size: 0.82rem; color: var(--muted); margin-top: 0.5rem;">
+          * SDKs for building Android and iPhone apps that connect to and control Orbit OS devices remotely.
+        </p>
+
+        <h3>Development SDK Tool</h3>
+        <p>Included with all SDKs. The Development SDK Tool lets you interact with a device directly:</p>
+        <ul>
+          <li>Install <code>.orb</code> packages</li>
+          <li>Remove packages</li>
+          <li>List installed packages</li>
+          <li>Interact with device APIs locally for Development</li>
+        </ul>
+
+        <h3>Official Android App</h3>
+        <p>The official Orbit OS Android app provides two capabilities:</p>
+        <ul>
+          <li><strong>Store access</strong> — browse and install apps on your devices from your phone</li>
+          <li><strong>Local device control</strong> — connect directly to a device on your local network and manage it: install, remove, monitor, control</li>
+        </ul>
+        <p>
+          The SDK's shared interface definition also allows any developer to build their own Android or iOS app
+          to interact with Orbit OS devices — for custom dashboards, industrial control panels, or smart home interfaces.
+        </p>
+        <p style="text-align: right;"><a href="#workflow" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Developer Workflow →</a></p>
+      </section>
+
+      <section id="workflow">
+        <h2>🧠 Developer Workflow</h2>
+        <p>The full lifecycle from development to production deployment:</p>
+        <ol>
+          <li><strong>Enable Developer Mode</strong> on the device (Settings → System → Security)</li>
+          <li><strong>Write and run your code</strong> from your PC against the device — no packaging needed</li>
+          <li><strong>Iterate in real time</strong> — logs and results stream back instantly</li>
+          <li><strong>Package as .orb</strong> once behavior is validated</li>
+          <li><strong>Submit to the Store</strong> and deploy to your devices</li>
+        </ol>
+
+        <div class="note-box" style="border-left-color: var(--accent-cyan); background: rgba(34, 211, 238, 0.05);">
+          <p>
+            The same device API used during development is the same API running in production.
+            What you test is exactly what ships.
+          </p>
+        </div>
+        <p style="text-align: right;"><a href="#store" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Orbit OS Store →</a></p>
+      </section>
+
+      <section id="store">
+        <h2>🏪 Orbit OS Store</h2>
+        <p>
+          The Store is the central control plane for distributing and managing applications across
+          Orbit OS devices. It handles the full application lifecycle — from first install to updates
+          and OTA system upgrades.
+        </p>
+        <p>The Store is live at <a href="https://store.orbit-os.org" target="_blank" rel="noopener noreferrer" style="color: var(--accent-cyan);">store.orbit-os.org</a>.</p>
+
+        <h3>For developers</h3>
+        <p>
+          The Store includes a developer portal where you can submit your own <code>.orb</code> apps,
+          manage versions, and distribute to users.
+        </p>
+        <p style="text-align: right;"><a href="#fleet" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Fleet Management →</a></p>
+      </section>
+
+      <section id="fleet">
+        <h2>🖥️ Fleet Management</h2>
+        <p>
+          The Store provides fleet-level control over all your devices from a single interface.
+          Deploy an app to one device or to your entire fleet with a single action.
+        </p>
+
+        <h3>How fleet deployment works</h3>
+        <p>
+          When installing an app from the Store, a device selector shows all devices in your account.
+          Devices that already have the current version are shown as up to date — preventing unnecessary reinstalls.
+          You can deploy to individual devices or select all eligible devices at once.
+        </p>
+
+        <ul>
+          <li>Deploy to any subset of your registered devices</li>
+          <li>Version tracking per device — always know what's running where</li>
+          <li>Automatic app updates when new versions are published</li>
+          <li>OTA system updates managed centrally — enable or disable per device</li>
+        </ul>
+
+        <div class="note-box">
+          <p>Fleet management works the same whether you have 1 device or 1,000. The model scales without changing the workflow.</p>
+        </div>
+        <p style="text-align: right;"><a href="#ota" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: OTA Updates →</a></p>
+      </section>
+
+      <section id="ota">
+        <h2>🔄 OTA Updates</h2>
+        <p>Orbit OS supports two types of over-the-air updates, both managed through the Store.</p>
+
+        <table class="api-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th><code>.orb</code> — App update</th>
+              <th><code>.orbit</code> — Runtime update</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>What it updates</strong></td>
+              <td>A single application</td>
+              <td>The Gravity RT runtime and system base</td>
+            </tr>
+            <tr>
+              <td><strong>Published by</strong></td>
+              <td>Any developer</td>
+              <td>Orbit OS team only</td>
+            </tr>
+            <tr>
+              <td><strong>Impact</strong></td>
+              <td>Only the updated app restarts</td>
+              <td>Runtime restarts — all apps relaunch automatically</td>
+            </tr>
+            <tr>
+              <td><strong>Android equivalent</strong></td>
+              <td>APK update</td>
+              <td>OS update</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Atomic and safe</h3>
+        <p>
+          Runtime updates are atomic — they either apply completely or not at all.
+          If anything goes wrong, the previous version is instantly restored.
+          There is no risk of ending up in a broken intermediate state.
+        </p>
+
+        <h3>Soft restart</h3>
+        <p>
+          A runtime update does not reboot the underlying Linux system —
+          only the Gravity RT process and its apps are restarted.
+          This makes updates significantly faster than a full device reboot.
+        </p>
+
+        <h3>Auto OTA</h3>
+        <p>
+          Auto OTA can be enabled or disabled per device in the Store.
+          When enabled, the Store delivers runtime updates automatically as they are published.
+          When disabled, updates are applied manually at the operator's discretion.
+        </p>
+        <p style="text-align: right;"><a href="#gravity-api-model" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Execution Model →</a></p>
+      </section>
+
+      <section id="gravity-api-model">
+        <h2>🔌 Execution Model</h2>
+        <p>
+          All interactions with Gravity RT — whether from an app running on the device or a tool
+          running on a remote laptop — go through the same system API. The origin differs; the model does not.
+        </p>
+
+        <table class="api-table">
+          <thead>
+            <tr>
+              <th>Channel</th>
+              <th>Origin</th>
+              <th>Usage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>External</strong></td>
+              <td>SDK, CLI, mobile apps, external tools</td>
+              <td>Remote development, device control, monitoring</td>
+            </tr>
+            <tr>
+              <td><strong>Internal</strong></td>
+              <td><code>.orb</code> applications and system services</td>
+              <td>Production execution on-device</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+          Because both paths use the same API, code written and tested via the external SDK in Developer Mode
+          behaves identically when deployed as a <code>.orb</code> and running internally in production.
+        </p>
+        <p style="text-align: right;"><a href="#footprint" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Footprint →</a></p>
+      </section>
+
+      <section id="footprint">
+        <h2>📊 Footprint</h2>
+        <p>
+          Orbit OS is designed to run on resource-constrained edge devices — not just high-end boards.
+          The runtime is small enough to be viable on devices with as little as 128–256 MB of RAM.
+        </p>
+
+        <h3>Real-world metrics (Raspberry Pi 4, 1.8 GB RAM)</h3>
+        <table class="api-table">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Linux distro</td><td>Debian 13 Lite (Trixie)</td></tr>
+            <tr><td>CPU usage (idle)</td><td>2.3%</td></tr>
+            <tr><td>Memory usage</td><td>139 MB (~7.7% of 1.8 GB)</td></tr>
+            <tr><td>Installer size</td><td>25 MB (.run file)</td></tr>
+            <tr><td>OTA update size</td><td>21 MB (full runtime update)</td></tr>
+          </tbody>
+        </table>
+
+        <p>
+          139 MB includes the Gravity RT Server, all system services, and the full runtime — leaving
+          over 1.6 GB free for applications on the RPi 4.
+        </p>
+
+        <h3>Installation</h3>
+        <p>
+          A single 25 MB <code>.run</code> file is all you need to install Orbit OS on a supported device.
+          Run it on the device, and the runtime is configured automatically.
+          Dependencies are installed once on first run.
+        </p>
+        <p style="text-align: right;"><a href="#principles" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Design Principles →</a></p>
+      </section>
+
+      <section id="principles">
+        <h2>🚀 Design Principles</h2>
+
+        <div class="cards">
+          <div class="card" style="padding: 1.25rem;">
+            <h3 style="font-size: 1rem; margin-bottom: 0.75rem;">Platform, not infrastructure</h3>
+            <p style="font-size: 0.9rem;">
+              Teams should focus on product logic, not on rebuilding GPIO drivers, OTA pipelines,
+              and remote access layers from scratch on every project.
+            </p>
+          </div>
+
+          <div class="card" style="padding: 1.25rem;">
+            <h3 style="font-size: 1rem; margin-bottom: 0.75rem;">Security by default</h3>
+            <p style="font-size: 0.9rem;">
+              Every package is signed. Every connection is authenticated. Every app runs
+              with the minimum permissions it needs. Security is the baseline, not an option.
+            </p>
+          </div>
+
+          <div class="card" style="padding: 1.25rem;">
+            <h3 style="font-size: 1rem; margin-bottom: 0.75rem;">Same API everywhere</h3>
+            <p style="font-size: 0.9rem;">
+              Development and production use the same system API.
+              What you build and test locally is exactly what runs on a device fleet.
+            </p>
+          </div>
+
+          <div class="card" style="padding: 1.25rem;">
+            <h3 style="font-size: 1rem; margin-bottom: 0.75rem;">Lightweight by design</h3>
+            <p style="font-size: 0.9rem;">
+              No Docker, no container overhead. The runtime is built for real edge devices —
+              including those with 128–256 MB of RAM where container-based solutions are impractical.
+            </p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <p class="footer-copy">&copy; 2026 Orbit OS &middot; Open Source &middot; Built for the edge</p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+
+  <script>
+    const toggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    toggle.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      toggle.classList.toggle('open', open);
+    });
+
+    const sections = document.querySelectorAll('section');
+    const navItems = document.querySelectorAll('.sidebar-link');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        if (pageYOffset >= section.offsetTop - 150) {
+          current = section.getAttribute('id');
+        }
+      });
+      navItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('href').slice(1) === current) {
+          item.classList.add('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

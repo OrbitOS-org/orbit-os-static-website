@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Downloads — Orbit OS</title>
+
+  <meta name="description"
+    content="Download the Orbit OS installer, SDK, tools, documentation and articles.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="style.css?v=5" />
+
+  <style>
+    :root {
+      --sidebar-width: 220px;
+    }
+
+    body {
+      background-color: var(--bg);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .downloads-layout {
+      display: flex;
+      max-width: 1200px;
+      margin: 80px auto 0;
+      width: 100%;
+      flex: 1;
+      padding: 2rem;
+      gap: 3rem;
+    }
+
+    /* Sidebar */
+    .downloads-sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      position: sticky;
+      top: 100px;
+      height: calc(100vh - 120px);
+      overflow-y: auto;
+      padding-right: 1rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .downloads-sidebar::-webkit-scrollbar { width: 4px; }
+    .downloads-sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+    .sidebar-nav { list-style: none; }
+
+    .sidebar-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+      font-weight: 700;
+    }
+
+    .sidebar-link {
+      display: block;
+      padding: 0.5rem 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      transition: color var(--transition);
+      border-left: 2px solid transparent;
+      padding-left: 1rem;
+      margin-left: -1rem;
+    }
+
+    .sidebar-link:hover,
+    .sidebar-link.active {
+      color: var(--accent-cyan);
+      border-left-color: var(--accent-cyan);
+    }
+
+    /* Content */
+    .downloads-content {
+      flex: 1;
+      max-width: 820px;
+    }
+
+    .downloads-header {
+      margin-bottom: 2.5rem;
+    }
+
+    .downloads-header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .downloads-header p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    .download-section {
+      margin-bottom: 3rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      background: var(--bg-card);
+      scroll-margin-top: 100px;
+    }
+
+    .download-section h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .download-section .section-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+
+    .download-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.25rem 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+      margin-bottom: 1rem;
+    }
+
+    .download-item:last-child { margin-bottom: 0; }
+
+    .download-item-info h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .download-item-info p {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .download-item-info code {
+      font-size: 0.82rem;
+      background: rgba(255,255,255,0.06);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+    }
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.25rem;
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: opacity var(--transition);
+    }
+
+    .download-btn.primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .download-btn.primary:hover { opacity: 0.85; }
+
+    .download-btn.disabled {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .sdk-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+      gap: 1rem;
+    }
+
+    .sdk-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .sdk-card h3 { font-size: 1rem; font-weight: 600; }
+
+    .sdk-card p {
+      font-size: 0.82rem;
+      color: var(--muted);
+      flex: 1;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+    }
+
+    .badge.ready   { background: rgba(16,185,129,0.15); color: #10b981; }
+    .badge.wip     { background: rgba(251,191,36,0.15);  color: #fbbf24; }
+    .badge.planned { background: rgba(139,92,246,0.15);  color: var(--accent); }
+
+    .note-box {
+      border-left: 3px solid var(--accent-cyan);
+      background: rgba(34,211,238,0.05);
+      padding: 1rem 1.25rem;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin-bottom: 1.5rem;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 768px) {
+      .downloads-sidebar { display: none; }
+      .downloads-layout { gap: 0; }
+    }
+
+    @media (max-width: 640px) {
+      .downloads-layout { padding: 0.75rem; margin-top: 80px; }
+      .downloads-header h1 { font-size: 1.8rem; }
+      .download-item { flex-direction: column; align-items: flex-start; }
+      .sdk-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <a href="index.html" class="logo-link" aria-label="Orbit OS — Home">
+          <img src="logo8.png" alt="Orbit OS" class="logo-img" width="200" height="48" />
+        </a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#features" class="nav-close">Features</a></li>
+        <li><a href="platform.html" class="nav-close">Platform</a></li>
+        <li><a href="getting_started.html" class="nav-close">Getting Started</a></li>
+        <li><a href="downloads.html" class="nav-close active">Downloads</a></li>
+        <li><a href="https://forum.orbit-os.org" class="nav-close" target="_blank" rel="noopener noreferrer">Forum</a></li>
+        <li><a href="https://store.orbit-os.org" class="btn-nav nav-close" target="_blank" rel="noopener noreferrer">App Store</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="downloads-layout">
+
+    <!-- Sidebar -->
+    <aside class="downloads-sidebar">
+      <nav class="sidebar-nav">
+        <p class="sidebar-title">Downloads</p>
+        <a href="#installer" class="sidebar-link">Orbit OS Installer</a>
+        <a href="#tools" class="sidebar-link">Tools</a>
+        <a href="#documentation" class="sidebar-link">Documentation</a>
+        <a href="#sdk" class="sidebar-link">SDK</a>
+        <a href="#articles" class="sidebar-link">Articles</a>
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <main class="downloads-content">
+
+      <div class="downloads-header">
+        <h1>Downloads</h1>
+        <p>Everything you need to install Orbit OS on your device and start building.</p>
+      </div>
+
+      <!-- Orbit OS Installer -->
+      <div class="download-section" id="installer">
+        <h2>⬇️ Orbit OS Installer</h2>
+        <p class="section-desc">
+          A single <code>.run</code> file installs Gravity RT and all system services on your device.
+          It runs on top of your existing Linux installation — no reflashing required.
+          On first run, it installs dependencies via <code>apt</code> and configures the runtime automatically.
+          Subsequent updates are delivered as <code>.orbit</code> files via the Store or locally through Settings.
+        </p>
+
+        <div class="note-box">
+          🚧 The installer is coming soon. This page will be updated with the download link at launch.
+        </div>
+
+        <div class="download-item">
+          <div class="download-item-info">
+            <h3>orbit-os-installer.run</h3>
+            <p>Community Edition · ARM64, ARM32, x86_64 · ~25 MB</p>
+            <p>Supported: Raspberry Pi 3/4/5/Zero 2W · Arduino UNO Q</p>
+          </div>
+          <a class="download-btn disabled">Coming soon</a>
+        </div>
+      </div>
+
+      <!-- Tools -->
+      <div class="download-section" id="tools">
+        <h2>🔧 Tools</h2>
+        <p class="section-desc">
+          Standalone tools for working with Orbit OS devices — package inspection, signing, and diagnostics.
+          Available independently of the SDK.
+        </p>
+
+        <div class="note-box">
+          🚧 Tools are coming soon and will be available at launch.
+        </div>
+
+        <div class="download-item">
+          <div class="download-item-info">
+            <h3>orb-inspect</h3>
+            <p>Inspect and validate <code>.orb</code> package contents, manifest, and signature.</p>
+          </div>
+          <a class="download-btn disabled">Coming soon</a>
+        </div>
+
+        <div class="download-item">
+          <div class="download-item-info">
+            <h3>orb-sign</h3>
+            <p>Sign <code>.orb</code> packages with a development certificate for local installation.</p>
+          </div>
+          <a class="download-btn disabled">Coming soon</a>
+        </div>
+      </div>
+
+      <!-- Documentation -->
+      <div class="download-section" id="documentation">
+        <h2>📄 Documentation</h2>
+        <p class="section-desc">
+          Downloadable reference documentation for offline use — architecture overviews, API references, and integration guides.
+        </p>
+
+        <div class="note-box">
+          🚧 PDF documentation will be available at launch.
+        </div>
+
+        <div class="download-item">
+          <div class="download-item-info">
+            <h3>Orbit OS — Platform Overview</h3>
+            <p>Architecture, Gravity RT, .orb model, permissions, trust model, and OTA updates. PDF.</p>
+          </div>
+          <a class="download-btn disabled">Coming soon</a>
+        </div>
+
+        <div class="download-item">
+          <div class="download-item-info">
+            <h3>Orbit OS — SDK Reference</h3>
+            <p>Full API reference for all supported languages and hardware capabilities. PDF.</p>
+          </div>
+          <a class="download-btn disabled">Coming soon</a>
+        </div>
+
+        <div class="download-item">
+          <div class="download-item-info">
+            <h3>Orbit OS — Getting Started Guide</h3>
+            <p>Step-by-step installation, first access, Store setup, and Developer Mode. PDF.</p>
+          </div>
+          <a class="download-btn disabled">Coming soon</a>
+        </div>
+      </div>
+
+      <!-- SDK -->
+      <div class="download-section" id="sdk">
+        <h2>🛠️ SDK</h2>
+        <p class="section-desc">
+          Build applications and tools that run on or connect to Orbit OS devices.
+          All SDKs expose the same unified device API — GPIO, PWM, I²C, UART, Camera, AI, and more.
+          Code written with the SDK in Developer Mode runs identically when deployed as a <code>.orb</code> package in production.
+        </p>
+
+        <p style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; margin-bottom: 0.75rem;">Device Target</p>
+        <div class="sdk-grid" style="margin-bottom: 2rem;">
+          <div class="sdk-card">
+            <h3>Go</h3>
+            <p>Build <code>.orb</code> apps and CLI tools for Orbit OS devices.</p>
+            <span class="badge ready">Available soon</span>
+          </div>
+          <div class="sdk-card">
+            <h3>Java</h3>
+            <p>Build <code>.orb</code> apps and CLI tools for Orbit OS devices.</p>
+            <span class="badge wip">Beta soon</span>
+          </div>
+          <div class="sdk-card">
+            <h3>Python</h3>
+            <p>Build <code>.orb</code> apps and CLI tools for Orbit OS devices.</p>
+            <span class="badge planned">Planned Q3</span>
+          </div>
+          <div class="sdk-card">
+            <h3>C++</h3>
+            <p>Build <code>.orb</code> apps and CLI tools for Orbit OS devices.</p>
+            <span class="badge planned">Planned Q4</span>
+          </div>
+        </div>
+
+        <p style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; margin-bottom: 0.75rem;">Mobile Target</p>
+        <div class="sdk-grid">
+          <div class="sdk-card">
+            <h3>Android (Kotlin)</h3>
+            <p>Build Android apps that connect to and control Orbit OS devices.</p>
+            <span class="badge ready">Available soon</span>
+          </div>
+          <div class="sdk-card">
+            <h3>iOS (Swift)</h3>
+            <p>Build iPhone apps that connect to and control Orbit OS devices.</p>
+            <span class="badge planned">Planned Q4</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Articles -->
+      <div class="download-section" id="articles">
+        <h2>📰 Articles</h2>
+        <p class="section-desc">
+          Technical articles and deep dives on Orbit OS internals, design decisions, and use cases.
+        </p>
+
+        <div class="note-box">
+          🚧 Articles are coming soon.
+        </div>
+
+        <div class="download-item">
+          <div class="download-item-info">
+            <h3>Edge AI — Face Recognition on embedded Linux with TFLite and Orbit OS</h3>
+            <p>Running face detection, landmark estimation, and identification on-device without Docker or heavyweight runtimes.</p>
+          </div>
+          <a class="download-btn disabled">Coming soon</a>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <p class="footer-copy">&copy; 2026 Orbit OS &middot; Open Source &middot; Built for the edge</p>
+    </div>
+  </footer>
+
+  <script>
+    // Hamburger menu
+    const toggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    toggle.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      toggle.classList.toggle('open', open);
+    });
+
+    document.querySelectorAll('.nav-close').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        toggle.classList.remove('open');
+      });
+    });
+
+    // Active sidebar link on scroll
+    const sections = document.querySelectorAll('.download-section[id]');
+    const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          sidebarLinks.forEach(l => l.classList.remove('active'));
+          const active = document.querySelector(`.sidebar-link[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+  </script>
+
+</body>
+</html>
