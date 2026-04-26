@@ -1,0 +1,55 @@
+── Idle (before face recognition) ────────────────────────────────────────────────────────────────
+┌─────────────────────────┬──────────────────────┬──────────────────────┐
+│                         │   Arduino UNO Q      │   Raspberry Pi 5     │
+├─────────────────────────┼──────────────────────┼──────────────────────┤
+│ CPU Usage               │ 2.4%                 │ 0.2%                 │
+│ CPU Freq                │ 1305.6 MHz           │ 1500 MHz             │
+│ RAM Used                │ 334.2 MB / 1.70 GB   │ 231.8 MB / 7.87 GB   │
+│ Memory Usage            │ 26.3%                │ 4.5%                 │
+│ SoC Thermal             │ 32.5°C               │ 47.1°C               │
+│ Uptime                  │ 95,598s (~26h)       │ 95,650s (~26h)       │
+└─────────────────────────┴──────────────────────┴──────────────────────┘
+
+── Face Recognition (live webcam, 640×480) ───────────────────────────────────────────────────────
+┌─────────────────────────┬──────────────────────┬──────────────────────┐
+│                         │   Arduino UNO Q      │   Raspberry Pi 5     │
+├─────────────────────────┼──────────────────────┼──────────────────────┤
+│ CPU Usage               │ 2.5%                 │ 0.3%                 │
+│ CPU Freq                │ 2016 MHz             │ 2400 MHz             │
+│ RAM Used                │ 453.9 MB / 1.70 GB   │ 353.7 MB / 7.87 GB   │
+│ Memory Usage            │ 34.0%                │ 6.2%                 │
+│ SoC Thermal             │ 40.6°C               │ 60.1°C               │
+│ Uptime                  │ 96,138s (~26h)       │ 96,790s (~26h)       │
+└─────────────────────────┴──────────────────────┴──────────────────────┘
+
+── Delta (Face Recognition vs Idle) ──────────────────────────────────────────────────────────────
+┌─────────────────────────┬──────────────────────┬──────────────────────┐
+│                         │   Arduino UNO Q      │   Raspberry Pi 5     │
+├─────────────────────────┼──────────────────────┼──────────────────────┤
+│ CPU Usage               │ +0.1%                │ +0.1%                │
+│ CPU Freq                │ +710.4 MHz           │ +900.0 MHz           │
+│ RAM Used                │ +119.7 MB            │ +121.9 MB            │
+│ Memory Usage            │ +7.7%                │ +1.7%                │
+│ SoC Thermal             │ +8.1°C               │ +13.0°C              │
+└─────────────────────────┴──────────────────────┴──────────────────────┘
+
+── Arduino UNO Q — Hardware ──────────────────────────────────
+  SoC Model:             qrb2210 (Kryo-V2, 4 cores @ 2016 MHz)
+  SoC Vendor:            Qualcomm
+  Board:                 Arduino SA, Imola
+  Architecture:          arm64
+  Total RAM:             1.70 GB
+  OS:                    Orbit OS 26 / Debian 13 / Kernel 6.16.7
+
+── Raspberry Pi 5 — Hardware ─────────────────────────────────
+  SoC Model:             bcm2712 (Cortex-A76, 4 cores @ 2400 MHz)
+  SoC Vendor:            Broadcom
+  Board:                 Raspberry Pi 5 Model B Rev 1.1
+  Architecture:          arm64
+  Total RAM:             7.87 GB
+  OS:                    Orbit OS 26 / Debian 13 / Kernel 6.12.47
+
+── Camera ────────────────────────────────────────────────────
+  Model:                 Logitech Brio 100
+  Resolution:            640×480 (VGA)
+  Connection:            USB-A
