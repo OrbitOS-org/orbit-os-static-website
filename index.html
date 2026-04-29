@@ -398,17 +398,24 @@ device, _ := sdk.NewClientAuto(DEVICE_IP_ADDRESS)
 defer device.Close()
 
 // GPIO — set direction and drive a pin high
-led := sdk.GpioPin{Number: 18, ChipNumber: 0}
-device.GpioManager.SetDirection(led, true)   // OUTPUT
-device.GpioManager.SetLevel(led, true)        // HIGH
+led := sdk.GpioPin{Name: "GPIO17"}
+device.GpioManager.SetDirection(led, sdk.GPIO_DIR_OUT)   // OUTPUT
+device.GpioManager.SetLevel(led, sdk.GPIO_LEVEL_HIGH)    // HIGH
 
 // PWM — 1 kHz signal at 50% duty cycle
 pwmPins, _ := device.GpioManager.ListPwmPins()
 device.GpioManager.SetPwm(pwmPins[0], 0.5, 1000.0)
 
 // UART — open ttyAMA0 at 115200 baud and send a command
-device.UartManager.Open(sdk.UartConfig{Port: "/dev/ttyAMA0", Baudrate: 115200})
-device.UartManager.Write("/dev/ttyAMA0", []byte("AT\r\n"))
+port, _ := client.UartManager.Open(UartConfig{
+    Port:     "ttyAMA0",
+    Baudrate: 115200,
+    DataBits: 8,
+    Parity:   UartParityNone,
+    StopBits: UartStopBits1,
+})
+port.Write([]byte("AT\r\n"))
+port.Close()
 
 // I²C — scan bus and read a sensor register
 addrs, _ := device.I2CManager.ScanBus(1)

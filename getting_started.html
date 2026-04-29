@@ -93,6 +93,7 @@
     /* Content */
     .docs-content {
       flex: 1;
+      min-width: 0;
       max-width: 850px;
       line-height: 1.8;
     }
@@ -288,14 +289,25 @@
       cursor: zoom-out;
     }
 
+    pre {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
     @media (max-width: 1024px) {
       .docs-sidebar {
         display: none;
       }
 
       .docs-layout {
-        padding: 1rem;
-        margin-top: 100px;
+        padding: 1.25rem;
+        margin-top: 80px;
+        gap: 0;
       }
 
       .docs-content h1 {
@@ -304,6 +316,17 @@
 
       .docs-content h2 {
         font-size: 1.35rem;
+      }
+
+      .api-table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .api-table th,
+      .api-table td {
+        white-space: nowrap;
       }
     }
 
@@ -315,55 +338,50 @@
       }
 
       .docs-content h1 {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
       }
 
       .docs-content h2 {
-        font-size: 1.2rem;
-        margin: 2rem 0 1rem;
+        font-size: 1.15rem;
+        margin: 1.75rem 0 0.75rem;
       }
 
       .docs-content h2.tab-heading {
-        font-size: 1.1rem;
+        font-size: 1.05rem;
       }
 
       .docs-content h3 {
         font-size: 1rem;
+        margin: 1.25rem 0 0.6rem;
       }
 
-      /* Tables scroll horizontally on small screens */
+      .docs-content p,
+      .docs-content li {
+        font-size: 0.92rem;
+      }
+
       .api-table {
-        display: block;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        font-size: 0.85rem;
+        font-size: 0.82rem;
       }
 
       .api-table th,
       .api-table td {
-        padding: 0.6rem 0.75rem;
-        white-space: nowrap;
+        padding: 0.55rem 0.65rem;
       }
 
-      /* Code blocks */
       pre {
-        font-size: 0.8rem;
-        overflow-x: auto;
+        font-size: 0.78rem;
       }
 
       .architecture-box {
-        font-size: 0.75rem;
-        padding: 1rem;
+        font-size: 0.72rem;
+        padding: 0.875rem;
       }
 
       .note-box {
-        padding: 1rem;
-        margin: 1.25rem 0;
-      }
-
-      /* Images fill width */
-      img.zoomable {
+        padding: 0.875rem 1rem;
         margin: 1rem 0;
+        font-size: 0.88rem;
       }
     }
   </style>
@@ -647,6 +665,7 @@
       <section id="gs-settings-account">
         <h2>⚙️ Settings — Account</h2>
         <p>The Account section is where you link the device to your Orbit OS Store account. Enter your Store email and password and press <strong>Connect</strong> — once registered, the device appears in your fleet and is ready for remote app installs and OTA updates.</p>
+        <img src="images/settings_account_reg.png" alt="Settings — Account Registration" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1rem 0;" />
         <p>See <a href="#gs-register-device" style="color: var(--accent-cyan);">Register Your Device</a> for the full registration flow and screenshots.</p>
         <p style="text-align: right;"><a href="#gs-settings-developer" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Developer →</a></p>
       </section>
