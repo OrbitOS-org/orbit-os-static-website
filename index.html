@@ -92,9 +92,6 @@
           Orbit OS turns embedded Linux devices into a programmable ecosystem.
           Expose hardware, networking, and system services as secure, unified APIs — locally and remotely — with built-in security, real-time control, and full application lifecycle management.
         </p>
-        <div class="under-construction">
-          🚧 Full website under construction · Community Edition launching soon
-        </div>
         <div class="hero-buttons">
           <a href="#features" class="btn-primary">Explore Features</a>
           <a href="#sdk" class="btn-secondary">View SDK</a>
@@ -389,6 +386,8 @@
             <div class="code-tabs">
               <button class="code-tab active" onclick="switchTab(this, 'tab-go')">Go</button>
               <button class="code-tab" onclick="switchTab(this, 'tab-java')">Java</button>
+              <button class="code-tab" onclick="switchTab(this, 'tab-python')">Python</button>
+              <button class="code-tab" onclick="switchTab(this, 'tab-cpp')">C++</button>
             </div>
             <span class="code-file"></span>
           </div>
@@ -398,56 +397,140 @@ device, _ := sdk.NewClientAuto(DEVICE_IP_ADDRESS)
 defer device.Close()
 
 // GPIO — set direction and drive a pin high
-led := sdk.GpioPin{Name: "GPIO17"}
-device.GpioManager.SetDirection(led, sdk.GPIO_DIR_OUT)   // OUTPUT
-device.GpioManager.SetLevel(led, sdk.GPIO_LEVEL_HIGH)    // HIGH
+led := &sdk.GpioPin{Name: "GPIO17"}
+device.GpioManager.SetDirection(led, sdk.GPIO_DIR_OUT)
+device.GpioManager.SetLevel(led, sdk.GPIO_LEVEL_HIGH)
 
 // PWM — 1 kHz signal at 50% duty cycle
-pwmPins, _ := device.GpioManager.ListPwmPins()
-device.GpioManager.SetPwm(pwmPins[0], 0.5, 1000.0)
+channels, _ := device.PwmManager.ListChannels()
+device.PwmManager.SetPwm(channels[0], 0.5, 1000.0)
 
 // UART — open ttyAMA0 at 115200 baud and send a command
-port, _ := client.UartManager.Open(UartConfig{
+port, _ := device.UartManager.Open(sdk.UartConfig{
     Port:     "ttyAMA0",
     Baudrate: 115200,
     DataBits: 8,
-    Parity:   UartParityNone,
-    StopBits: UartStopBits1,
+    Parity:   sdk.UartParityNone,
+    StopBits: sdk.UartStopBits1,
 })
 port.Write([]byte("AT\r\n"))
 port.Close()
 
 // I²C — scan bus and read a sensor register
-addrs, _ := device.I2CManager.ScanBus(1)
-data, _  := device.I2CManager.WriteRead(1, addrs[0], []byte{0x00}, 2)</code></pre>
+bus, _  := device.I2CManager.Open(1, 100000, false, false)
+data, _ := bus.Transfer(0xA0, []byte{0x00}, 2, 0)
+
+// SPI — open spidev0.0 at 1 MHz and do a full-duplex transfer
+spi, _  := device.SpiManager.Open(0, 0, 1000000, 8, 0, false)
+data, _ := spi.Transfer([]byte{0xAA, 0xBB}, 2)</code></pre>
 
           <pre class="code-body" id="tab-java" style="display:none;"><code class="language-java">// Connect — UDS on-device or TCP remotely, same API
-var device = Client.connect(DEVICE_IP_ADDRESS)
+OrbitClient device = OrbitClient.connect(DEVICE_IP_ADDRESS);
 
 // GPIO — set direction and drive a pin high
-var led = new GpioManager.GpioPin("GPIO18", 18, 0);
-device.gpioManager().setDirection(led, GpioManager.Direction.OUTPUT);
-device.gpioManager().setLevel(led, GpioManager.Level.HIGH);
+GpioPin led = new GpioPin("GPIO17");
+device.gpio().setDirection(led, GpioDirection.OUTPUT);
+device.gpio().setLevel(led, GpioLevel.HIGH);
 
 // PWM — 1 kHz signal at 50% duty cycle
-var pwmPins = device.gpioManager().listPwmPins();
-device.gpioManager().setPwm(pwmPins.get(0), 0.5, 1000.0);
+List<PwmChannel> channels = device.pwm().listChannels();
+device.pwm().setPwm(channels.get(0), 0.5, 1000.0);
 
 // UART — open ttyAMA0 at 115200 baud and send a command
-device.uartManager().open(new UartManager.UartConfig("/dev/ttyAMA0", 115200, 8,
-    UartManager.Parity.NONE, UartManager.StopBits.ONE, UartManager.FlowControl.NONE));
-device.uartManager().write("/dev/ttyAMA0", "AT\r\n".getBytes());
+UartPort port = device.uart().open(UartConfig.builder()
+        .port("ttyAMA0")
+        .baudrate(115200)
+        .dataBits(8)
+        .parity(UartParity.NONE)
+        .stopBits(UartStopBits.ONE)
+        .build());
+port.write("AT\r\n".getBytes());
+port.close();
 
-// I²C — scan bus and read a sensor register
-var addrs = device.i2cManager().scanBus(1);
-byte[] data = device.i2cManager().transfer(new I2CManager.I2CTransferRequest(1, addrs.get(0), new byte[]{0x00}, 2));</code></pre>
+// I²C — open bus and read a sensor register
+I2CBus bus  = device.i2c().open(1, 100000, false, false);
+byte[] data = bus.transfer(0xA0, new byte[]{0x00}, 2, 0);
+
+// SPI — open spidev0.0 at 1 MHz and do a full-duplex transfer
+SpiDevice spi   = device.spi().open(0, 0, 1_000_000, 8, 0, false);
+byte[] rxData   = spi.transfer(new byte[]{(byte)0xAA, (byte)0xBB}, 2);
+
+device.close();
+
+          </code></pre>
+
+          <pre class="code-body" id="tab-python" style="display:none;"><code class="language-python"># Connect — UDS on-device or TCP remotely, same API
+device = OrbitClient.connect(DEVICE_IP_ADDRESS)
+
+# GPIO — set direction and drive a pin high
+led = GpioPin("GPIO17")
+device.gpio.set_direction(led, GpioDirection.OUTPUT)
+device.gpio.set_level(led, GpioLevel.HIGH)
+
+# PWM — 1 kHz signal at 50% duty cycle
+channels = device.pwm.list_channels()
+device.pwm.set_pwm(channels[0], 0.5, 1000.0)
+
+# UART — open ttyAMA0 at 115200 baud and send a command
+port = device.uart.open(UartConfig(
+    port="ttyAMA0",
+    baudrate=115200,
+    data_bits=8,
+    parity=UartParity.NONE,
+    stop_bits=UartStopBits.ONE,
+))
+port.write(b"AT\r\n")
+port.close()
+
+# I²C — open bus and read a sensor register
+bus  = device.i2c.open(1, 100000, False, False)
+data = bus.transfer(0xA0, bytes([0x00]), 2, 0)
+
+# SPI — open spidev0.0 at 1 MHz and do a full-duplex transfer
+spi     = device.spi.open(0, 0, 1_000_000, 8, 0, False)
+rx_data = spi.transfer(bytes([0xAA, 0xBB]), 2)
+
+device.close()</code></pre>
+
+          <pre class="code-body" id="tab-cpp" style="display:none;"><code class="language-cpp">// Connect — UDS on-device or TCP remotely, same API
+auto device = OrbitClient::connect(DEVICE_IP_ADDRESS);
+
+// GPIO — set direction and drive a pin high
+GpioPin led("GPIO17");
+device->gpio().setDirection(led, GpioDirection::OUTPUT);
+device->gpio().setLevel(led, GpioLevel::HIGH);
+
+// PWM — 1 kHz signal at 50% duty cycle
+auto channels = device->pwm().listChannels();
+device->pwm().setPwm(channels[0], 0.5, 1000.0);
+
+// UART — open ttyAMA0 at 115200 baud and send a command
+auto port = device->uart().open(UartConfig{
+    .port     = "ttyAMA0",
+    .baudrate = 115200,
+    .dataBits = 8,
+    .parity   = UartParity::NONE,
+    .stopBits = UartStopBits::ONE,
+});
+port->write("AT\r\n");
+port->close();
+
+// I²C — open bus and read a sensor register
+auto bus  = device->i2c().open(1, 100000, false, false);
+auto data = bus->transfer(0xA0, {0x00}, 2, 0);
+
+// SPI — open spidev0.0 at 1 MHz and do a full-duplex transfer
+auto spi    = device->spi().open(0, 0, 1000000, 8, 0, false);
+auto rxData = spi->transfer({0xAA, 0xBB}, 2);
+
+device->close();</code></pre>
         </div>
 
         <div class="sdk-langs">
-          <div class="sdk-pill"><a href="sdk_comparison.html" target="_blank" class="sdk-lang-link">Go</a><span class="sdk-status ready">Available</span></div>
-          <div class="sdk-pill"><a href="sdk_comparison.html" target="_blank" class="sdk-lang-link">Java</a><span class="sdk-status wip">Beta soon</span></div>
-          <div class="sdk-pill"><a href="sdk_comparison.html" target="_blank" class="sdk-lang-link">Python</a><span class="sdk-status planned">Planned Q3</span></div>
-          <div class="sdk-pill"><a href="sdk_comparison.html" target="_blank" class="sdk-lang-link">C++</a><span class="sdk-status planned">Planned Q4</span></div>
+          <div class="sdk-pill"><a href="api-reference.html" class="sdk-lang-link">Go</a><span class="sdk-status ready">Available</span></div>
+          <div class="sdk-pill"><span class="sdk-lang-link">Java</span><span class="sdk-status wip">Beta soon</span></div>
+          <div class="sdk-pill"><span class="sdk-lang-link">Python</span><span class="sdk-status planned">Planned Q3</span></div>
+          <div class="sdk-pill"><span class="sdk-lang-link">C++</span><span class="sdk-status planned">Planned Q4</span></div>
         </div>
       </div>
     </section>
@@ -481,7 +564,7 @@ byte[] data = device.i2cManager().transfer(new I2CManager.I2CTransferRequest(1, 
     <!-- Footer -->
     <footer class="footer">
       <div class="footer-container">
-        <p class="footer-copy">&copy; 2026 Orbit OS &middot; Open Source &middot; Built for the edge</p>
+        <p class="footer-copy">&copy; 2026 Orbit OS &middot; Open Platform &middot; Built for the edge</p>
       </div>
     </footer>
 

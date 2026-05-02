@@ -271,9 +271,7 @@
         <p class="sidebar-title">Downloads</p>
         <a href="#installer" class="sidebar-link">Installer</a>
         <a href="#tools" class="sidebar-link">Tools</a>
-        <a href="#documentation" class="sidebar-link">Documentation</a>
         <a href="#sdk" class="sidebar-link">SDK</a>
-        <a href="#articles" class="sidebar-link">Articles</a>
       </nav>
     </aside>
 
@@ -301,8 +299,8 @@
 
         <div class="download-item">
           <div class="download-item-info">
-            <h3>orbit-os-installer.run</h3>
-            <p>Community Edition · ARM64, ARM32, x86_64 · ~25 MB</p>
+            <h3>orbit-os-installer.run <span class="badge wip">Beta</span></h3>
+            <p>Community Edition · ARM64 · ~30 MB</p>
             <p>Supported: Raspberry Pi 3/4/5/Zero 2W · Arduino UNO Q</p>
           </div>
           <a class="download-btn disabled">Coming soon</a>
@@ -317,61 +315,16 @@
           Available independently of the SDK.
         </p>
 
-        <div class="note-box">
-          🚧 Tools are coming soon and will be available at launch.
-        </div>
 
         <div class="download-item">
           <div class="download-item-info">
-            <h3>orb-inspect</h3>
-            <p>Inspect and validate <code>.orb</code> package contents, manifest, and signature.</p>
+            <h3>Orbit Studio — VS Code Extension <span class="badge wip">Beta</span></h3>
+            <p>Create, run, and deploy Orbit OS apps directly from VS Code. Includes realtime device log, project templates, and one-click deploy.</p>
+            <p style="margin-top: 4px; font-size: 0.8rem; color: var(--muted);">v0.4.3 · Requires Visual Studio Code · Pending VS Code Marketplace approval</p>
           </div>
-          <a class="download-btn disabled">Coming soon</a>
+          <a href="downloads/tools/orbit-studio/orbit-studio-0.4.3.vsix" class="download-btn primary" download>Download VSIX</a>
         </div>
 
-        <div class="download-item">
-          <div class="download-item-info">
-            <h3>orb-sign</h3>
-            <p>Sign <code>.orb</code> packages with a development certificate for local installation.</p>
-          </div>
-          <a class="download-btn disabled">Coming soon</a>
-        </div>
-      </div>
-
-      <!-- Documentation -->
-      <div class="download-section" id="documentation">
-        <h2>📄 Documentation</h2>
-        <p class="section-desc">
-          Downloadable reference documentation for offline use — architecture overviews, API references, and integration guides.
-        </p>
-
-        <div class="note-box">
-          🚧 PDF documentation will be available at launch.
-        </div>
-
-        <div class="download-item">
-          <div class="download-item-info">
-            <h3>Orbit OS — Platform Overview</h3>
-            <p>Architecture, Gravity RT, .orb model, permissions, trust model, and OTA updates. PDF.</p>
-          </div>
-          <a class="download-btn disabled">Coming soon</a>
-        </div>
-
-        <div class="download-item">
-          <div class="download-item-info">
-            <h3>Orbit OS — SDK Reference</h3>
-            <p>Full API reference for all supported languages and hardware capabilities. PDF.</p>
-          </div>
-          <a class="download-btn disabled">Coming soon</a>
-        </div>
-
-        <div class="download-item">
-          <div class="download-item-info">
-            <h3>Orbit OS — Getting Started Guide</h3>
-            <p>Step-by-step installation, first access, Store setup, and Developer Mode. PDF.</p>
-          </div>
-          <a class="download-btn disabled">Coming soon</a>
-        </div>
       </div>
 
       <!-- SDK -->
@@ -388,16 +341,16 @@
             <h3>API Reference</h3>
             <p>Full reference for all services, permissions, and device APIs available in the Orbit OS SDK.</p>
           </div>
-          <a href="sdk/api-reference.html" class="download-btn primary">View Docs</a>
+          <a href="api-reference.html" class="download-btn primary">View Docs</a>
         </div>
 
         <p style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; margin-bottom: 0.75rem;">Device Target</p>
         <div class="sdk-grid" style="margin-bottom: 2rem;">
-          <div class="sdk-card">
+          <a class="sdk-card" href="api-reference.html" style="text-decoration: none; color: inherit;">
             <h3>Go</h3>
             <p>Build <code>.orb</code> apps and CLI tools for Orbit OS devices.</p>
-            <span class="badge ready">Available soon</span>
-          </div>
+            <span class="badge ready">Available</span>
+          </a>
           <div class="sdk-card">
             <h3>Java</h3>
             <p>Build <code>.orb</code> apps and CLI tools for Orbit OS devices.</p>
@@ -430,33 +383,13 @@
         </div>
       </div>
 
-      <!-- Articles -->
-      <div class="download-section" id="articles">
-        <h2>📰 Articles</h2>
-        <p class="section-desc">
-          Technical articles and deep dives on Orbit OS internals, design decisions, and use cases.
-        </p>
-
-        <div class="note-box">
-          🚧 Articles are coming soon.
-        </div>
-
-        <div class="download-item">
-          <div class="download-item-info">
-            <h3>Edge AI — Face Recognition on embedded Linux with TFLite and Orbit OS</h3>
-            <p>Running face detection, landmark estimation, and identification on-device without Docker or heavyweight runtimes.</p>
-          </div>
-          <a class="download-btn disabled">Coming soon</a>
-        </div>
-      </div>
-
     </main>
   </div>
 
   <!-- Footer -->
   <footer class="footer">
     <div class="footer-container">
-      <p class="footer-copy">&copy; 2026 Orbit OS &middot; Open Source &middot; Built for the edge</p>
+      <p class="footer-copy">&copy; 2026 Orbit OS &middot; Open Platform &middot; Built for the edge</p>
     </div>
   </footer>
 

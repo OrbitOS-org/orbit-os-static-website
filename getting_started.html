@@ -4,10 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Documentation — Orbit OS</title>
+  <title>Getting Started — Orbit OS</title>
 
   <meta name="description"
     content="Official documentation for Orbit OS — Gravity RT runtime, .orb package model, OTA updates, SDK, Developer Mode, and fleet management.">
+  <link rel="canonical" href="https://www.orbit-os.org/getting_started.html">
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="stylesheet" href="style.css?v=5" />
   <link rel="stylesheet"
@@ -444,9 +445,9 @@
         <div class="sidebar-group">
           <h3 class="sidebar-title">Developer Setup</h3>
           <a href="#gs-devmode" class="sidebar-link">Enable Developer Mode</a>
-          <a href="#gs-sdk-install" class="sidebar-link">Install the SDK</a>
-          <a href="#gs-connect" class="sidebar-link">Connect to Your Device</a>
-          <a href="#gs-hello-world" class="sidebar-link">Hello World — GPIO from laptop</a>
+          <a href="#gs-vscode" class="sidebar-link">Orbit Studio</a>
+          <a href="#gs-vscode-new-project" class="sidebar-link" style="padding-left: 1.75rem; margin-left: -1rem;">Create a Project</a>
+          <a href="#gs-hello-world" class="sidebar-link" style="padding-left: 1.75rem; margin-left: -1rem;">GPIO Blink — First App</a>
         </div>
       </nav>
     </aside>
@@ -566,9 +567,10 @@
         <p>
           Clicking the <strong>Settings</strong> icon in the Launcher opens the device settings panel.
         </p>
-
         <p>The left-side menu gives you access to all configuration areas of your device: <strong>System</strong>, <strong>Network</strong>, <strong>Apps</strong>, <strong>Firewall</strong>, <strong>Account</strong>, <strong>Power</strong>, and <strong>About</strong>. A <strong>Developer</strong> menu also appears when Developer Mode is enabled.</p>
-
+        <div class="note-box">
+          <p>If you want to go straight to development, skip ahead to <a href="#gs-devmode" style="color: var(--accent-cyan);">Enable Developer Mode →</a></p>
+        </div>
         <p style="text-align: right;"><a href="#gs-settings-system" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: System →</a></p>
       </section>
 
@@ -854,34 +856,254 @@
           <li>Toggle <strong>Developer Mode</strong> on</li>
           <li>Read and confirm the security notice</li>
         </ol>
-        <p>Once enabled, a <strong>Developer</strong> menu appears in the Settings sidebar with two tabs — <strong>Tools</strong> and <strong>Logs</strong>. The Tools tab contains the SDK connection details needed to connect from your laptop.</p>
-        <div class="note-box">
-          <p>In Developer Mode, the mTLS SDK certificate is sufficient to connect — no password required. Disable it when the device is in production.</p>
-        </div>
-        <p style="text-align: right;"><a href="#gs-sdk-install" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Install the SDK →</a></p>
+        <img src="images/system_security_enable_dev_mode.png" alt="Settings — Developer Mode enabled" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1rem 0;" />
+        <p style="text-align: right;"><a href="#gs-vscode" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Orbit Studio →</a></p>
       </section>
 
-      <section id="gs-sdk-install">
-        <h2>🛠️ Install the SDK</h2>
+      <section id="gs-vscode">
+        <h2><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="42" height="42" style="flex-shrink:0;"><defs><linearGradient id="hexGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6c63ff"/><stop offset="100%" stop-color="#a78bfa"/></linearGradient></defs><polygon points="32,11 49,21 49,43 32,53 15,43 15,21" fill="none" stroke="url(#hexGrad)" stroke-width="4.2" stroke-linejoin="round"/></svg> Orbit Studio</h2>
+        <p>
+          Orbit Studio is a VS Code extension that covers the full development lifecycle — from creating a new project to deploying it on a real device. Everything you need to build for Orbit OS is available directly inside the editor.
+        </p>
+
+        <h3>Install the extension</h3>
+        <p>
+          Orbit Studio is pending approval on the VS Code Marketplace. In the meantime, install it manually from the <code>.vsix</code> file.
+        </p>
+        <ol>
+          <li>Download <a href="downloads.html#orbit-studio" style="color: var(--accent-cyan);"><strong>orbit-studio-0.4.3.vsix</strong></a></li>
+          <li>Open VS Code or Cursor</li>
+          <li>Press <strong>Ctrl+Shift+P</strong> (Windows/Linux) or <strong>Cmd+Shift+P</strong> (macOS) to open the Command Palette</li>
+          <li>Type <code>Install from VSIX</code> and run <strong>Extensions: Install from VSIX...</strong></li>
+          <li>Select the downloaded <code>.vsix</code> file and reload the window if prompted</li>
+        </ol>
         <div class="note-box">
-          <p>🚧 The SDK is coming soon. Installation instructions will be available at launch.</p>
+          <p>Extensions installed from a <code>.vsix</code> do not update automatically. To update, repeat the same process with the newer <code>.vsix</code> — it replaces the previous version in place.</p>
         </div>
-        <p style="text-align: right;"><a href="#gs-connect" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Connect to Your Device →</a></p>
+
+        <p>Once installed, open the Orbit Studio panel from the VS Code Activity Bar. The home screen gives you access to all extension features — project creation, device connection, and deployment.</p>
+        <img src="images/orbit_studio_home.png" alt="Orbit Studio — Home" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1rem 0;" />
+
+        <h3>What Orbit Studio does</h3>
+        <ul>
+          <li><strong>Language selection</strong> — choose the programming language for your project from all supported SDKs: Go, Java, Python, or C++</li>
+          <li><strong>SDK version</strong> — select the target SDK version at project creation</li>
+          <li><strong>Project creation</strong> — scaffold a new Orbit OS project with the correct structure and manifest in one step</li>
+          <li><strong>Run locally</strong> — run your code directly from VS Code against a real device over the network, without packaging or deploying anything</li>
+          <li><strong>Build .orb</strong> — generate a signed <code>.orb</code> package when your app is ready for deployment</li>
+          <li><strong>Deploy to device</strong> — push the <code>.orb</code> package directly to a connected device from inside the editor</li>
+        </ul>
+
+        <p style="text-align: right;"><a href="#gs-vscode-new-project" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Create a Project →</a></p>
       </section>
 
-      <section id="gs-connect">
-        <h2>🔗 Connect to Your Device</h2>
-        <div class="note-box">
-          <p>🚧 Coming soon — connection instructions will be available with the SDK launch.</p>
-        </div>
+      <section id="gs-vscode-new-project">
+        <h2><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="42" height="42" style="flex-shrink:0;"><defs><linearGradient id="hexGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6c63ff"/><stop offset="100%" stop-color="#a78bfa"/></linearGradient></defs><polygon points="32,11 49,21 49,43 32,53 15,43 15,21" fill="none" stroke="url(#hexGrad)" stroke-width="4.2" stroke-linejoin="round"/></svg> Orbit Studio — Create a Project</h2>
+        <p>
+          In the Orbit Studio sidebar, select <strong>Create Project</strong>. Fill in the fields below and click <strong>Create project</strong> — the extension scaffolds the full project structure for you.
+        </p>
+        <img src="images/orbit_studio_create_project.png" alt="Orbit Studio — Create Project" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1rem 0;" />
+
+        <h3>Language</h3>
+        <p>
+          Select the programming language for your project. Currently only <strong>Go</strong> supports full project creation. Python, Java, and C++ are on the roadmap.
+        </p>
+
+        <h3>Project name</h3>
+        <p>
+          The name of your project — used to generate the Go module path, the app folder name, and the app ID. Type a name to preview all three before creating.
+        </p>
+
+        <h3>Device address</h3>
+        <p>
+          The IP address of your Orbit OS device on the local network (e.g. <code>192.168.1.51</code>). The extension connects to this device when you run the project locally.
+        </p>
+
+        <h3>SDK version</h3>
+        <p>
+          The target SDK version for this project. The newest release is selected by default.
+        </p>
+
+        <h3>App icon</h3>
+        <p>
+          Optionally upload your own SVG icon (max 512 KB, square recommended). If you skip this, the default Orbit icon is used. A preview is shown before you confirm.
+        </p>
+
+        <h3>Examples</h3>
+        <p>
+          Optionally include example code from the selected SDK release to help you get started.
+        </p>
+
+        <p>Once all fields are filled in, click <strong>Create project…</strong> — Orbit Studio generates the project structure and opens it in VS Code ready to run.</p>
+        <img src="images/orbit_studio_project.png" alt="Orbit Studio — Project created in VS Code" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1rem 0;" />
+
+        <h3>Run App</h3>
+        <p>
+          In the Orbit Studio sidebar, click <strong>Run App</strong>. Your code runs on your development machine and communicates with the device using the API over TCP/mTLS — all API calls go to real hardware, returning real data, in real time. This is <strong>realtime remote development</strong>: no packaging, no deployment, no flashing. Iterate directly against the device from your laptop.
+        </p>
+        <p>
+          The default example that ships with every new project connects to the device and prints the hardware model to the terminal — confirming the connection is working.
+        </p>
+        <img src="images/orbit_studio_first_run.png" alt="Orbit Studio — First run output showing Raspberry Pi 4 Model B Rev 1.5" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1rem 0;" />
+
         <p style="text-align: right;"><a href="#gs-hello-world" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Hello World →</a></p>
       </section>
 
       <section id="gs-hello-world">
-        <h2>👋 Hello World — GPIO from laptop</h2>
+        <h2>⚡ GPIO Blink — First App</h2>
+        <p>
+          This demo app shows how to control GPIO pins using the Orbit OS SDK. It uses <code>gpio_manager.go</code> — the SDK component responsible for managing and controlling GPIO hardware — as described in the <a href="api-reference.html" style="color: var(--accent-cyan);">SDK API Reference</a>.
+        </p>
+        <p>
+          The app does two things: lists all available GPIO pins on the connected device, then blinks <strong>GPIO17</strong> continuously at 1-second intervals — toggling it HIGH and LOW in a loop.
+        </p>
+
+        <h3>List available GPIO pins</h3>
+        <p>
+          To list all available GPIO pins on the device, the app calls <a href="api-reference.html#gpio-list" style="color: var(--accent-cyan);" target="_blank" rel="noopener noreferrer"><code>GpioManager.ListPins()</code></a> — returning the full list of pins exposed by the hardware.
+        </p>
+
+        <h3>Blink GPIO17</h3>
+        <p>
+          With the pin identified, the app sets its direction to OUTPUT using <a href="api-reference.html#gpio-setdir" style="color: var(--accent-cyan);" target="_blank" rel="noopener noreferrer"><code>GpioManager.SetDirection()</code></a>, then enters a loop that toggles the level between HIGH and LOW every second using <a href="api-reference.html#gpio-setlevel" style="color: var(--accent-cyan);" target="_blank" rel="noopener noreferrer"><code>GpioManager.SetLevel()</code></a> — producing the blink.
+        </p>
+        <details style="margin: 1.5rem 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;">
+          <summary style="padding: 0.85rem 1.25rem; cursor: pointer; background: var(--bg-card); font-size: 0.92rem; font-weight: 600; color: var(--muted); list-style: none; display: flex; align-items: center; gap: 0.5rem; user-select: none;">
+
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            View full main.go
+          </summary>
+          <pre style="margin: 0; border-radius: 0; font-size: 0.78rem;"><code class="language-go">// OrbitOS app — generated by Orbit VS Code plugging (orbit-os-vscode-plugging).
+package main
+
+import (
+	_ "embed"
+	"flag"
+	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
+	"github.com/OrbitOS-org/sdk-go/v26/client"
+	"github.com/OrbitOS-org/sdk-go/v26/logger"
+	"github.com/OrbitOS-org/sdk-go/v26/metadata"
+)
+
+const logTag = "main"
+
+//go:embed metadata.json
+var metadataJSON []byte
+
+var appManifest = metadata.MustParseAppManifestJSON(metadataJSON)
+
+func main() {
+	host := flag.String("host", "192.168.1.51", "Device IP address")
+	flag.Parse()
+
+	meta := metadata.Build(appManifest)
+	logger.Init(meta.Name, "INFO", true)
+
+	logger.Infof(logTag, "Starting %s", meta.Name)
+	appManifest.PrintInfo()
+
+	c, err := client.NewClientAuto(*host)
+	if err != nil {
+		logger.Fatalf(logTag, "create client: %v", err)
+		os.Exit(1)
+	}
+	defer c.Close()
+
+	hwModel, _ := c.SystemManager.GetHardwareModel()
+	logger.Infof(logTag, "HW Model: %s", hwModel)
+
+	// List available GPIO pins
+	pins, err := c.GpioManager.ListPins()
+	if err != nil {
+		logger.Fatalf(logTag, "list pins: %v", err)
+		os.Exit(1)
+	}
+	fmt.Println("=== Available GPIO pins ===")
+	for _, p := range pins {
+		fmt.Printf("  chip%d  line%-4d  %s\n", p.ChipNumber, p.Number, p.Name)
+	}
+	fmt.Println("===========================")
+
+	// Configure GPIO17 as output and blink every 1 second
+	gpio17 := &amp;client.GpioPin{Name: "GPIO17"}
+
+	if err := c.GpioManager.SetDirection(gpio17, client.GPIO_DIR_OUT); err != nil {
+		logger.Fatalf(logTag, "set direction GPIO17: %v", err)
+		os.Exit(1)
+	}
+	logger.Infof(logTag, "GPIO17 configured as output — blinking every 1s (Ctrl+C to stop)")
+
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM)
+
+	ticker := time.NewTicker(time.Second)
+	defer ticker.Stop()
+
+	level := client.GPIO_LEVEL_LOW
+	for {
+		select {
+		case &lt;-ticker.C:
+			if level == client.GPIO_LEVEL_LOW {
+				level = client.GPIO_LEVEL_HIGH
+			} else {
+				level = client.GPIO_LEVEL_LOW
+			}
+			if err := c.GpioManager.SetLevel(gpio17, level); err != nil {
+				logger.Errorf(logTag, "set level GPIO17: %v", err)
+			} else {
+				logger.Infof(logTag, "GPIO17 → %d", level)
+			}
+		case &lt;-stop:
+			// Drive GPIO17 low before exiting
+			_ = c.GpioManager.SetLevel(gpio17, client.GPIO_LEVEL_LOW)
+			logger.Infof(logTag, "Stopped — GPIO17 set LOW")
+			os.Exit(0)
+		}
+	}
+}</code></pre>
+        </details>
+
+        <p>
+          The screenshot below shows the app running via Orbit Studio — the code executes on the development machine, the Raspberry Pi's GPIO17 blinks physically, and the terminal shows the full log: pin listing, hardware model, and the toggle output every second.
+        </p>
+        <img src="images/orbit_studio_app_blink.png" alt="Orbit Studio — GPIO17 blink running, terminal log visible" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1rem 0;" />
+
+        <h3>Deploy to Device</h3>
+        <p>
+          Once the app is tested and working, click <strong>Deploy</strong> in the Orbit Studio sidebar. With a single click, the extension generates the <code>.orb</code> package, signs it with a development certificate, and installs it directly on the device — no terminal, no manual steps.
+        </p>
+        <img src="images/orbit_studio_deply.png" alt="Orbit Studio — Deploy to device" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1rem 0;" />
+
+        <p>
+          After deployment, the <code>.orb</code> is running inside the device — it's no longer your development machine driving the GPIO, it's the app itself running natively on the hardware. GPIO17 continues to blink, now fully autonomous.
+        </p>
+
+        <h3>Real-time Device Log</h3>
+        <p>
+          With the app running on the device, Orbit Studio lets you stream its logs directly into the VS Code <strong>Output</strong> panel. In the extension, select <strong>Device Log</strong> — the terminal immediately starts showing the app's output in real time, straight from the device.
+        </p>
+        <img src="images/orbit_studio_real_time_log.png" alt="Orbit Studio — Real-time device log in VS Code Output panel" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1rem 0;" />
+        <p>
+          Open a browser and navigate to <code>http://&lt;device-ip&gt;</code> to access the Launcher. The <strong>led-blink</strong> app icon is now visible alongside the other installed apps.
+        </p>
+        <img src="images/led-blink_on_launcher.png" alt="Orbit OS Launcher — led-blink app installed and visible" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1rem 0;" />
+
+        <p>
+          In the Launcher, go to <strong>Settings → Apps</strong> to see all installed apps. The <strong>led-blink</strong> app appears there with its status shown as running. From this view you can also uninstall it directly from the device.
+        </p>
+        <img src="images/led-blink-running-in-settings.png" alt="Settings — Apps — led-blink running" class="zoomable" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); margin: 1rem 0;" />
+
         <div class="note-box">
-          <p>🚧 Coming soon — full Hello World guide will be available with the SDK launch.</p>
+          <p>
+            From a blank project to a running app on real hardware — without SSH, without flashing, without manual file transfers. You created a project in Orbit Studio, ran it in realtime remote development mode against a live device, and deployed it as a signed <code>.orb</code> package with a single click. The app now runs autonomously on the device, managed by Gravity RT, visible in the Launcher, and controllable from Settings.
+          </p>
         </div>
+
         <p style="text-align: right;"><a href="platform.html" class="sidebar-link" style="display: inline; border: none; padding: 0;">Next: Platform →</a></p>
       </section>
 
@@ -894,7 +1116,7 @@
   <!-- Footer -->
   <footer class="footer">
     <div class="footer-container">
-      <p class="footer-copy">&copy; 2026 Orbit OS &middot; Open Source &middot; Built for the edge</p>
+      <p class="footer-copy">&copy; 2026 Orbit OS &middot; Open Platform &middot; Built for the edge</p>
     </div>
   </footer>
 

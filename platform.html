@@ -8,6 +8,7 @@
 
   <meta name="description"
     content="Orbit OS architecture — Gravity RT runtime, .orb package model, permissions, trust model, security, OTA updates, SDK, and design principles.">
+  <link rel="canonical" href="https://www.orbit-os.org/platform.html">
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="stylesheet" href="style.css?v=5" />
   <link rel="stylesheet"
@@ -400,7 +401,7 @@
           <li><strong>Hardware access:</strong> all device capabilities exposed as a unified, secure API</li>
           <li><strong>Resource control:</strong> CPU, memory, and I/O limits enforced per application</li>
           <li><strong>Security enforcement:</strong> every package verified before execution</li>
-          <li><strong>Edge AI:</strong> TFLite runtime included by default — no add-on required</li>
+          <li><strong>Edge AI:</strong> TFLite and ONNX runtimes included by default — no add-on required</li>
         </ul>
         <div class="note-box">
           <p>Nothing runs on the device outside of Gravity RT. There is no back door, no bypass.</p>
@@ -427,7 +428,7 @@
         <p>
           A <code>.orb</code> bundles everything the app needs. As an example, a full Edge AI face recognition app —
           including three TFLite models for detection, landmarks, and identification — weighs only <strong>6 MB</strong>.
-          The TFLite runtime lives in the OS, not in each package, keeping sizes small.
+          The TFLite and ONNX runtimes live in the OS, not in each package, keeping sizes small.
         </p>
 
         <h3>Persistent data</h3>
@@ -455,7 +456,7 @@
           <li>GPIO, PWM, I²C, SPI, UART</li>
           <li>WiFi, Ethernet, Bluetooth (BLE)</li>
           <li>Camera</li>
-          <li>AI Service (TFLite inference)</li>
+          <li>AI Service (TFLite &amp; ONNX inference)</li>
           <li>Network access</li>
           <li>Package Manager</li>
           <li>Firewall</li>
@@ -625,7 +626,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td><strong>Go</strong></td><td>Available soon</td></tr>
+            <tr><td><strong>Go</strong></td><td><a href="api-reference.html" style="color: var(--accent-cyan);">Available</a></td></tr>
             <tr><td><strong>Java</strong></td><td>Beta soon</td></tr>
             <tr><td><strong>Python</strong></td><td>Planned Q3</td></tr>
             <tr><td><strong>C++</strong></td><td>Planned Q4</td></tr>
@@ -657,7 +658,7 @@
         </p>
 
         <p>
-          Full reference for all services, permissions, and device APIs: <a href="sdk/api-reference.html" style="color: var(--accent-cyan);">API Reference →</a>
+          Full reference for all services, permissions, and device APIs: <a href="api-reference.html" style="color: var(--accent-cyan);">API Reference →</a>
         </p>
 
         <h3>Development SDK Tool</h3>
@@ -923,7 +924,7 @@
   <!-- Footer -->
   <footer class="footer">
     <div class="footer-container">
-      <p class="footer-copy">&copy; 2026 Orbit OS &middot; Open Source &middot; Built for the edge</p>
+      <p class="footer-copy">&copy; 2026 Orbit OS &middot; Open Platform &middot; Built for the edge</p>
     </div>
   </footer>
 
